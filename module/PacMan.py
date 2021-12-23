@@ -1,8 +1,3 @@
-# Pac-Man Game
-
-import pygame
-import random
-
 from setting import *
 
 
@@ -28,10 +23,11 @@ class PacMan(pygame.sprite.Sprite):
     @property
     def player_data(self):
         return {
-            "tyep": "rect",
+            "type": "rect",
             "name": "pac-man",
             "x": self.rect.x,
             "y": self.rect.y,
+            "angle": 0,
             "width": self.rect.width,
             "height": self.rect.height,
             "color": self.color
