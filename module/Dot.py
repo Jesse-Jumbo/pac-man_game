@@ -12,9 +12,7 @@ class Dot(pygame.sprite.Sprite):
         self.rect.centery = random.randint(0, 600)
 
     def update(self) -> None:
-        self.angle += 10
-        if self.angle > 360:
-            self.angle -= 360
+        self.angle = (self.angle + 10) % 360
 
     @property
     def dot_data(self):

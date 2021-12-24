@@ -1,3 +1,5 @@
+import pygame
+
 from .setting import *
 
 
@@ -10,17 +12,25 @@ class PacMan(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = 400
         self.rect.centery = 300
+        self.speed_x = 0
+        self.speed_y = 0
 
     def update(self):
+        self.speed_x = 0
+        self.speed_y = 0
         keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_UP] == "UP":
-            self.rect.centery -= 10
-        if keystate[pygame.K_DOWN] == "DOWN":
-            self.rect.centery += 10
-        if keystate[pygame.K_LEFT] == "LEFT":
-            self.rect.centerx -= 10
-        if keystate[pygame.K_RIGHT] == "RIGHT":
-            self.rect.centerx += 10
+        if keystate[pygame.K_UP] or keystate[pygame.K_w]:
+            self.speed_y = -3
+        if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
+            self.speed_y = +3
+        if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
+            self.speed_x = -3
+        if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
+            self.speed_x = +3
+
+        self.rect.centerx += self.speed_x
+        self.rect.centery += self.speed_y
+
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
