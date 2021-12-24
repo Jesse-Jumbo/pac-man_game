@@ -18,19 +18,19 @@ for i in range(100):
 
 ghosts = pygame.sprite.Group()
 
-red_ghost = RedGhost(RED, 380, 175)
+red_ghost = RedGhost(380, 175)
 all_sprites.add(red_ghost)
 ghosts.add(red_ghost)
 
-cyan_blue_ghost = RedGhost(CYAN_BLUE, 420, 225)
+cyan_blue_ghost = RedGhost(420, 225)
 all_sprites.add(cyan_blue_ghost)
 ghosts.add(cyan_blue_ghost)
 
-yellow_ghost = RedGhost(YELLOW, 420, 175)
+yellow_ghost = RedGhost(420, 175)
 all_sprites.add(yellow_ghost)
 ghosts.add(yellow_ghost)
 
-pink_ghost = RedGhost(PINK, 380, 225)
+pink_ghost = RedGhost(380, 225)
 all_sprites.add(pink_ghost)
 ghosts.add(pink_ghost)
 
