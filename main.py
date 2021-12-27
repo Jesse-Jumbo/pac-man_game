@@ -4,6 +4,9 @@ from module.setting import *
 from module.PacMan import PacMan
 from module.Dot import Dot
 from module.RedGhost import RedGhost
+from module.GreenGhost import GreenGhost
+from module.PinkGhost import PinkGhost
+from module.OrangeGhost import OrangeGhost
 from module.draw_score import draw_score
 
 
@@ -18,21 +21,21 @@ for i in range(100):
 
 ghosts = pygame.sprite.Group()
 
-red_ghost = RedGhost(380, 175)
+red_ghost = RedGhost(390, 182.5)
 all_sprites.add(red_ghost)
 ghosts.add(red_ghost)
 
-cyan_blue_ghost = RedGhost(420, 225)
-all_sprites.add(cyan_blue_ghost)
-ghosts.add(cyan_blue_ghost)
+green_ghost = GreenGhost(370, 217.5)
+all_sprites.add(green_ghost)
+ghosts.add(green_ghost)
 
-yellow_ghost = RedGhost(420, 175)
-all_sprites.add(yellow_ghost)
-ghosts.add(yellow_ghost)
-
-pink_ghost = RedGhost(380, 225)
+pink_ghost = PinkGhost(390, 217.5)
 all_sprites.add(pink_ghost)
 ghosts.add(pink_ghost)
+
+orange_ghost = OrangeGhost(410, 217.5)
+all_sprites.add(orange_ghost)
+ghosts.add(orange_ghost)
 
 score = 0
 
