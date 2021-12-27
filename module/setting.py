@@ -54,3 +54,8 @@ pink_ghost_u = pygame.image.load(path.join(img_dir, "pink_ghost_u.png")).convert
 pink_ghost_d = pygame.image.load(path.join(img_dir, "pink_ghost_d.png")).convert_alpha()
 pink_ghost_r = pygame.image.load(path.join(img_dir, "pink_ghost_r.png")).convert_alpha()
 pink_ghost_l = pygame.image.load(path.join(img_dir, "pink_ghost_l.png")).convert_alpha()
+
+orange_ghost_u = pygame.image.load(path.join(img_dir, "orange_ghost_u.png")).convert_alpha()
+orange_ghost_d = pygame.image.load(path.join(img_dir, "orange_ghost_d.png")).convert_alpha()
+orange_ghost_r = pygame.image.load(path.join(img_dir, "orange_ghost_r.png")).convert_alpha()
+orange_ghost_l = pygame.image.load(path.join(img_dir, "orange_ghost_l.png")).convert_alpha()
