@@ -11,10 +11,10 @@ def move():
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, center_x=0, center_y=0):
+    def __init__(self):
         super().__init__()
         self.image = pygame.transform.scale(blue_ghost_d, (20, 25))
-        self.rect = self.image.get_rect(center=(center_x, center_y))
+        self.rect = self.image.get_rect()
         self.last_move = pygame.time.get_ticks()
         self.move_delay = 100
         self.origin_img = pygame.transform.scale(blue_ghost_d, (20, 25))
@@ -82,7 +82,7 @@ class Ghost(pygame.sprite.Sprite):
     def move_up(self):
         self.rect.centery += -1
         self.image = self.up_img
-
+# TODO 改成任何情況下都能適用
     def scatter_model(self, x, y):
         if self.rect.centerx <= x+150 and self.rect.centery == y:
             self.move_right()

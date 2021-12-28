@@ -9,8 +9,8 @@ class PacMan(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(player_img, (20, 20))
         self.color = color
         self.rect = self.image.get_rect()
-        self.rect.centerx = 400
-        self.rect.centery = 300
+        self.rect.centerx = (WIDTH/2)
+        self.rect.centery = (HEIGHT-50)
         self.speed_x = 0
         self.speed_y = 0
 
@@ -24,16 +24,16 @@ class PacMan(pygame.sprite.Sprite):
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
             self.image = up_img
-            self.speed_y = -3
+            self.speed_y = -1
         if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
             self.image = down_img
-            self.speed_y = +3
+            self.speed_y = +1
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.image = turn_left_image
-            self.speed_x = -3
+            self.speed_x = -1
         if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
             self.image = origin_img
-            self.speed_x = +3
+            self.speed_x = +1
 
         self.rect.centerx += self.speed_x
         self.rect.centery += self.speed_y

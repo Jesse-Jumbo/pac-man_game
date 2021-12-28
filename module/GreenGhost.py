@@ -3,20 +3,21 @@ from .Ghost import Ghost
 
 
 class GreenGhost(Ghost):
-    def __init__(self, center_x, center_y):
-        super().__init__(center_x, center_y)
+    def __init__(self):
+        super().__init__()
         self.image = pygame.transform.scale(green_ghost_d, (20, 25))
+        self.rect.center = [(WIDTH/2-20), (HEIGHT/2+8)]
         self.origin_img = pygame.transform.scale(green_ghost_d, (20, 25))
         self.up_img = pygame.transform.scale(green_ghost_u, (20, 25))
         self.right_img = pygame.transform.scale(green_ghost_r, (20, 25))
         self.left_image = pygame.transform.scale(green_ghost_l, (20, 25))
 
     def update(self, *args, **kwargs) -> None:
-        if self.count_time <= 1200:
-            self.move(30, 220)
-        elif self.count_time <= 2400:
-            self.scatter_model(30, 220)
-        elif self.count_time >= 3600:
+        if 1 < self.count_time <= 20:
+            self.move(30, HEIGHT-180)
+        elif self.count_time <= 40:
+            self.scatter_model(30, HEIGHT-180)
+        elif self.count_time >= 60:
             self.origin_img = pygame.transform.scale(green_ghost_d, (20, 25))
             self.up_img = pygame.transform.scale(green_ghost_u, (20, 25))
             self.right_img = pygame.transform.scale(green_ghost_r, (20, 25))
@@ -24,5 +25,5 @@ class GreenGhost(Ghost):
             self.count_time = 0
         else:
             self.blue_module()
-        self.count_time += 1
+        self.count_time += 0.015625
         print(self.count_time)

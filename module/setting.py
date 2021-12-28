@@ -9,9 +9,9 @@ from os import path
 img_dir = path.join(path.dirname(__file__), '../img')
 snd_dir = path.join(path.dirname(__file__), 'snd')
 
-WIDTH = 800
-HEIGHT = 400
-FPS = 60
+WIDTH = 1024
+HEIGHT = 768
+FPS = 64
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -34,6 +34,9 @@ all_sprites = pygame.sprite.Group()
 
 """img"""
 player_img = pygame.image.load(path.join(img_dir, "pac.png")).convert_alpha()
+
+small_dot_img = pygame.image.load(path.join(img_dir, "dot.png")).convert_alpha()
+big_dot_img = pygame.image.load(path.join(img_dir, "point.png")).convert_alpha()
 
 blue_ghost_d = pygame.image.load(path.join(img_dir, "blue_ghost_d.png")).convert_alpha()
 blue_ghost_u = pygame.image.load(path.join(img_dir, "blue_ghost_u.png")).convert_alpha()

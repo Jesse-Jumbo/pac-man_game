@@ -4,15 +4,13 @@ class Dot(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.angle = 0
-        self.image = pygame.Surface([8, 8])
-        self.color = YELLOW
-        self.image.fill(self.color)
+        self.image = pygame.transform.scale(small_dot_img, (8, 8))
         self.rect = self.image.get_rect()
-        self.rect.centerx = random.randint(0, 800)
-        self.rect.centery = random.randint(0, 600)
+        self.rect.x = random.randint(0, WIDTH-self.rect.width)
+        self.rect.y = random.randint(0, HEIGHT-self.rect.height)
 
-    def update(self) -> None:
-        self.angle = (self.angle + 10) % 360
+    # def update(self) -> None:
+    #     self.angle = (self.angle + 10) % 360
 
     @property
     def dot_data(self):
@@ -24,6 +22,5 @@ class Dot(pygame.sprite.Sprite):
             "angle": 0,
             "width": self.rect.width,
             "height": self.rect.height,
-            "color": self.color
         }
 
