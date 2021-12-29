@@ -6,13 +6,15 @@ import random
 from os import path
 
 
-img_dir = path.join(path.dirname(__file__), '../img')
-snd_dir = path.join(path.dirname(__file__), 'snd')
 
+'''window'''
 WIDTH = 1024
+# WIDTH = 200
 HEIGHT = 768
+# HEIGHT = 200
 FPS = 64
 
+'''color'''
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -20,45 +22,23 @@ BLUE = (0, 0, 255)
 CYAN_BLUE = (0, 255, 255)
 YELLOW = (255, 255, 0)
 PINK = (255, 0, 255)
+DARKGREY = (40, 40, 40)
+LIGHTGREY = (100, 100, 100)
 
-pygame.init()
-pygame.mixer.init()
-pygame.display.set_caption("Pac-Man!")
-clock = pygame.time.Clock()
-window = pygame.display.set_mode((WIDTH, HEIGHT))
+'''Layers'''
+WALL_LAYER = 1
+ITEMS_LAYER = 1
+DOT_LAYER = 2
+POINT_LAYER = 2
+PLAYER_LAYER = 2
+GHOST_LAYER = 3
+EFFECTS_LAYER = 4
 
-'''font'''
-font_name = pygame.font.match_font('arial')
+'''BG View'''
+TITLE = "Pac-Man!"
+BG_COLOR = DARKGREY
+TILE_SIZE = 32
+GRID_WIDTH = WIDTH/TILE_SIZE
+GRID_HEIGHT = HEIGHT/TILE_SIZE
 
-all_sprites = pygame.sprite.Group()
 
-"""img"""
-player_img = pygame.image.load(path.join(img_dir, "pac.png")).convert_alpha()
-
-small_dot_img = pygame.image.load(path.join(img_dir, "dot.png")).convert_alpha()
-big_dot_img = pygame.image.load(path.join(img_dir, "point.png")).convert_alpha()
-
-blue_ghost_d = pygame.image.load(path.join(img_dir, "blue_ghost_d.png")).convert_alpha()
-blue_ghost_u = pygame.image.load(path.join(img_dir, "blue_ghost_u.png")).convert_alpha()
-blue_ghost_r = pygame.image.load(path.join(img_dir, "blue_ghost_r.png")).convert_alpha()
-blue_ghost_l = pygame.image.load(path.join(img_dir, "blue_ghost_l.png")).convert_alpha()
-
-green_ghost_d = pygame.image.load(path.join(img_dir, "green_ghost_d.png")).convert_alpha()
-green_ghost_u = pygame.image.load(path.join(img_dir, "green_ghost_u.png")).convert_alpha()
-green_ghost_r = pygame.image.load(path.join(img_dir, "green_ghost_r.png")).convert_alpha()
-green_ghost_l = pygame.image.load(path.join(img_dir, "green_ghost_l.png")).convert_alpha()
-
-red_ghost_d = pygame.image.load(path.join(img_dir, "red_ghost_d.png")).convert_alpha()
-red_ghost_u = pygame.image.load(path.join(img_dir, "red_ghost_u.png")).convert_alpha()
-red_ghost_r = pygame.image.load(path.join(img_dir, "red_ghost_r.png")).convert_alpha()
-red_ghost_l = pygame.image.load(path.join(img_dir, "red_ghost_l.png")).convert_alpha()
-
-pink_ghost_u = pygame.image.load(path.join(img_dir, "pink_ghost_u.png")).convert_alpha()
-pink_ghost_d = pygame.image.load(path.join(img_dir, "pink_ghost_d.png")).convert_alpha()
-pink_ghost_r = pygame.image.load(path.join(img_dir, "pink_ghost_r.png")).convert_alpha()
-pink_ghost_l = pygame.image.load(path.join(img_dir, "pink_ghost_l.png")).convert_alpha()
-
-orange_ghost_u = pygame.image.load(path.join(img_dir, "orange_ghost_u.png")).convert_alpha()
-orange_ghost_d = pygame.image.load(path.join(img_dir, "orange_ghost_d.png")).convert_alpha()
-orange_ghost_r = pygame.image.load(path.join(img_dir, "orange_ghost_r.png")).convert_alpha()
-orange_ghost_l = pygame.image.load(path.join(img_dir, "orange_ghost_l.png")).convert_alpha()

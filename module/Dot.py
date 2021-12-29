@@ -1,10 +1,14 @@
+import pygame.draw
+
 from .setting import *
 
 class Dot(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
+    def __init__(self, game):
+        self._layer = DOT_LAYER
+        self.groups = game.all_sprites, game.dots
+        pygame.sprite.Sprite.__init__(self, self.groups)
         self.angle = 0
-        self.image = pygame.transform.scale(small_dot_img, (8, 8))
+        self.image = game.small_dot_img
         self.rect = self.image.get_rect()
         self.rect.x = random.randint(0, WIDTH-self.rect.width)
         self.rect.y = random.randint(0, HEIGHT-self.rect.height)

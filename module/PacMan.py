@@ -1,43 +1,24 @@
-import pygame
-
 from .setting import *
 
-
 class PacMan(pygame.sprite.Sprite):
-    def __init__(self, color=YELLOW):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(player_img, (20, 20))
-        self.color = color
+    def __init__(self, game, x, y):
+        self._layer = PLAYER_LAYER
+        self.groups = game.all_sprites
+        super().__init__(self.groups)
+        self.game = game
+        self.image = game.player_img
         self.rect = self.image.get_rect()
-        self.rect.centerx = (WIDTH/2)
-        self.rect.centery = (HEIGHT-50)
+        self.rect.centerx = x
+        self.rect.centery = y
         self.speed_x = 0
         self.speed_y = 0
+        self.origin_img = game.player_img
+        self.up_img = game.up_img
+        self.down_img = game.down_img
+        self.turn_left_image = game.turn_left_image
 
     def update(self):
-        origin_img = pygame.transform.scale(player_img, (20, 20))
-        up_img = pygame.transform.scale((pygame.transform.rotate(player_img, 90)), (20, 20))
-        down_img = pygame.transform.scale((pygame.transform.rotate(player_img, 270)), (20, 20))
-        turn_left_image = pygame.transform.scale((pygame.transform.flip(player_img, True, False)), (20, 20))
-        self.speed_x = 0
-        self.speed_y = 0
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_UP] or keystate[pygame.K_w]:
-            self.image = up_img
-            self.speed_y = -1
-        if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
-            self.image = down_img
-            self.speed_y = +1
-        if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
-            self.image = turn_left_image
-            self.speed_x = -1
-        if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
-            self.image = origin_img
-            self.speed_x = +1
-
-        self.rect.centerx += self.speed_x
-        self.rect.centery += self.speed_y
-
+        self.get_keys()
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
@@ -46,6 +27,28 @@ class PacMan(pygame.sprite.Sprite):
             self.rect.bottom = HEIGHT
         if self.rect.top < 0:
             self.rect.top = 0
+
+    def get_keys(self):
+        self.speed_x = 0
+        self.speed_y = 0
+        keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_UP] or keystate[pygame.K_w]:
+            self.image = self.game.up_img
+            self.speed_y = -1
+        if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
+            self.image = self.game.down_img
+            self.speed_y = +1
+        if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
+            self.image = self.game.turn_left_image
+            self.speed_x = -1
+        if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
+            self.image = self.game.player_img
+            self.speed_x = +1
+
+        self.rect.centerx += self.speed_x
+        self.rect.centery += self.speed_y
+
+
 
 
     @property
@@ -58,5 +61,4 @@ class PacMan(pygame.sprite.Sprite):
             "angle": 0,
             "width": self.rect.width,
             "height": self.rect.height,
-            "color": self.color
         }

@@ -11,23 +11,26 @@ def move():
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.transform.scale(blue_ghost_d, (20, 25))
-        self.rect = self.image.get_rect()
+    def __init__(self, game, x, y):
+        self._layer = GHOST_LAYER
+        self.groups = game.all_sprites, game.ghosts
+        pygame.sprite.Sprite.__init__(self, self.groups)
+        self.image = game.blue_ghost_d
+        self.rect = self.image.get_rect(center=(x, y))
         self.last_move = pygame.time.get_ticks()
         self.move_delay = 100
-        self.origin_img = pygame.transform.scale(blue_ghost_d, (20, 25))
-        self.up_img = pygame.transform.scale(blue_ghost_u, (20, 25))
-        self.right_img = pygame.transform.scale(blue_ghost_r, (20, 25))
-        self.left_image = pygame.transform.scale(blue_ghost_l, (20, 25))
+        self.origin_img = game.blue_ghost_d
+        self.up_img = game.blue_ghost_u
+        self.right_img = game.blue_ghost_r
+        self.left_image = game.blue_ghost_l
         self.count_time = 0
+        self.game = game
 
     def blue_module(self):
-        self.origin_img = pygame.transform.scale(blue_ghost_d, (20, 25))
-        self.up_img = pygame.transform.scale(blue_ghost_u, (20, 25))
-        self.right_img = pygame.transform.scale(blue_ghost_r, (20, 25))
-        self.left_image = pygame.transform.scale(blue_ghost_l, (20, 25))
+        self.origin_img = self.game.blue_ghost_d
+        self.up_img = self.game.blue_ghost_u
+        self.right_img = self.game.blue_ghost_r
+        self.left_image = self.game.blue_ghost_l
         x_move = random.randrange(-3, 3)
         y_move = random.randrange(-3, 3)
         now = pygame.time.get_ticks()

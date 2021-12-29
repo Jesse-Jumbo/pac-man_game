@@ -3,14 +3,16 @@ from .Ghost import Ghost
 
 
 class PinkGhost(Ghost):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.transform.scale(pink_ghost_d, (20, 25))
-        self.rect.center = [(WIDTH/2), (HEIGHT/2+8)]
-        self.origin_img = pygame.transform.scale(pink_ghost_d, (20, 25))
-        self.up_img = pygame.transform.scale(pink_ghost_u, (20, 25))
-        self.right_img = pygame.transform.scale(pink_ghost_r, (20, 25))
-        self.left_image = pygame.transform.scale(pink_ghost_l, (20, 25))
+    def __init__(self, game, x, y):
+        super().__init__(game, x, y)
+        self.image = game.pink_ghost_d
+        self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
+        self.origin_img = game.pink_ghost_d
+        self.up_img = game.pink_ghost_u
+        self.right_img = game.pink_ghost_r
+        self.left_image = game.pink_ghost_l
+        self.game = game
 
     def update(self, *args, **kwargs) -> None:
         if 1 < self.count_time <= 20:
@@ -18,10 +20,10 @@ class PinkGhost(Ghost):
         elif self.count_time <= 40:
             self.scatter_model(WIDTH-180, 30)
         elif self.count_time == 60:
-            self.origin_img = pygame.transform.scale(pink_ghost_d, (20, 25))
-            self.up_img = pygame.transform.scale(pink_ghost_u, (20, 25))
-            self.right_img = pygame.transform.scale(pink_ghost_r, (20, 25))
-            self.left_image = pygame.transform.scale(pink_ghost_l, (20, 25))
+            self.origin_img = self.game.pink_ghost_d
+            self.up_img = self.game.pink_ghost_u
+            self.right_img = self.game.pink_ghost_r
+            self.left_image = self.game.pink_ghost_l
             self.count_time = 0
         else:
             self.blue_module()
