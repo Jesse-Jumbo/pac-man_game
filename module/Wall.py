@@ -3,8 +3,9 @@ from .setting import *
 
 class Wall(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = WALL_LAYER
         self.groups = game.all_sprites, game.walls
-        super().__init__(self, self.groups)
+        super().__init__(self.groups)
         self.game = game
         self.image = pygame.Surface((TILE_SIZE, TILE_SIZE))
         self.image.fill(CYAN_BLUE)

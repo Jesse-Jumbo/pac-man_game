@@ -31,7 +31,7 @@ class RedGhost(Ghost):
         else:
             self.blue_module()
         self.count_time += 0.015625
-        print(self.count_time)
+        # print(self.count_time)
 
 
 

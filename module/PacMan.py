@@ -1,4 +1,7 @@
+import pygame.math
+
 from .setting import *
+
 
 class PacMan(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -8,17 +11,26 @@ class PacMan(pygame.sprite.Sprite):
         self.game = game
         self.image = game.player_img
         self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
-        self.speed_x = 0
-        self.speed_y = 0
+        self.rect.x = x
+        self.rect.y = y
         self.origin_img = game.player_img
         self.up_img = game.up_img
         self.down_img = game.down_img
         self.turn_left_image = game.turn_left_image
+        self.vel = pygame.math.Vector2(0, 0)
+        self.pos = pygame.math.Vector2(x, y) * TILE_SIZE
 
     def update(self):
         self.get_keys()
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.pos += self.vel * self.game.dt
+
+        self.rect.centerx = self.pos.x
+        self.collide_with_walls('x')
+        self.rect.centery = self.pos.y
+        self.collide_with_walls('y')
+
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
@@ -29,24 +41,45 @@ class PacMan(pygame.sprite.Sprite):
             self.rect.top = 0
 
     def get_keys(self):
-        self.speed_x = 0
-        self.speed_y = 0
+        self.vel = pygame.math.Vector2(0, 0)
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
             self.image = self.game.up_img
-            self.speed_y = -1
+            self.vel.y = -PLAYER_SPEED
         if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
             self.image = self.game.down_img
-            self.speed_y = +1
+            self.vel.y = PLAYER_SPEED
         if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.image = self.game.turn_left_image
-            self.speed_x = -1
+            self.vel.x = -PLAYER_SPEED
         if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
             self.image = self.game.player_img
-            self.speed_x = +1
+            self.vel.x = PLAYER_SPEED
+        # to slow the speed when move to corner
+        if self.vel.x != 0 and self.vel.y != 0:
+            self.vel *= 0.7071
 
-        self.rect.centerx += self.speed_x
-        self.rect.centery += self.speed_y
+
+
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                if self.vel.x > 0:
+                    self.pos.x = hits[0].rect.left - self.rect.width / 2.0
+                if self.vel.x < 0:
+                    self.pos.x = hits[0].rect.right + self.rect.width / 2.0
+                self.vel.x = 0
+                self.rect.centerx = self.pos.x
+        if dir == 'y':
+            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                if self.vel.y > 0:
+                    self.pos.y = hits[0].rect.top - self.rect.height / 2.0
+                if self.vel.y < 0:
+                    self.pos.y = hits[0].rect.bottom + self.rect.height / 2.0
+                self.vel.y = 0
+                self.rect.centery = self.pos.y
 
 
 

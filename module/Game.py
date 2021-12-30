@@ -11,7 +11,8 @@ from .GreenGhost import GreenGhost
 from .PinkGhost import PinkGhost
 from .OrangeGhost import OrangeGhost
 from .draw_score import draw_score
-from .Ghost import Ghost
+from .Wall import Wall
+from .Map import Map
 
 
 class Game:
@@ -19,7 +20,6 @@ class Game:
         pygame.init()
         pygame.mixer.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
-        pygame.display.set_caption(TITLE)
         self.clock = pygame.time.Clock()
         # pygame.key.set_repeat(500, 100)
         self.load_data()
@@ -31,16 +31,20 @@ class Game:
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, '../img')
         snd_dir = path.join(game_dir, '../snd')
+        map_dir = path.join(game_dir, '../map')
         '''font'''
         self.font_name = pygame.font.match_font('arial')
+        '''load map'''
+        for i in range(1):
+            self.map = Map(path.join(map_dir, f'map_{i}.txt'))
 
         """img"""
         """player"""
-        self.player_img = pygame.image.load(path.join(img_dir, "pac.png")).convert_alpha()
-        self.player_img = pygame.transform.scale(self.player_img, (20, 20))
-        self.up_img = pygame.transform.scale((pygame.transform.rotate(self.player_img, 90)), (20, 20))
-        self.down_img = pygame.transform.scale((pygame.transform.rotate(self.player_img, 270)), (20, 20))
-        self.turn_left_image = pygame.transform.scale((pygame.transform.flip(self.player_img, True, False)), (20, 20))
+        self.player_img = pygame.image.load(path.join(img_dir, PLAYER_IMG)).convert_alpha()
+        self.player_img = pygame.transform.scale(self.player_img, (TILE_SIZE, TILE_SIZE))
+        self.up_img = pygame.transform.scale((pygame.transform.rotate(self.player_img, 90)), (TILE_SIZE, TILE_SIZE))
+        self.down_img = pygame.transform.scale((pygame.transform.rotate(self.player_img, 270)), (TILE_SIZE, TILE_SIZE))
+        self.turn_left_image = pygame.transform.scale((pygame.transform.flip(self.player_img, True, False)), (TILE_SIZE, TILE_SIZE))
         """dot"""
         self.small_dot_img = pygame.image.load(path.join(img_dir, "dot.png")).convert_alpha()
         self.big_dot_img = pygame.image.load(path.join(img_dir, "point.png")).convert_alpha()
@@ -51,46 +55,46 @@ class Game:
         self.blue_ghost_u = pygame.image.load(path.join(img_dir, "blue_ghost_u.png")).convert_alpha()
         self.blue_ghost_r = pygame.image.load(path.join(img_dir, "blue_ghost_r.png")).convert_alpha()
         self.blue_ghost_l = pygame.image.load(path.join(img_dir, "blue_ghost_l.png")).convert_alpha()
-        self.blue_ghost_d = pygame.transform.scale(self.blue_ghost_d, (20, 25))
-        self.blue_ghost_u = pygame.transform.scale(self.blue_ghost_u, (20, 25))
-        self.blue_ghost_r = pygame.transform.scale(self.blue_ghost_r, (20, 25))
-        self.blue_ghost_l = pygame.transform.scale(self.blue_ghost_l, (20, 25))
+        self.blue_ghost_d = pygame.transform.scale(self.blue_ghost_d, (TILE_SIZE, TILE_SIZE))
+        self.blue_ghost_u = pygame.transform.scale(self.blue_ghost_u, (TILE_SIZE, TILE_SIZE))
+        self.blue_ghost_r = pygame.transform.scale(self.blue_ghost_r, (TILE_SIZE, TILE_SIZE))
+        self.blue_ghost_l = pygame.transform.scale(self.blue_ghost_l, (TILE_SIZE, TILE_SIZE))
         """green ghost"""
         self.green_ghost_d = pygame.image.load(path.join(img_dir, "green_ghost_d.png")).convert_alpha()
         self.green_ghost_u = pygame.image.load(path.join(img_dir, "green_ghost_u.png")).convert_alpha()
         self.green_ghost_r = pygame.image.load(path.join(img_dir, "green_ghost_r.png")).convert_alpha()
         self.green_ghost_l = pygame.image.load(path.join(img_dir, "green_ghost_l.png")).convert_alpha()
-        self.green_ghost_d = pygame.transform.scale(self.green_ghost_d, (20, 25))
-        self.green_ghost_u = pygame.transform.scale(self.green_ghost_u, (20, 25))
-        self.green_ghost_r = pygame.transform.scale(self.green_ghost_r, (20, 25))
-        self.green_ghost_l = pygame.transform.scale(self.green_ghost_l, (20, 25))
+        self.green_ghost_d = pygame.transform.scale(self.green_ghost_d, (TILE_SIZE, TILE_SIZE))
+        self.green_ghost_u = pygame.transform.scale(self.green_ghost_u, (TILE_SIZE, TILE_SIZE))
+        self.green_ghost_r = pygame.transform.scale(self.green_ghost_r, (TILE_SIZE, TILE_SIZE))
+        self.green_ghost_l = pygame.transform.scale(self.green_ghost_l, (TILE_SIZE, TILE_SIZE))
         """red ghost"""
         self.red_ghost_d = pygame.image.load(path.join(img_dir, "red_ghost_d.png")).convert_alpha()
         self.red_ghost_u = pygame.image.load(path.join(img_dir, "red_ghost_u.png")).convert_alpha()
         self.red_ghost_r = pygame.image.load(path.join(img_dir, "red_ghost_r.png")).convert_alpha()
         self.red_ghost_l = pygame.image.load(path.join(img_dir, "red_ghost_l.png")).convert_alpha()
-        self.red_ghost_d = pygame.transform.scale(self.red_ghost_d, (20, 25))
-        self.red_ghost_u = pygame.transform.scale(self.red_ghost_u, (20, 25))
-        self.red_ghost_r = pygame.transform.scale(self.red_ghost_r, (20, 25))
-        self.red_ghost_l = pygame.transform.scale(self.red_ghost_l, (20, 25))
+        self.red_ghost_d = pygame.transform.scale(self.red_ghost_d, (TILE_SIZE, TILE_SIZE))
+        self.red_ghost_u = pygame.transform.scale(self.red_ghost_u, (TILE_SIZE, TILE_SIZE))
+        self.red_ghost_r = pygame.transform.scale(self.red_ghost_r, (TILE_SIZE, TILE_SIZE))
+        self.red_ghost_l = pygame.transform.scale(self.red_ghost_l, (TILE_SIZE, TILE_SIZE))
         """pink ghost"""
         self.pink_ghost_u = pygame.image.load(path.join(img_dir, "pink_ghost_u.png")).convert_alpha()
         self.pink_ghost_d = pygame.image.load(path.join(img_dir, "pink_ghost_d.png")).convert_alpha()
         self.pink_ghost_r = pygame.image.load(path.join(img_dir, "pink_ghost_r.png")).convert_alpha()
         self.pink_ghost_l = pygame.image.load(path.join(img_dir, "pink_ghost_l.png")).convert_alpha()
-        self.pink_ghost_d = pygame.transform.scale(self.pink_ghost_d, (20, 25))
-        self.pink_ghost_u = pygame.transform.scale(self.pink_ghost_u, (20, 25))
-        self.pink_ghost_r = pygame.transform.scale(self.pink_ghost_r, (20, 25))
-        self.pink_ghost_l = pygame.transform.scale(self.pink_ghost_l, (20, 25))
+        self.pink_ghost_d = pygame.transform.scale(self.pink_ghost_d, (TILE_SIZE, TILE_SIZE))
+        self.pink_ghost_u = pygame.transform.scale(self.pink_ghost_u, (TILE_SIZE, TILE_SIZE))
+        self.pink_ghost_r = pygame.transform.scale(self.pink_ghost_r, (TILE_SIZE, TILE_SIZE))
+        self.pink_ghost_l = pygame.transform.scale(self.pink_ghost_l, (TILE_SIZE, TILE_SIZE))
         """orange ghost"""
         self.orange_ghost_u = pygame.image.load(path.join(img_dir, "orange_ghost_u.png")).convert_alpha()
         self.orange_ghost_d = pygame.image.load(path.join(img_dir, "orange_ghost_d.png")).convert_alpha()
         self.orange_ghost_r = pygame.image.load(path.join(img_dir, "orange_ghost_r.png")).convert_alpha()
         self.orange_ghost_l = pygame.image.load(path.join(img_dir, "orange_ghost_l.png")).convert_alpha()
-        self.orange_ghost_d = pygame.transform.scale(self.orange_ghost_d, (20, 25))
-        self.orange_ghost_u = pygame.transform.scale(self.orange_ghost_u, (20, 25))
-        self.orange_ghost_r = pygame.transform.scale(self.orange_ghost_r, (20, 25))
-        self.orange_ghost_l = pygame.transform.scale(self.orange_ghost_l, (20, 25))
+        self.orange_ghost_d = pygame.transform.scale(self.orange_ghost_d, (TILE_SIZE, TILE_SIZE))
+        self.orange_ghost_u = pygame.transform.scale(self.orange_ghost_u, (TILE_SIZE, TILE_SIZE))
+        self.orange_ghost_r = pygame.transform.scale(self.orange_ghost_r, (TILE_SIZE, TILE_SIZE))
+        self.orange_ghost_l = pygame.transform.scale(self.orange_ghost_l, (TILE_SIZE, TILE_SIZE))
 
     def new(self):
         # initialize all variables and so all the setup for a new game
@@ -99,7 +103,6 @@ class Game:
         self.ghosts = pygame.sprite.Group()
         self.dots = pygame.sprite.Group()
         self.points = pygame.sprite.Group()
-        self.player = PacMan(self, WIDTH / 2, HEIGHT - 50)
         #
         # self.all_sprites.add(self.player)
         # #
@@ -122,7 +125,14 @@ class Game:
         PinkGhost(self, WIDTH/2, HEIGHT/2+8)
         #
         OrangeGhost(self, WIDTH/2+20, HEIGHT/2+8)
-
+        # Wall
+        for row, tiles in enumerate(self.map.map_data):
+            for col, tile in enumerate(tiles):
+                if tile == '1':
+                    wall = Wall(self, col, row)
+                    self.walls.add(wall)
+                if tile == 'p':
+                    self.player = PacMan(self, col, row)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -159,12 +169,14 @@ class Game:
             pygame.draw.line(self.window, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
+        pygame.display.set_caption(TITLE+f"{(self.clock.get_fps())}")
         self.window.fill(BLACK)
         self.draw_grid()
         if len(self.dots) is 0:
             self.window.fill(CYAN_BLUE)
         self.score_draw = draw_score(self, self.window, str(self.score), 30, WIDTH / 2, 10)
-        self.all_sprites.draw(self.window)
+        for sprite in self.all_sprites:
+            self.window.blit(sprite.image, sprite.rect)
         pygame.display.flip()
 
     def events(self):
