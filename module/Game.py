@@ -2,6 +2,7 @@ import sys
 
 import pygame.event
 
+from .Obstacle import Obstacle
 from .TiledMap import TiledMap
 from .setting import *
 from .PacMan import PacMan
@@ -123,14 +124,6 @@ class Game:
         #
         Point(self, WIDTH - 30, HEIGHT - 30)
         #
-        #
-        RedGhost(self, WIDTH/2, HEIGHT/2-17.5)
-        #
-        GreenGhost(self, WIDTH/2-20, HEIGHT/2+8)
-        #
-        PinkGhost(self, WIDTH/2, HEIGHT/2+8)
-        #
-        OrangeGhost(self, WIDTH/2+20, HEIGHT/2+8)
         # Wall
         # for row, tiles in enumerate(self.map.map_data):
         #     for col, tile in enumerate(tiles):
@@ -139,7 +132,21 @@ class Game:
         #             self.walls.add(wall)
         #         if tile == 'p':
         #             self.player = PacMan(self, col, row)
-        self.player = PacMan(self, 5, 5)
+        for tile_object in self.map.tmxdata.objects:
+            if tile_object.name == 'player':
+                self.player = PacMan(self, tile_object.x, tile_object.y)
+            if tile_object.name == 'wall':
+                Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+            if tile_object.name == 'red_ghost':
+                RedGhost(self, tile_object.x, tile_object.y)
+            if tile_object.name == 'green_ghost':
+                GreenGhost(self, tile_object.x, tile_object.y)
+            if tile_object.name == 'pink_ghost':
+                PinkGhost(self, tile_object.x, tile_object.y)
+            if tile_object.name == 'orange_ghost':
+                OrangeGhost(self, tile_object.x, tile_object.y)
+        self.draw_debug = False
+
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -185,13 +192,21 @@ class Game:
         self.score_draw = draw_score(self, self.window, str(self.score), 30, WIDTH / 2, 10)
         for sprite in self.all_sprites:
             self.window.blit(sprite.image, sprite.rect)
+            if self.draw_debug:
+                pygame.draw.rect(self.window, CYAN_BLUE, sprite.rect, 1)
+        if self.draw_debug:
+            for wall in self.walls:
+                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
         pygame.display.flip()
 
     def events(self):
         # catch all events here
-        for even in pygame.event.get():
-            if even.type == pygame.QUIT:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
                 self.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_h:
+                    self.draw_debug = not self.draw_debug
 
     def show_start_screen(self):
         pass

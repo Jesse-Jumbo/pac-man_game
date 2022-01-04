@@ -17,6 +17,7 @@ class Ghost(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.image = game.blue_ghost_d
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.hit_rect = GHOST_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
         self.pos = pygame.math.Vector2(x, y)

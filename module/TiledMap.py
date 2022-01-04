@@ -1,6 +1,5 @@
+import pygame
 import pytmx
-
-from .Game import *
 
 
 class TiledMap:
