@@ -7,7 +7,7 @@ class GreenGhost(Ghost):
         super().__init__(game, x, y)
         self.image = game.green_ghost_d
         self. rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.center = self.pos
         self.origin_img = game.green_ghost_d
         self.up_img = game.green_ghost_u
         self.right_img = game.green_ghost_r

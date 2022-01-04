@@ -16,7 +16,11 @@ class Ghost(pygame.sprite.Sprite):
         self.groups = game.all_sprites, game.ghosts
         pygame.sprite.Sprite.__init__(self, self.groups)
         self.image = game.blue_ghost_d
-        self.rect = self.image.get_rect(center=(x, y))
+        self.rect = self.image.get_rect()
+        self.hit_rect = GHOST_HIT_RECT.copy()
+        self.hit_rect.center = self.rect.center
+        self.pos = pygame.math.Vector2(x, y)
+        self.rect.center = self.pos
         self.last_move = pygame.time.get_ticks()
         self.move_delay = 100
         self.origin_img = game.blue_ghost_d
@@ -25,6 +29,8 @@ class Ghost(pygame.sprite.Sprite):
         self.left_image = game.blue_ghost_l
         self.count_time = 0
         self.game = game
+        self.rot = 0
+        self.vel = pygame.math.Vector2(0, 0)
 
     def blue_module(self):
         self.origin_img = self.game.blue_ghost_d

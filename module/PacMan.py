@@ -1,5 +1,6 @@
 import pygame.math
 
+from .collide_with_walls import collide_with_walls
 from .setting import *
 
 
@@ -27,9 +28,9 @@ class PacMan(pygame.sprite.Sprite):
         self.pos += self.vel * self.game.dt
 
         self.rect.centerx = self.pos.x
-        self.collide_with_walls('x')
+        collide_with_walls(self, self.game.walls, 'x')
         self.rect.centery = self.pos.y
-        self.collide_with_walls('y')
+        collide_with_walls(self, self.game.walls, 'y')
 
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
@@ -58,30 +59,6 @@ class PacMan(pygame.sprite.Sprite):
         # to slow the speed when move to corner
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
-
-
-
-    def collide_with_walls(self, dir):
-        if dir == 'x':
-            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
-            if hits:
-                if self.vel.x > 0:
-                    self.pos.x = hits[0].rect.left - self.rect.width / 2.0
-                if self.vel.x < 0:
-                    self.pos.x = hits[0].rect.right + self.rect.width / 2.0
-                self.vel.x = 0
-                self.rect.centerx = self.pos.x
-        if dir == 'y':
-            hits = pygame.sprite.spritecollide(self, self.game.walls, False)
-            if hits:
-                if self.vel.y > 0:
-                    self.pos.y = hits[0].rect.top - self.rect.height / 2.0
-                if self.vel.y < 0:
-                    self.pos.y = hits[0].rect.bottom + self.rect.height / 2.0
-                self.vel.y = 0
-                self.rect.centery = self.pos.y
-
-
 
 
     @property
