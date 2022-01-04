@@ -44,13 +44,14 @@ GRID_HEIGHT = HEIGHT/TILE_SIZE
 
 '''player setting'''
 PLAYER_SPEED = 100.0
-PLAYER_ROT_SPEED = 250.0
+# PLAYER_ROT_SPEED = 250.0
 PLAYER_IMG = "pac.png"
 PLAYRE_HIT_RECT = pygame.Rect(0, 0, 28, 28)
 
 '''ghost setting'''
-#TODO need to define hit rect in ghost with player collide
 GHOST_HIT_RECT = pygame.Rect(0, 0, 28, 28)
+AVOID_RADIUS = 50
+GHOST_SPEED = 90.0
 '''blue'''
 BLUE_GHOST_IMG = "blue_ghost_d.png"
 BLUE_GHOST_IMG_L = "blue_ghost_l.png"

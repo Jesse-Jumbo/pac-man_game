@@ -32,6 +32,8 @@ class Ghost(pygame.sprite.Sprite):
         self.game = game
         self.rot = 0
         self.vel = pygame.math.Vector2(0, 0)
+        self.acc = pygame.math.Vector2(0, 0)
+        self.speed = GHOST_SPEED
 
     def blue_module(self):
         self.origin_img = self.game.blue_ghost_d

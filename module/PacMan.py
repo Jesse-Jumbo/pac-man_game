@@ -49,13 +49,13 @@ class PacMan(pygame.sprite.Sprite):
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
             self.image = self.game.up_img
             self.vel.y = -PLAYER_SPEED
-        if keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
+        elif keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
             self.image = self.game.down_img
             self.vel.y = PLAYER_SPEED
-        if keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
+        elif keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.image = self.game.turn_left_image
             self.vel.x = -PLAYER_SPEED
-        if keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
+        elif keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
             self.image = self.game.player_img
             self.vel.x = PLAYER_SPEED
         # to slow the speed when move to corner

@@ -16,6 +16,8 @@ class RedGhost(Ghost):
 
     def update(self, *args, **kwargs) -> None:
         self.red_move()
+        self.rect.center = self.pos
+
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
@@ -58,6 +60,7 @@ class RedGhost(Ghost):
             self.pos.y += self.vel.y * self.game.dt
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
+
 
 
 

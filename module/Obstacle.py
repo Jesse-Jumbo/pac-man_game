@@ -3,7 +3,6 @@ from .setting import *
 
 class Obstacle(pygame.sprite.Sprite):
     def __init__(self, game, x, y, width, height):
-        # self._layer = OBJECT_LAYER
         self.groups = game.walls
         super().__init__(self.groups)
         self.game = game

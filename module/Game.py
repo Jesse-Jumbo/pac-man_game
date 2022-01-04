@@ -4,6 +4,7 @@ import pygame.event
 
 from .Obstacle import Obstacle
 from .TiledMap import TiledMap
+from .draw_text import draw_text
 from .setting import *
 from .PacMan import PacMan
 from .Dot import Dot
@@ -12,7 +13,6 @@ from .RedGhost import RedGhost
 from .GreenGhost import GreenGhost
 from .PinkGhost import PinkGhost
 from .OrangeGhost import OrangeGhost
-from .draw_score import draw_score
 from .Wall import Wall
 from .Map import Map
 
@@ -36,6 +36,9 @@ class Game:
         map_dir = path.join(game_dir, '../maps')
         '''font'''
         self.font_name = pygame.font.match_font('arial')
+        '''stop window'''
+        self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
+        self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
         for i in range(1, 2):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
@@ -133,19 +136,22 @@ class Game:
         #         if tile == 'p':
         #             self.player = PacMan(self, col, row)
         for tile_object in self.map.tmxdata.objects:
+            obj_center = pygame.math.Vector2(tile_object.x + tile_object.width / 2,
+                                             tile_object.y + tile_object.height / 2)
             if tile_object.name == 'player':
-                self.player = PacMan(self, tile_object.x, tile_object.y)
+                self.player = PacMan(self, obj_center.x, obj_center.y)
             if tile_object.name == 'wall':
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             if tile_object.name == 'red_ghost':
-                RedGhost(self, tile_object.x, tile_object.y)
+                self.red_ghost = RedGhost(self, obj_center.x, obj_center.y)
             if tile_object.name == 'green_ghost':
-                GreenGhost(self, tile_object.x, tile_object.y)
+                GreenGhost(self, obj_center.x, obj_center.y)
             if tile_object.name == 'pink_ghost':
-                PinkGhost(self, tile_object.x, tile_object.y)
+                PinkGhost(self, obj_center.x, obj_center.y)
             if tile_object.name == 'orange_ghost':
-                OrangeGhost(self, tile_object.x, tile_object.y)
+                OrangeGhost(self, obj_center.x, obj_center.y)
         self.draw_debug = False
+        self.paused = False
 
 
     def run(self):
@@ -154,7 +160,8 @@ class Game:
         while self.runing:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
-            self.update()
+            if not self.paused:
+                self.update()
             self.draw()
 
     def quit(self):
@@ -189,7 +196,7 @@ class Game:
         # self.draw_grid()
         if len(self.dots) is 0:
             self.window.fill(CYAN_BLUE)
-        self.score_draw = draw_score(self, self.window, str(self.score), 30, WIDTH / 2, 10)
+        draw_text(self, self.window, str(self.score),30, WHITE,  WIDTH / 2, 10, "n")
         for sprite in self.all_sprites:
             self.window.blit(sprite.image, sprite.rect)
             if self.draw_debug:
@@ -197,6 +204,14 @@ class Game:
         if self.draw_debug:
             for wall in self.walls:
                 pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
+            for ghost in self.ghosts:
+                pygame.draw.rect(self.window, CYAN_BLUE, ghost.hit_rect, 1)
+            pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
+            pygame.draw.circle(self.window, CYAN_BLUE, self.red_ghost.rect.center, AVOID_RADIUS, 1)
+
+        if self.paused:
+            self.window.blit(self.dim_window, (0, 0))
+            draw_text(self, self.window, "PAUSED", 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
         pygame.display.flip()
 
     def events(self):
@@ -207,6 +222,8 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_h:
                     self.draw_debug = not self.draw_debug
+                if event.key == pygame.K_p:
+                    self.paused = not self.paused
 
     def show_start_screen(self):
         pass
