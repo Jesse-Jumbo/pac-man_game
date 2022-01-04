@@ -9,9 +9,7 @@ from os import path
 
 '''window'''
 WIDTH = 1024
-# WIDTH = 200
 HEIGHT = 768
-# HEIGHT = 200
 FPS = 64
 
 '''color'''

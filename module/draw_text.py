@@ -3,8 +3,8 @@ import pygame.font
 from .setting import *
 
 
-def draw_text(game, surface, text, size, color, x, y, align="nw"):
-    font = pygame.font.SysFont(game.font_name, size, bold=True)
+def draw_text(surface, text, font_name, size, color, x, y, align="nw"):
+    font = pygame.font.SysFont(font_name, size, bold=True)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()
     if align == "nw":

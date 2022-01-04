@@ -11,4 +11,3 @@ game.show_start_screen()
 while True:
     game.new()
     game.run()
-    game.show_go_screen()

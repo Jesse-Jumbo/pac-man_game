@@ -27,6 +27,7 @@ class Game:
         self.load_data()
 
         self.score = 0
+        self.show_start_screen()
 
     def load_data(self):
         """folder path"""
@@ -156,8 +157,8 @@ class Game:
 
     def run(self):
         # game loop - set self.playing = False to end the game
-        self.runing = True
-        while self.runing:
+        self.playing = True
+        while self.playing:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             if not self.paused:
@@ -171,9 +172,14 @@ class Game:
     def update(self):
         # update potion of the game loop
         self.all_sprites.update()
+        # game over?
+        if len(self.dots) == 0 and self.dt != 0:
+            self.playing = False
+            self.show_win_screen()
         hits = pygame.sprite.spritecollide(self.player, self.ghosts, False)
         for hit in hits:
-            self.runing = False
+            self.playing = False
+            self.show_go_screen()
 
         hits = pygame.sprite.spritecollide(self.player, self.dots, True)
         for hit in hits:
@@ -194,9 +200,7 @@ class Game:
         # self.window.fill(BG_COLOR)
         self.window.blit(self.map_img, self.map_rect)
         # self.draw_grid()
-        if len(self.dots) is 0:
-            self.window.fill(CYAN_BLUE)
-        draw_text(self, self.window, str(self.score),30, WHITE,  WIDTH / 2, 10, "n")
+        draw_text(self.window, str(self.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
         for sprite in self.all_sprites:
             self.window.blit(sprite.image, sprite.rect)
             if self.draw_debug:
@@ -211,7 +215,7 @@ class Game:
 
         if self.paused:
             self.window.blit(self.dim_window, (0, 0))
-            draw_text(self, self.window, "PAUSED", 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
+            draw_text(self.window, "PAUSED", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
         pygame.display.flip()
 
     def events(self):
@@ -225,10 +229,33 @@ class Game:
                 if event.key == pygame.K_p:
                     self.paused = not self.paused
 
-    def show_start_screen(self):
-        pass
+    def show_start_screen(self, status="start"):
+        self.window.fill(WHITE)
+        draw_text(self.window, "PacMan!", self.font_name, 100, DARKGREY, WIDTH / 2, HEIGHT / 2, "center")
+        if status == "again":
+            draw_text(self.window, "Press a key to start", self.font_name, 20, BLACK, WIDTH / 2, HEIGHT - 50, "center")
+        else:
+            draw_text(self.window, "Press a key twice to start", self.font_name, 20, BLACK, WIDTH / 2, HEIGHT - 50, "center")
+
+        pygame.display.flip()
+        self.wait_for_key()
+
+    def show_win_screen(self):
+        self.window.blit(self.dim_window, (0, 0))
+        draw_text(self.window, "YOU WIN", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2 - 100, "center")
+        draw_text(self.window, f"Your score:{self.score}", self.font_name, 80, WHITE, WIDTH / 2, HEIGHT / 2 , "center")
+        draw_text(self.window, "Press a key to start again", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
+
+        pygame.display.flip()
+        self.wait_for_key()
+        self.show_start_screen("again")
+
 
     def show_go_screen(self):
+        self.window.blit(self.dim_window, (0, 0))
+        draw_text(self.window, "GAME OVER", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
+        draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
+
         pygame.display.flip()
         self.wait_for_key()
 
