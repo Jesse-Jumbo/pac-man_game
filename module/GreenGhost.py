@@ -1,3 +1,4 @@
+from .collide_with_walls import collide_with_walls
 from .settings import *
 from .Ghost import Ghost
 
@@ -13,6 +14,11 @@ class GreenGhost(Ghost):
 
     def update(self, *args, **kwargs) -> None:
         self.blue_module()
+        self.hit_rect.centerx = self.pos.x
+        collide_with_walls(self, self.game.walls, 'x')
+        self.hit_rect.centery = self.pos.y
+        collide_with_walls(self, self.game.walls, 'y')
+        self.rect.center = self.hit_rect.center
         # if 1 < self.count_time <= 20:
         #     self.move(30, HEIGHT-180)
         # elif self.count_time <= 40:

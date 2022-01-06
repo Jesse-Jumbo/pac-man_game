@@ -35,34 +35,37 @@ class Ghost(pygame.sprite.Sprite):
         self.acc = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
         self.target_pos = pygame.math.Vector2(0, 0)
+        self.bule_limit = 10000
+
 
     def blue_module(self):
-        x_move = random.randrange(-3, 3)
-        y_move = random.randrange(-3, 3)
         now = pygame.time.get_ticks()
-        if now - self.last_move > self.move_delay:
-            self.last_move = now
-            if self.rect.right >= WIDTH or self.rect.left <= 0:
-                x_move *= -1
-            if self.rect.top <= 0 or self.rect.bottom >= HEIGHT:
-                y_move *= -1
-            if abs(x_move) > abs(y_move):
-                if x_move >= 0:
-                    self.image = self.right_img
-                else:
-                    self.image = self.left_image
-            else:
-                if y_move >= 0:
-                    self.image = self.origin_img
-                else:
-                    self.image = self.up_img
-            if x_move > y_move:
-                self.rect.centerx += x_move
-            elif y_move > x_move:
-                self.rect.centery += y_move
-            else:
-                self.rect.centerx += x_move
-                self.rect.centery += y_move
+        if now - self.game.blue_time > self.bule_limit:
+            self.game.is_blue = False
+        self.origin_img = self.game.blue_ghost_images['down']
+        self.up_img = self.game.blue_ghost_images['up']
+        self.right_img = self.game.blue_ghost_images['right']
+        self.left_image = self.game.blue_ghost_images['left']
+        self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
+        if -45 <= self.rot < 45:
+            self.image = self.right_img
+            self.vel.x = -(GHOST_SPEED - 10)
+            self.pos.x += self.vel.x * self.game.dt
+        elif 45 <= self.rot < 135:
+            self.image = self.up_img
+            self.vel.y = GHOST_SPEED - 10
+            self.pos.y += self.vel.y * self.game.dt
+        elif -135 >= self.rot or 180 >= self.rot >= 135:
+            self.image = self.left_image
+            self.vel.x = GHOST_SPEED - 10
+            self.pos.x += self.vel.x * self.game.dt
+        else:
+            self.image = self.origin_img
+            self.vel.y = -(GHOST_SPEED - 10)
+            self.pos.y += self.vel.y * self.game.dt
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+
 
     def move(self, x, y):
         if self.rect.centerx != x:

@@ -25,6 +25,7 @@ class Game:
         self.clock = pygame.time.Clock()
         # pygame.key.set_repeat(500, 100)
         self.load_data()
+        self.blue_time = pygame.time.get_ticks()
 
         self.score = 0
         self.show_start_screen()
@@ -140,6 +141,8 @@ class Game:
                 Point(self, obj_center.x, obj_center.y)
         self.draw_debug = False
         self.paused = False
+        self.is_blue = False
+
 
 
     def run(self):
@@ -171,6 +174,8 @@ class Game:
         hits = pygame.sprite.spritecollide(self.player, self.points, True)
         for hit in hits:
             self.score += 50
+            self.is_blue = True
+            self.blue_time = pygame.time.get_ticks()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE_SIZE):

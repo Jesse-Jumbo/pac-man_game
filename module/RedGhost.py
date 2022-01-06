@@ -15,7 +15,10 @@ class RedGhost(Ghost):
         self.left_image = game.red_ghost_images['left']
 
     def update(self, *args, **kwargs) -> None:
-        self.red_move()
+        if self.game.is_blue:
+            self.blue_module()
+        else:
+            self.red_move()
 
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
@@ -40,6 +43,10 @@ class RedGhost(Ghost):
         # print(self.count_time)
 
     def red_move(self):
+        self.origin_img = self.game.red_ghost_images['down']
+        self.up_img = self.game.red_ghost_images['up']
+        self.right_img = self.game.red_ghost_images['right']
+        self.left_image = self.game.red_ghost_images['left']
         self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
         if -45 <= self.rot < 45:
             self.image = self.right_img

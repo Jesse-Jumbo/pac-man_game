@@ -13,7 +13,10 @@ class PinkGhost(Ghost):
         self.left_image = game.pink_ghost_images['left']
 
     def update(self, *args, **kwargs) -> None:
-        self.pink_move()
+        if self.game.is_blue:
+            self.blue_module()
+        else:
+            self.pink_move()
 
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
@@ -21,6 +24,10 @@ class PinkGhost(Ghost):
         collide_with_walls(self, self.game.walls, 'y')
 
     def pink_move(self):
+        self.origin_img = self.game.pink_ghost_images['down']
+        self.up_img = self.game.pink_ghost_images['up']
+        self.right_img = self.game.pink_ghost_images['right']
+        self.left_image = self.game.pink_ghost_images['left']
         self.rot = (self.game.player.front_pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
         if -45 <= self.rot < 45:
             self.image = self.right_img

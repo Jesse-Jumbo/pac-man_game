@@ -15,12 +15,20 @@ class OrangeGhost(Ghost):
         self.left_image = game.orange_ghost_images['left']
 
     def update(self, *args, **kwargs) -> None:
-        self.orange_move()
-        self.hit_rect.centerx = self.pos.x
-        self.hit_rect.centery = self.pos.y
+        if self.game.is_blue:
+            self.blue_module()
+        else:
+            self.orange_move()
         self.rect.center = self.hit_rect.center
-
+        self.hit_rect.centerx = self.pos.x
+        collide_with_walls(self, self.game.walls, 'x')
+        self.hit_rect.centery = self.pos.y
+        collide_with_walls(self, self.game.walls, 'y')
     def orange_move(self):
+        self.origin_img = self.game.orange_ghost_images['down']
+        self.up_img = self.game.orange_ghost_images['up']
+        self.right_img = self.game.orange_ghost_images['right']
+        self.left_image = self.game.orange_ghost_images['left']
         now = pygame.time.get_ticks()
         if now - self.last_move > self.move_delay:
             self.move_delay = random.randrange(5000, 10000)
