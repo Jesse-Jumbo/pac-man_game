@@ -1,6 +1,6 @@
 import pygame.draw
 
-from .setting import *
+from .settings import *
 
 class Dot(pygame.sprite.Sprite):
     def __init__(self, game):

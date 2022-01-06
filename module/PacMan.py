@@ -1,7 +1,7 @@
 import pygame.math
 
 from .collide_with_walls import collide_with_walls
-from .setting import *
+from .settings import *
 
 
 class PacMan(pygame.sprite.Sprite):
@@ -21,6 +21,7 @@ class PacMan(pygame.sprite.Sprite):
         self.up_img = game.up_img
         self.down_img = game.down_img
         self.turn_left_image = game.turn_left_image
+        self.front_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
 
     def update(self):
         self.get_keys()
@@ -29,9 +30,9 @@ class PacMan(pygame.sprite.Sprite):
         self.pos += self.vel * self.game.dt
 
         self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
+        # collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
+        # collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
 
         if self.rect.right > WIDTH:
@@ -49,15 +50,19 @@ class PacMan(pygame.sprite.Sprite):
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
             self.image = self.game.up_img
             self.vel.y = -PLAYER_SPEED
+            self.front_pos = (self.rect.centerx, self.rect.top - TILE_SIZE)
         elif keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
             self.image = self.game.down_img
             self.vel.y = PLAYER_SPEED
+            self.front_pos = (self.rect.centerx, self.rect.bottom + TILE_SIZE)
         elif keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
             self.image = self.game.turn_left_image
             self.vel.x = -PLAYER_SPEED
+            self.front_pos = (self.rect.left - TILE_SIZE, self.rect.centery)
         elif keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
             self.image = self.game.player_img
             self.vel.x = PLAYER_SPEED
+            self.front_pos = (self.rect.right + TILE_SIZE, self.rect.centery)
         # to slow the speed when move to corner
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071

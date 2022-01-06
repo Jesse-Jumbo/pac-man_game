@@ -1,6 +1,6 @@
 import pygame.transform
 
-from .setting import *
+from .settings import *
 
 def move():
     x_move = random.randrange(-3, 3)

@@ -1,6 +1,6 @@
 import pygame.font
 
-from .setting import *
+from .settings import *
 
 
 def draw_text(surface, text, font_name, size, color, x, y, align="nw"):

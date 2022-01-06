@@ -5,7 +5,7 @@ import pygame.event
 from .Obstacle import Obstacle
 from .TiledMap import TiledMap
 from .draw_text import draw_text
-from .setting import *
+from .settings import *
 from .PacMan import PacMan
 from .Dot import Dot
 from .Point import Point
@@ -41,7 +41,7 @@ class Game:
         self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
-        for i in range(1, 2):
+        for i in range(2, 3):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
             self.map_img = self.map.make_map()
             self.map_rect = self.map_img.get_rect()
@@ -177,9 +177,9 @@ class Game:
             self.playing = False
             self.show_win_screen()
         hits = pygame.sprite.spritecollide(self.player, self.ghosts, False)
-        for hit in hits:
-            self.playing = False
-            self.show_go_screen()
+        # for hit in hits:
+            # self.playing = False
+            # self.show_go_screen()
 
         hits = pygame.sprite.spritecollide(self.player, self.dots, True)
         for hit in hits:
@@ -211,7 +211,7 @@ class Game:
             for ghost in self.ghosts:
                 pygame.draw.rect(self.window, CYAN_BLUE, ghost.hit_rect, 1)
             pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
-            pygame.draw.circle(self.window, CYAN_BLUE, self.red_ghost.rect.center, AVOID_RADIUS, 1)
+            # pygame.draw.circle(self.window, CYAN_BLUE, self.red_ghost.rect.center, AVOID_RADIUS, 1)
 
         if self.paused:
             self.window.blit(self.dim_window, (0, 0))

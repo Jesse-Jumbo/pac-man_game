@@ -1,5 +1,5 @@
 from .collide_hit_rect import collide_hit_rect
-from .setting import *
+from .settings import *
 
 
 def collide_with_walls(sprite, group, dir):

@@ -1,4 +1,4 @@
-from module.setting import *
+from module.settings import *
 from module.Game import Game
 
 

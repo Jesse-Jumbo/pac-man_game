@@ -1,4 +1,5 @@
-from .setting import *
+from .collide_with_walls import collide_with_walls
+from .settings import *
 from .Ghost import Ghost
 
 
@@ -12,16 +13,31 @@ class PinkGhost(Ghost):
         self.left_image = game.pink_ghost_l
 
     def update(self, *args, **kwargs) -> None:
-        if 1 < self.count_time <= 20:
-            self.move(WIDTH-180, 30)
-        elif self.count_time <= 40:
-            self.scatter_model(WIDTH-180, 30)
-        elif self.count_time == 60:
-            self.origin_img = self.game.pink_ghost_d
-            self.up_img = self.game.pink_ghost_u
-            self.right_img = self.game.pink_ghost_r
-            self.left_image = self.game.pink_ghost_l
-            self.count_time = 0
+        self.pink_move()
+
+        self.hit_rect.centerx = self.pos.x
+        # collide_with_walls(self, self.game.walls, 'x')
+        self.hit_rect.centery = self.pos.y
+        # collide_with_walls(self, self.game.walls, 'y')
+
+    def pink_move(self):
+        self.rot = (self.game.player.front_pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
+        print(self.rot)
+        if -45 <= self.rot < 45:
+            self.image = self.game.pink_ghost_r
+            self.vel.x = GHOST_SPEED
+            self.pos.x += self.vel.x * self.game.dt
+        elif 45 <= self.rot < 135:
+            self.image = self.game.pink_ghost_u
+            self.vel.y = -GHOST_SPEED
+            self.pos.y += self.vel.y * self.game.dt
+        elif -135 >= self.rot or 180 >= self.rot >= 135:
+            self.image = self.game.pink_ghost_l
+            self.vel.x = -GHOST_SPEED
+            self.pos.x += self.vel.x * self.game.dt
         else:
-            self.blue_module()
-        self.count_time += 0.015625
+            self.image = self.game.pink_ghost_d
+            self.vel.y = GHOST_SPEED
+            self.pos.y += self.vel.y * self.game.dt
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
