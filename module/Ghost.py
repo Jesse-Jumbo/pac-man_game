@@ -15,7 +15,7 @@ class Ghost(pygame.sprite.Sprite):
         self._layer = GHOST_LAYER
         self.groups = game.all_sprites, game.ghosts
         pygame.sprite.Sprite.__init__(self, self.groups)
-        self.image = game.blue_ghost_d
+        self.image = game.blue_ghost_images['down']
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = GHOST_HIT_RECT.copy()
@@ -24,22 +24,19 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.center = self.pos
         self.last_move = pygame.time.get_ticks()
         self.move_delay = 100
-        self.origin_img = game.blue_ghost_d
-        self.up_img = game.blue_ghost_u
-        self.right_img = game.blue_ghost_r
-        self.left_image = game.blue_ghost_l
+        self.origin_img = game.blue_ghost_images['down']
+        self.up_img = game.blue_ghost_images['up']
+        self.right_img = game.blue_ghost_images['right']
+        self.left_image = game.blue_ghost_images['left']
         self.count_time = 0
         self.game = game
         self.rot = 0
         self.vel = pygame.math.Vector2(0, 0)
         self.acc = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
+        self.target_pos = pygame.math.Vector2(0, 0)
 
     def blue_module(self):
-        self.origin_img = self.game.blue_ghost_d
-        self.up_img = self.game.blue_ghost_u
-        self.right_img = self.game.blue_ghost_r
-        self.left_image = self.game.blue_ghost_l
         x_move = random.randrange(-3, 3)
         y_move = random.randrange(-3, 3)
         now = pygame.time.get_ticks()

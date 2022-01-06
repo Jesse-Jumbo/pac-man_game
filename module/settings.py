@@ -43,37 +43,28 @@ GRID_HEIGHT = HEIGHT/TILE_SIZE
 '''player setting'''
 PLAYER_SPEED = 100.0
 # PLAYER_ROT_SPEED = 250.0
-PLAYER_IMG = "pac.png"
 PLAYRE_HIT_RECT = pygame.Rect(0, 0, 28, 28)
 
 '''ghost setting'''
 GHOST_HIT_RECT = pygame.Rect(0, 0, 28, 28)
 AVOID_RADIUS = 50
 GHOST_SPEED = 90.0
-'''blue'''
-BLUE_GHOST_IMG = "blue_ghost_d.png"
-BLUE_GHOST_IMG_L = "blue_ghost_l.png"
-BLUE_GHOST_IMG_R = "blue_ghost_r.png"
-BLUE_GHOST_IMG_U = "blue_ghost_u.png"
-'''orange'''
-ORANGE_GHOST_IMG = "orange_ghost_d.png"
-ORANGE_GHOST_IMG_L = "orange_ghost_l.png"
-ORANGE_GHOST_IMG_R = "orange_ghost_r.png"
-ORANGE_GHOST_IMG_U = "orange_ghost_u.png"
-'''pink'''
-PINK_GHOST_IMG = "pink_ghost_d.png"
-PINK_GHOST_IMG_L = "pink_ghost_l.png"
-PINK_GHOST_IMG_R = "pink_ghost_r.png"
-PINK_GHOST_IMG_U = "pink_ghost_u.png"
-'''red'''
-RED_GHOST_IMG = "red_ghost_d.png"
-RED_GHOST_IMG_L = "red_ghost_l.png"
-RED_GHOST_IMG_R = "red_ghost_r.png"
-RED_GHOST_IMG_U = "red_ghost_u.png"
-'''green'''
-GREEN_GHOST_IMG = "green_ghost_d.png"
-GREEN_GHOST_IMG_L = "green_ghost_l.png"
-GREEN_GHOST_IMG_R = "green_ghost_r.png"
-GREEN_GHOST_IMG_U = "green_ghost_u.png"
 '''wall setting'''
 WALL_IMG = "wall.png"
+
+'''img'''
+'''player'''
+PLAYER_IMG = "pac.png"
+'''blue'''
+blue_ghost_image_dic = {"down": "blue_ghost_d.png", "left": "blue_ghost_l.png", "right": "blue_ghost_r.png", "up": "blue_ghost_u.png"}
+'''orange'''
+orange_ghost_image_dic = {"down": "orange_ghost_d.png", "left": "orange_ghost_l.png", "right": "orange_ghost_r.png", "up": "orange_ghost_u.png"}
+'''pink'''
+pink_ghost_image_dic = {"down": "pink_ghost_d.png", "left": "pink_ghost_l.png", "right": "pink_ghost_r.png", "up": "pink_ghost_u.png"}
+'''red'''
+red_ghost_image_dic = {"down": "red_ghost_d.png", "left": "red_ghost_l.png", "right": "red_ghost_r.png", "up": "red_ghost_u.png"}
+'''green'''
+green_ghost_image_dic = {"down": "green_ghost_d.png", "left": "green_ghost_l.png", "right": "green_ghost_r.png", "up": "green_ghost_u.png"}
+'''dot'''
+DOT_IMG = "dot.png"
+POINT_IMG = "point.png"

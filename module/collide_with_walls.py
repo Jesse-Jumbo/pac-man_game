@@ -21,3 +21,9 @@ def collide_with_walls(sprite, group, dir):
                 sprite.pos.y = hits[0].rect.bottom + sprite.hit_rect.height / 2
             sprite.vel.y = 0
             sprite.hit_rect.centery = sprite.pos.y
+
+    if dir == 'ghost':
+        hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        if hits:
+            sprite.game.playing = False
+            sprite.game.show_go_screen()
