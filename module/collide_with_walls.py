@@ -30,5 +30,5 @@ def collide_with_walls(sprite, group, dir):
     if dir == 'wall':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
-            sprite.rect.x = random.randint(0, WIDTH - TILE_SIZE)
-            sprite.rect.y = random.randint(0, HEIGHT - TILE_SIZE)
+            sprite.rect.x = random.randint(0 + TILE_SIZE, WIDTH - TILE_SIZE)
+            sprite.rect.y = random.randint(0 + TILE_SIZE, HEIGHT - TILE_SIZE)

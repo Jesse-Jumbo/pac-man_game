@@ -50,19 +50,19 @@ class Ghost(pygame.sprite.Sprite):
         self.left_image = self.game.blue_ghost_images['left']
         self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
         if -45 <= self.rot < 45:
-            self.image = self.right_img
+            self.image = self.left_image
             self.vel.x = -(GHOST_SPEED - 10)
             self.pos.x += self.vel.x * self.game.dt
         elif 45 <= self.rot < 135:
-            self.image = self.up_img
+            self.image = self.origin_img
             self.vel.y = GHOST_SPEED - 10
             self.pos.y += self.vel.y * self.game.dt
         elif -135 >= self.rot or 180 >= self.rot >= 135:
-            self.image = self.left_image
+            self.image = self.right_img
             self.vel.x = GHOST_SPEED - 10
             self.pos.x += self.vel.x * self.game.dt
         else:
-            self.image = self.origin_img
+            self.image = self.up_img
             self.vel.y = -(GHOST_SPEED - 10)
             self.pos.y += self.vel.y * self.game.dt
         self.rect = self.image.get_rect()

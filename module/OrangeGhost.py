@@ -33,8 +33,8 @@ class OrangeGhost(Ghost):
         if now - self.last_move > self.move_delay:
             self.move_delay = random.randrange(5000, 10000)
             self.last_move = now
-            self.target_pos.x = random.randrange(0, WIDTH)
-            self.target_pos.y = random.randrange(0, HEIGHT)
+            self.target_pos.x = random.randrange(0+TILE_SIZE, WIDTH-TILE_SIZE)
+            self.target_pos.y = random.randrange(0+TILE_SIZE, HEIGHT-TILE_SIZE)
             self.rot = (self.target_pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
             if -45 <= self.rot < 45:
                 self.image = self.right_img

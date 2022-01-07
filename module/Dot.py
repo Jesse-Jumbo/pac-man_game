@@ -13,9 +13,9 @@ class Dot(pygame.sprite.Sprite):
         self.image = game.small_dot_img
         self.rect = self.image.get_rect()
         self.hit_rect = self.rect
-        self.rect.x = random.randint(0, WIDTH - TILE_SIZE)
+        self.rect.x = random.randint(0+TILE_SIZE, WIDTH - TILE_SIZE)
         self.rect.x = 50
-        self.rect.y = random.randint(0, HEIGHT - TILE_SIZE)
+        self.rect.y = random.randint(0+TILE_SIZE, HEIGHT - TILE_SIZE)
         self.rect.y = 50
 
     def update(self) -> None:
