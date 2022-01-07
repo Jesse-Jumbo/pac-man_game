@@ -4,6 +4,7 @@ import pygame.event
 
 from .Obstacle import Obstacle
 from .TiledMap import TiledMap
+from .collide_with_walls import collide_with_walls
 from .draw_text import draw_text
 from .settings import *
 from .PacMan import PacMan
@@ -110,8 +111,10 @@ class Game:
         #
         # self.all_sprites.add(self.player)
         # #
-        for i in range(100):
-            Dot(self)
+        for i in dot_amount:
+            dot = Dot(self)
+            self.dots.add(dot)
+
         # #
         # Point(self, 30, 30)
         # #

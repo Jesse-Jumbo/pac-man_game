@@ -51,7 +51,8 @@ AVOID_RADIUS = 50
 GHOST_SPEED = 90.0
 '''wall setting'''
 WALL_IMG = "wall.png"
-
+'''dot setting'''
+dot_amount = range(100)
 '''img'''
 '''player'''
 # PLAYER_IMG = "pac.png"
