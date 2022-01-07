@@ -232,6 +232,7 @@ class Game:
                     self.paused = not self.paused
 
     def show_start_screen(self, status="start"):
+        self.music_play()
         self.window.fill(WHITE)
         draw_text(self.window, "PacMan!", self.font_name, 100, DARKGREY, WIDTH / 2, HEIGHT / 2, "center")
         if status == "again":
