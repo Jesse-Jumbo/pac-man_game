@@ -232,7 +232,6 @@ class Game:
                     self.paused = not self.paused
 
     def show_start_screen(self, status="start"):
-        self.music_play()
         self.window.fill(WHITE)
         draw_text(self.window, "PacMan!", self.font_name, 100, DARKGREY, WIDTH / 2, HEIGHT / 2, "center")
         if status == "again":
@@ -244,8 +243,6 @@ class Game:
         self.wait_for_key()
 
     def show_win_screen(self):
-        self.danger = False
-        self.music_play()
         self.window.blit(self.dim_window, (0, 0))
         draw_text(self.window, "YOU WIN", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2 - 100, "center")
         draw_text(self.window, f"Your score:{self.score}", self.font_name, 80, WHITE, WIDTH / 2, HEIGHT / 2 , "center")
@@ -257,8 +254,6 @@ class Game:
 
 
     def show_go_screen(self):
-        self.danger = False
-        self.music_play()
         self.window.blit(self.dim_window, (0, 0))
         draw_text(self.window, "GAME OVER", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
         draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
@@ -272,6 +267,7 @@ class Game:
         self.waiting = True
         self.music_play()
         while self.waiting:
+            self.danger = False
             self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
