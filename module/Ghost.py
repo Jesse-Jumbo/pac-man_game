@@ -1,5 +1,6 @@
 import pygame.transform
 
+from .collide_sprite_with_group import collide_with_walls
 from .settings import *
 
 def move():
@@ -14,7 +15,7 @@ class Ghost(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self._layer = GHOST_LAYER
         self.groups = game.all_sprites, game.ghosts
-        pygame.sprite.Sprite.__init__(self, self.groups)
+        super().__init__(self.groups)
         self.image = game.blue_ghost_images['down']
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
@@ -35,39 +36,40 @@ class Ghost(pygame.sprite.Sprite):
         self.acc = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
         self.target_pos = pygame.math.Vector2(0, 0)
-        self.bule_limit = 10000
-
+        self.blue_limit = 10000
+        self.blue_time = 0
+        self.is_blue = False
+        self.speed_slow = SPEED_SLOW
 
     def blue_module(self):
         now = pygame.time.get_ticks()
-        if now - self.game.blue_time > self.bule_limit:
-            self.game.is_blue = False
-
-
-        self.origin_img = self.game.blue_ghost_images['down']
-        self.up_img = self.game.blue_ghost_images['up']
-        self.right_img = self.game.blue_ghost_images['right']
-        self.left_image = self.game.blue_ghost_images['left']
-        self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
-        if -45 <= self.rot < 45:
-            self.image = self.left_image
-            self.vel.x = -(GHOST_SPEED - 10)
-            self.pos.x += self.vel.x * self.game.dt
-        elif 45 <= self.rot < 135:
-            self.image = self.origin_img
-            self.vel.y = GHOST_SPEED - 10
-            self.pos.y += self.vel.y * self.game.dt
-        elif -135 >= self.rot or 180 >= self.rot >= 135:
-            self.image = self.right_img
-            self.vel.x = GHOST_SPEED - 10
-            self.pos.x += self.vel.x * self.game.dt
-        else:
-            self.image = self.up_img
-            self.vel.y = -(GHOST_SPEED - 10)
-            self.pos.y += self.vel.y * self.game.dt
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
-
+        if now - self.blue_time > self.blue_limit:
+            self.is_blue = False
+        if self.is_blue:
+            collide_with_walls(self.game.player, self.game.ghosts, 'player')
+            self.origin_img = self.game.blue_ghost_images['down']
+            self.up_img = self.game.blue_ghost_images['up']
+            self.right_img = self.game.blue_ghost_images['right']
+            self.left_image = self.game.blue_ghost_images['left']
+            self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
+            if -45 <= self.rot < 45:
+                self.image = self.left_image
+                self.vel.x = -(GHOST_SPEED + self.speed_slow)
+                self.pos.x += self.vel.x * self.game.dt
+            elif 45 <= self.rot < 135:
+                self.image = self.origin_img
+                self.vel.y = GHOST_SPEED + self.speed_slow
+                self.pos.y += self.vel.y * self.game.dt
+            elif -135 >= self.rot or 180 >= self.rot >= 135:
+                self.image = self.right_img
+                self.vel.x = GHOST_SPEED + self.speed_slow
+                self.pos.x += self.vel.x * self.game.dt
+            else:
+                self.image = self.up_img
+                self.vel.y = -(GHOST_SPEED + self.speed_slow)
+                self.pos.y += self.vel.y * self.game.dt
+            self.rect = self.image.get_rect()
+            self.rect.center = self.pos
 
     def move(self, x, y):
         if self.rect.centerx != x:
@@ -96,6 +98,7 @@ class Ghost(pygame.sprite.Sprite):
     def move_up(self):
         self.rect.centery += -1
         self.image = self.up_img
+
 # TODO 改成任何情況下都能適用
     def scatter_model(self, x, y):
         if self.rect.centerx <= x+150 and self.rect.centery == y:

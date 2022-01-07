@@ -4,7 +4,7 @@ import pygame.event
 
 from .Obstacle import Obstacle
 from .TiledMap import TiledMap
-from .collide_with_walls import collide_with_walls
+from .collide_sprite_with_group import collide_with_walls
 from .draw_text import draw_text
 from .settings import *
 from .PacMan import PacMan
@@ -138,17 +138,17 @@ class Game:
                 Obstacle(self, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             if tile_object.name == 'red_ghost':
                 self.red_ghost = RedGhost(self, obj_center.x, obj_center.y)
+                self.red_origin_pos = pygame.math.Vector2(obj_center.x, obj_center.y)
             if tile_object.name == 'green_ghost':
-                GreenGhost(self, obj_center.x, obj_center.y)
+                self.green_ghost = GreenGhost(self, obj_center.x, obj_center.y)
             if tile_object.name == 'pink_ghost':
-                PinkGhost(self, obj_center.x, obj_center.y)
+                self.pink_ghost = PinkGhost(self, obj_center.x, obj_center.y)
             if tile_object.name == 'orange_ghost':
-                OrangeGhost(self, obj_center.x, obj_center.y)
+                self.orange_ghost = OrangeGhost(self, obj_center.x, obj_center.y)
             if tile_object.name == 'point':
                 Point(self, obj_center.x, obj_center.y)
         self.draw_debug = False
         self.paused = False
-        self.is_blue = False
         self.waiting = False
         self.danger = False
         self.stop_music = False
@@ -187,10 +187,16 @@ class Game:
         hits = pygame.sprite.spritecollide(self.player, self.points, True)
         for hit in hits:
             self.score += 50
-            self.is_blue = True
+            self.red_ghost.is_blue = True
+            self.green_ghost.is_blue = True
+            self.pink_ghost.is_blue = True
+            self.orange_ghost.is_blue = True
             self.danger = True
             self.music_play()
-            self.blue_time = pygame.time.get_ticks()
+            self.red_ghost.blue_time = pygame.time.get_ticks()
+            self.green_ghost.blue_time = pygame.time.get_ticks()
+            self.pink_ghost.blue_time = pygame.time.get_ticks()
+            self.orange_ghost.blue_time = pygame.time.get_ticks()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE_SIZE):

@@ -1,6 +1,6 @@
 import random
 
-from .collide_with_walls import collide_with_walls
+from .collide_sprite_with_group import collide_with_walls
 from .settings import *
 from .Ghost import Ghost
 
@@ -16,15 +16,17 @@ class OrangeGhost(Ghost):
 
     def update(self, *args, **kwargs) -> None:
         if len(self.game.dots) < 65:
-            if self.game.is_blue:
+            self.rect.center = self.hit_rect.center
+            self.hit_rect.centerx = self.pos.x
+            collide_with_walls(self, self.game.walls, 'x')
+            self.hit_rect.centery = self.pos.y
+            collide_with_walls(self, self.game.walls, 'y')
+            if self.is_blue:
                 self.blue_module()
             else:
                 self.orange_move()
-        self.rect.center = self.hit_rect.center
-        self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
-        self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
+
+
     def orange_move(self):
         self.origin_img = self.game.orange_ghost_images['down']
         self.up_img = self.game.orange_ghost_images['up']

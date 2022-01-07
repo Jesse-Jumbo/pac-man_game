@@ -1,3 +1,5 @@
+import pygame.sprite
+
 from .collide_hit_rect import collide_hit_rect
 from .settings import *
 
@@ -25,10 +27,19 @@ def collide_with_walls(sprite, group, dir):
     if dir == 'ghost':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
-            sprite.game.playing = False
-            sprite.game.show_go_screen()
+            if hits[0].is_blue == False:
+                sprite.game.playing = False
+                sprite.game.show_go_screen()
+
     if dir == 'wall':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
             sprite.rect.x = random.randint(0 + TILE_SIZE, WIDTH - TILE_SIZE)
             sprite.rect.y = random.randint(0 + TILE_SIZE, HEIGHT - TILE_SIZE)
+
+    if dir == 'player':
+        hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        if hits:
+            if hits[0].is_blue == True:
+                hits[0].pos.xy = sprite.game.red_origin_pos
+                hits[0].is_blue = False

@@ -1,6 +1,6 @@
 import pygame.draw
 
-from .collide_with_walls import collide_with_walls
+from .collide_sprite_with_group import collide_with_walls
 from .settings import *
 
 class Dot(pygame.sprite.Sprite):

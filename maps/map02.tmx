@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="70">
+<map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="71">
  <tileset firstgid="1" source="Pac-man Topdown Pack.tsx"/>
  <layer id="2" name="ground" width="32" height="24">
   <data encoding="csv">
@@ -60,8 +60,8 @@
  <objectgroup id="3" name="Object Layer 1">
   <object id="1" name="player" x="494" y="625"/>
   <object id="2" name="red_ghost" x="495" y="335"/>
-  <object id="4" name="green_ghost" x="464" y="368"/>
-  <object id="5" name="pink_ghost" x="496" y="367"/>
+  <object id="4" name="green_ghost" x="492" y="368"/>
+  <object id="5" name="pink_ghost" x="459" y="369"/>
   <object id="6" name="orange_ghost" x="526" y="367"/>
   <object id="7" name="wall" x="15" y="5" width="979" height="11"/>
   <object id="10" name="wall" x="14" y="741" width="979" height="11"/>
@@ -124,5 +124,6 @@
   <object id="66" name="point" x="973" y="41"/>
   <object id="68" name="point" x="48" y="720"/>
   <object id="69" name="point" x="974" y="719"/>
+  <object id="70" name="point" x="458" y="611"/>
  </objectgroup>
 </map>

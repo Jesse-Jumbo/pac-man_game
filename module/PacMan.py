@@ -1,6 +1,6 @@
 import pygame.math
 
-from .collide_with_walls import collide_with_walls
+from .collide_sprite_with_group import collide_with_walls
 from .settings import *
 
 
@@ -39,7 +39,10 @@ class PacMan(pygame.sprite.Sprite):
         self.hit_rect.centery = self.pos.y
         # collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
+
         collide_with_walls(self, self.game.ghosts, 'ghost')
+
+
 
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH

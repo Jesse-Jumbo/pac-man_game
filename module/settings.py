@@ -41,7 +41,7 @@ GRID_WIDTH = WIDTH/TILE_SIZE
 GRID_HEIGHT = HEIGHT/TILE_SIZE
 
 '''player setting'''
-PLAYER_SPEED = 100.0
+PLAYER_SPEED = 200.0
 # PLAYER_ROT_SPEED = 250.0
 PLAYRE_HIT_RECT = pygame.Rect(0, 0, 28, 28)
 
@@ -49,6 +49,7 @@ PLAYRE_HIT_RECT = pygame.Rect(0, 0, 28, 28)
 GHOST_HIT_RECT = pygame.Rect(0, 0, 28, 28)
 AVOID_RADIUS = 50
 GHOST_SPEED = 90.0
+SPEED_SLOW = -10
 '''wall setting'''
 WALL_IMG = "wall.png"
 '''dot setting'''
