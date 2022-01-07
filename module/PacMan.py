@@ -10,20 +10,25 @@ class PacMan(pygame.sprite.Sprite):
         self.groups = game.all_sprites
         super().__init__(self.groups)
         self.game = game
-        self.image = game.player_img
+        self.present_player = 0
+        self.image = game.player_right_images[self.present_player]
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = PLAYRE_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2(x, y)
-        self.origin_img = game.player_img
-        self.up_img = game.up_img
-        self.down_img = game.down_img
-        self.turn_left_image = game.turn_left_image
+        self.right_img = game.player_right_images[int(self.present_player)]
+        self.up_img = game.player_up_images[int(self.present_player)]
+        self.down_img = game.player_down_images[int(self.present_player)]
+        self.left_img = game.player_left_images[int(self.present_player)]
         self.front_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
+        self.img_change_control = 0.4
 
     def update(self):
+        self.present_player += self.img_change_control
+        if self.present_player >= len(self.game.player_right_images):
+            self.present_player = 0
         self.get_keys()
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
@@ -49,19 +54,19 @@ class PacMan(pygame.sprite.Sprite):
         self.vel = pygame.math.Vector2(0, 0)
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_UP] or keystate[pygame.K_w]:
-            self.image = self.game.up_img
+            self.image = self.game.player_up_images[int(self.present_player)]
             self.vel.y = -PLAYER_SPEED
             self.front_pos = (self.rect.centerx, self.rect.top - TILE_SIZE)
         elif keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
-            self.image = self.game.down_img
+            self.image = self.game.player_down_images[int(self.present_player)]
             self.vel.y = PLAYER_SPEED
             self.front_pos = (self.rect.centerx, self.rect.bottom + TILE_SIZE)
         elif keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
-            self.image = self.game.turn_left_image
+            self.image = self.game.player_left_images[int(self.present_player)]
             self.vel.x = -PLAYER_SPEED
             self.front_pos = (self.rect.left - TILE_SIZE, self.rect.centery)
         elif keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
-            self.image = self.game.player_img
+            self.image = self.game.player_right_images[int(self.present_player)]
             self.vel.x = PLAYER_SPEED
             self.front_pos = (self.rect.right + TILE_SIZE, self.rect.centery)
         # to slow the speed when move to corner

@@ -54,7 +54,8 @@ WALL_IMG = "wall.png"
 
 '''img'''
 '''player'''
-PLAYER_IMG = "pac.png"
+# PLAYER_IMG = "pac.png"
+PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
 '''blue'''
 blue_ghost_image_dic = {"down": "blue_ghost_d.png", "left": "blue_ghost_l.png", "right": "blue_ghost_r.png", "up": "blue_ghost_u.png"}
 '''orange'''

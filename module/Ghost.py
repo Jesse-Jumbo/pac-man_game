@@ -42,6 +42,8 @@ class Ghost(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.game.blue_time > self.bule_limit:
             self.game.is_blue = False
+
+
         self.origin_img = self.game.blue_ghost_images['down']
         self.up_img = self.game.blue_ghost_images['up']
         self.right_img = self.game.blue_ghost_images['right']

@@ -52,11 +52,18 @@ class Game:
         self.wall_img = pygame.image.load(path.join(img_dir, WALL_IMG)).convert_alpha()
         self.wall_img = pygame.transform.scale(self.wall_img, (TILE_SIZE, TILE_SIZE))
         """player"""
-        self.player_img = pygame.image.load(path.join(img_dir, PLAYER_IMG)).convert_alpha()
-        self.player_img = pygame.transform.scale(self.player_img, (TILE_SIZE, TILE_SIZE))
-        self.up_img = pygame.transform.scale((pygame.transform.rotate(self.player_img, 90)), (TILE_SIZE, TILE_SIZE))
-        self.down_img = pygame.transform.scale((pygame.transform.rotate(self.player_img, 270)), (TILE_SIZE, TILE_SIZE))
-        self.turn_left_image = pygame.transform.scale((pygame.transform.flip(self.player_img, True, False)), (TILE_SIZE, TILE_SIZE))
+        self.player_images = []
+        self.player_right_images = []
+        self.player_up_images = []
+        self.player_down_images = []
+        self.player_left_images = []
+        for i in ["cc", "c", "o", "oo"]:
+            self.player_images.append(pygame.image.load(path.join(img_dir, f"pac_man_{i}.png")).convert_alpha())
+        for player_img in self.player_images:
+            self.player_right_images.append(pygame.transform.scale(player_img, (TILE_SIZE, TILE_SIZE)))
+            self.player_up_images.append(pygame.transform.scale((pygame.transform.rotate(player_img, 90)), (TILE_SIZE, TILE_SIZE)))
+            self.player_down_images.append(pygame.transform.scale((pygame.transform.rotate(player_img, 270)), (TILE_SIZE, TILE_SIZE)))
+            self.player_left_images.append(pygame.transform.scale((pygame.transform.flip(player_img, True, False)), (TILE_SIZE, TILE_SIZE)))
         """dot"""
         self.small_dot_img = pygame.image.load(path.join(img_dir, DOT_IMG)).convert_alpha()
         self.big_dot_img = pygame.image.load(path.join(img_dir, POINT_IMG)).convert_alpha()
