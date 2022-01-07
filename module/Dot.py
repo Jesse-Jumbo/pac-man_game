@@ -14,7 +14,9 @@ class Dot(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.hit_rect = self.rect
         self.rect.x = random.randint(0, WIDTH - TILE_SIZE)
+        self.rect.x = 50
         self.rect.y = random.randint(0, HEIGHT - TILE_SIZE)
+        self.rect.y = 50
 
     def update(self) -> None:
         collide_with_walls(self, self.game.walls, "wall")

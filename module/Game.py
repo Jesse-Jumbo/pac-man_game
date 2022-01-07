@@ -30,12 +30,14 @@ class Game:
 
         self.score = 0
         self.show_start_screen()
+        self.waiting = False
+        self.music_play()
 
     def load_data(self):
         """folder path"""
         game_dir = path.dirname(__file__)
         img_dir = path.join(game_dir, '../img')
-        snd_dir = path.join(game_dir, '../snd')
+        self.snd_dir = path.join(game_dir, '../snd')
         map_dir = path.join(game_dir, '../maps')
         '''font'''
         self.font_name = pygame.font.match_font('arial')
@@ -47,7 +49,6 @@ class Game:
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
             self.map_img = self.map.make_map()
             self.map_rect = self.map_img.get_rect()
-
         """img"""
         """wall"""
         self.wall_img = pygame.image.load(path.join(img_dir, WALL_IMG)).convert_alpha()
@@ -153,8 +154,6 @@ class Game:
         self.paused = False
         self.is_blue = False
 
-
-
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
@@ -259,12 +258,29 @@ class Game:
 
     def wait_for_key(self):
         pygame.event.wait()
-        waiting = True
-        while waiting:
+        self.waiting = True
+        self.music_play()
+        while self.waiting:
             self.clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    waiting = False
+                    self.waiting = False
                     self.quit()
                 if event.type == pygame.KEYUP:
-                    waiting = False
+                    pygame.mixer.music.stop()
+                    self.waiting = False
+        self.music_play()
+
+    def music_play(self):
+        if self.waiting == False:
+            pygame.mixer.music.load(path.join(self.snd_dir, BGM))
+            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.play(loops=-1)
+        elif self.waiting == True or self.paused == True:
+            pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
+            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.play(loops=-1)
+        # if self.danger == True:
+        #     pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
+        #     pygame.mixer.music.set_volume(0.4)
+        #     pygame.mixer.music.play(loops=-1)

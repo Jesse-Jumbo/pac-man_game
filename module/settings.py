@@ -53,6 +53,7 @@ GHOST_SPEED = 90.0
 WALL_IMG = "wall.png"
 '''dot setting'''
 dot_amount = range(100)
+
 '''img'''
 '''player'''
 # PLAYER_IMG = "pac.png"
@@ -70,3 +71,8 @@ green_ghost_image_dic = {"down": "green_ghost_d.png", "left": "green_ghost_l.png
 '''dot'''
 DOT_IMG = "dot.png"
 POINT_IMG = "point.png"
+
+'''snd'''
+BGM = 'pacman background music.ogg'
+MENU_SND = 'MenuTheme.wav'
+ALL_GHOST_GO_OUT = 'Destractor.mp3'
