@@ -264,6 +264,7 @@ class Game:
         self.wait_for_key()
 
     def wait_for_key(self):
+        self.music_play()
         pygame.event.wait()
         self.waiting = True
         self.music_play()
@@ -281,13 +282,13 @@ class Game:
     def music_play(self):
         if self.waiting == True or self.paused == True:
             pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
-            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(loops=-1)
         elif self.danger == True:
             pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
-            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.set_volume(1)
             pygame.mixer.music.play(loops=-1)
         elif self.waiting == False:
             pygame.mixer.music.load(path.join(self.snd_dir, BGM))
-            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.set_volume(1)
             pygame.mixer.music.play(loops=-1)
