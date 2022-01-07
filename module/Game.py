@@ -29,7 +29,13 @@ class Game:
         self.blue_time = pygame.time.get_ticks()
 
         self.score = 0
+        self.draw_debug = False
+        self.paused = False
+        self.is_blue = False
+        self.waiting = False
+        self.danger = False
         self.show_start_screen()
+
 
     def load_data(self):
         """folder path"""
@@ -151,6 +157,8 @@ class Game:
         self.draw_debug = False
         self.paused = False
         self.is_blue = False
+        self.waiting = False
+        self.danger = False
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -226,7 +234,6 @@ class Game:
                     self.paused = not self.paused
 
     def show_start_screen(self, status="start"):
-        self.waiting = False
         self.window.fill(WHITE)
         draw_text(self.window, "PacMan!", self.font_name, 100, DARKGREY, WIDTH / 2, HEIGHT / 2, "center")
         if status == "again":
@@ -257,9 +264,9 @@ class Game:
         self.wait_for_key()
 
     def wait_for_key(self):
-        self.music_play()
         pygame.event.wait()
         self.waiting = True
+        self.music_play()
         while self.waiting:
             self.clock.tick(FPS)
             for event in pygame.event.get():
@@ -272,15 +279,15 @@ class Game:
         self.music_play()
 
     def music_play(self):
-        if self.waiting == False:
-            pygame.mixer.music.load(path.join(self.snd_dir, BGM))
-            pygame.mixer.music.set_volume(1)
-            pygame.mixer.music.play(loops=-1)
-        elif self.waiting == True or self.paused == True:
+        if self.waiting == True or self.paused == True:
             pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
-            pygame.mixer.music.set_volume(0.2)
+            pygame.mixer.music.set_volume(0.4)
             pygame.mixer.music.play(loops=-1)
         elif self.danger == True:
             pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
+            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.play(loops=-1)
+        elif self.waiting == False:
+            pygame.mixer.music.load(path.join(self.snd_dir, BGM))
             pygame.mixer.music.set_volume(0.4)
             pygame.mixer.music.play(loops=-1)
