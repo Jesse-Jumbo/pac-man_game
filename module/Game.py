@@ -26,15 +26,7 @@ class Game:
         self.clock = pygame.time.Clock()
         # pygame.key.set_repeat(500, 100)
         self.load_data()
-        self.blue_time = pygame.time.get_ticks()
 
-        self.score = 0
-        self.draw_debug = False
-        self.paused = False
-        self.is_blue = False
-        self.waiting = False
-        self.danger = False
-        self.show_start_screen()
 
 
     def load_data(self):
@@ -159,6 +151,11 @@ class Game:
         self.is_blue = False
         self.waiting = False
         self.danger = False
+        self.blue_time = pygame.time.get_ticks()
+
+        self.score = 0
+
+        self.show_start_screen()
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -191,6 +188,7 @@ class Game:
             self.score += 50
             self.is_blue = True
             self.danger = True
+            self.music_play()
             self.blue_time = pygame.time.get_ticks()
 
     def draw_grid(self):
@@ -288,7 +286,7 @@ class Game:
             pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
             pygame.mixer.music.set_volume(1)
             pygame.mixer.music.play(loops=-1)
-        elif self.waiting == False:
+        else:
             pygame.mixer.music.load(path.join(self.snd_dir, BGM))
             pygame.mixer.music.set_volume(1)
             pygame.mixer.music.play(loops=-1)
