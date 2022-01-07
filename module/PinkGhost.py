@@ -13,10 +13,11 @@ class PinkGhost(Ghost):
         self.left_image = game.pink_ghost_images['left']
 
     def update(self, *args, **kwargs) -> None:
-        if self.game.is_blue:
-            self.blue_module()
-        else:
-            self.pink_move()
+        if len(self.game.dots) < 85:
+            if self.game.is_blue:
+                self.blue_module()
+            else:
+                self.pink_move()
 
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')

@@ -151,6 +151,7 @@ class Game:
         self.is_blue = False
         self.waiting = False
         self.danger = False
+        self.stop_music = False
         self.blue_time = pygame.time.get_ticks()
 
         self.score = 0
@@ -230,6 +231,8 @@ class Game:
                     self.draw_debug = not self.draw_debug
                 if event.key == pygame.K_p:
                     self.paused = not self.paused
+                if event.key == pygame.K_ESCAPE:
+                    self.stop_music = not self.stop_music
 
     def show_start_screen(self, status="start"):
         self.window.fill(WHITE)
@@ -287,6 +290,8 @@ class Game:
             pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
             pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(loops=-1)
+        elif self.stop_music == True:
+            pygame.mixer.music.stop()
         else:
             pygame.mixer.music.load(path.join(self.snd_dir, BGM))
             pygame.mixer.music.set_volume(0.8)
