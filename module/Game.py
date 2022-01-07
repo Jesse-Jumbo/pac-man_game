@@ -30,8 +30,6 @@ class Game:
 
         self.score = 0
         self.show_start_screen()
-        self.waiting = False
-        self.music_play()
 
     def load_data(self):
         """folder path"""
@@ -184,6 +182,7 @@ class Game:
         for hit in hits:
             self.score += 50
             self.is_blue = True
+            self.danger = True
             self.blue_time = pygame.time.get_ticks()
 
     def draw_grid(self):
@@ -227,6 +226,7 @@ class Game:
                     self.paused = not self.paused
 
     def show_start_screen(self, status="start"):
+        self.waiting = False
         self.window.fill(WHITE)
         draw_text(self.window, "PacMan!", self.font_name, 100, DARKGREY, WIDTH / 2, HEIGHT / 2, "center")
         if status == "again":
@@ -257,9 +257,9 @@ class Game:
         self.wait_for_key()
 
     def wait_for_key(self):
+        self.music_play()
         pygame.event.wait()
         self.waiting = True
-        self.music_play()
         while self.waiting:
             self.clock.tick(FPS)
             for event in pygame.event.get():
@@ -274,13 +274,13 @@ class Game:
     def music_play(self):
         if self.waiting == False:
             pygame.mixer.music.load(path.join(self.snd_dir, BGM))
-            pygame.mixer.music.set_volume(0.4)
+            pygame.mixer.music.set_volume(1)
             pygame.mixer.music.play(loops=-1)
         elif self.waiting == True or self.paused == True:
             pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
+            pygame.mixer.music.set_volume(0.2)
+            pygame.mixer.music.play(loops=-1)
+        elif self.danger == True:
+            pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
             pygame.mixer.music.set_volume(0.4)
             pygame.mixer.music.play(loops=-1)
-        # if self.danger == True:
-        #     pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
-        #     pygame.mixer.music.set_volume(0.4)
-        #     pygame.mixer.music.play(loops=-1)
