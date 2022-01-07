@@ -243,6 +243,8 @@ class Game:
         self.wait_for_key()
 
     def show_win_screen(self):
+        self.danger = False
+        self.music_play()
         self.window.blit(self.dim_window, (0, 0))
         draw_text(self.window, "YOU WIN", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2 - 100, "center")
         draw_text(self.window, f"Your score:{self.score}", self.font_name, 80, WHITE, WIDTH / 2, HEIGHT / 2 , "center")
@@ -254,6 +256,8 @@ class Game:
 
 
     def show_go_screen(self):
+        self.danger = False
+        self.music_play()
         self.window.blit(self.dim_window, (0, 0))
         draw_text(self.window, "GAME OVER", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
         draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
@@ -284,9 +288,9 @@ class Game:
             pygame.mixer.music.play(loops=-1)
         elif self.danger == True:
             pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
-            pygame.mixer.music.set_volume(1)
+            pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(loops=-1)
         else:
             pygame.mixer.music.load(path.join(self.snd_dir, BGM))
-            pygame.mixer.music.set_volume(1)
+            pygame.mixer.music.set_volume(0.8)
             pygame.mixer.music.play(loops=-1)
