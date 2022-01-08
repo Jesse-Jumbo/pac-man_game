@@ -13,21 +13,21 @@ class OrangeGhost(Ghost):
         self.up_img = game.orange_ghost_images['up']
         self.right_img = game.orange_ghost_images['right']
         self.left_image = game.orange_ghost_images['left']
+        self.go_out_limit = ORANGE_GO
 
     def update(self, *args, **kwargs) -> None:
-        if len(self.game.dots) < 65:
-            self.rect.center = self.hit_rect.center
-            self.hit_rect.centerx = self.pos.x
-            collide_with_walls(self, self.game.walls, 'x')
-            self.hit_rect.centery = self.pos.y
-            collide_with_walls(self, self.game.walls, 'y')
-            if self.is_blue:
-                self.blue_module()
-            else:
-                self.orange_move()
+        if self.is_out() and not self.is_blue:
+            self.orange_module()
+        elif self.is_blue:
+            self.frightened_module()
 
+        self.rect.center = self.hit_rect.center
+        self.hit_rect.centerx = self.pos.x
+        collide_with_walls(self, self.game.walls, 'x')
+        self.hit_rect.centery = self.pos.y
+        collide_with_walls(self, self.game.walls, 'y')
 
-    def orange_move(self):
+    def orange_module(self):
         self.origin_img = self.game.orange_ghost_images['down']
         self.up_img = self.game.orange_ghost_images['up']
         self.right_img = self.game.orange_ghost_images['right']

@@ -50,6 +50,13 @@ GHOST_HIT_RECT = pygame.Rect(0, 0, 28, 28)
 AVOID_RADIUS = 50
 GHOST_SPEED = 90.0
 SPEED_SLOW = -10
+'''red'''
+'''pink'''
+PINK_GO = 85
+'''green'''
+GREEN_GO = 70
+'''orange'''
+ORANGE_GO = 55
 '''wall setting'''
 WALL_IMG = "wall.png"
 '''dot setting'''

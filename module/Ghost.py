@@ -1,7 +1,8 @@
 import pygame.transform
 
-from .collide_sprite_with_group import collide_with_walls
+from .collide_sprite_with_group import ghost_collide
 from .settings import *
+
 
 def move():
     x_move = random.randrange(-3, 3)
@@ -37,39 +38,66 @@ class Ghost(pygame.sprite.Sprite):
         self.speed = GHOST_SPEED
         self.target_pos = pygame.math.Vector2(0, 0)
         self.blue_limit = 10000
-        self.blue_time = 0
-        self.is_blue = False
         self.speed_slow = SPEED_SLOW
+        self.go_out_limit = 100
+        self.is_blue = False
+        self.get_blue_time = pygame.time.get_ticks()
 
-    def blue_module(self):
-        now = pygame.time.get_ticks()
-        if now - self.blue_time > self.blue_limit:
-            self.is_blue = False
-        if self.is_blue:
-            collide_with_walls(self.game.player, self.game.ghosts, 'player')
-            self.origin_img = self.game.blue_ghost_images['down']
-            self.up_img = self.game.blue_ghost_images['up']
-            self.right_img = self.game.blue_ghost_images['right']
-            self.left_image = self.game.blue_ghost_images['left']
+    def is_out(self):
+        if len(self.game.dots) <= self.go_out_limit:
+            return True
+        else:
+            return False
+
+    def blue_time(self):
+        if self.is_out():
+            self.get_blue_time = pygame.time.get_ticks()
+            self.is_blue = True
+            self.frightened_module()
+
+    def frightened_module(self):
+        if self.is_blue and self.is_out():
+            now = pygame.time.get_ticks()
+            ghost_collide(self.game.player, self.game.ghosts, 'player')
+            if now - self.get_blue_time > self.blue_limit:
+                self.is_blue = False
             self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
             if -45 <= self.rot < 45:
-                self.image = self.left_image
+                self.image = self.game.blue_ghost_images['left']
                 self.vel.x = -(GHOST_SPEED + self.speed_slow)
                 self.pos.x += self.vel.x * self.game.dt
             elif 45 <= self.rot < 135:
-                self.image = self.origin_img
+                self.image = self.game.blue_ghost_images['down']
                 self.vel.y = GHOST_SPEED + self.speed_slow
                 self.pos.y += self.vel.y * self.game.dt
             elif -135 >= self.rot or 180 >= self.rot >= 135:
-                self.image = self.right_img
+                self.image = self.game.blue_ghost_images['right']
                 self.vel.x = GHOST_SPEED + self.speed_slow
                 self.pos.x += self.vel.x * self.game.dt
             else:
-                self.image = self.up_img
+                self.image = self.game.blue_ghost_images['up']
                 self.vel.y = -(GHOST_SPEED + self.speed_slow)
                 self.pos.y += self.vel.y * self.game.dt
             self.rect = self.image.get_rect()
             self.rect.center = self.pos
+
+    def chase_module(self):
+        self.red_module()
+        self.pink_module()
+        self.green__module()
+        self.orange_module()
+
+    def orange_module(self):
+        pass
+
+    def green__module(self):
+        pass
+
+    def pink_module(self):
+        pass
+
+    def red_module(self):
+        pass
 
     def move(self, x, y):
         if self.rect.centerx != x:

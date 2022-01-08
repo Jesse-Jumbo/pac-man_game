@@ -187,16 +187,12 @@ class Game:
         hits = pygame.sprite.spritecollide(self.player, self.points, True)
         for hit in hits:
             self.score += 50
-            self.red_ghost.is_blue = True
-            self.green_ghost.is_blue = True
-            self.pink_ghost.is_blue = True
-            self.orange_ghost.is_blue = True
+            self.red_ghost.blue_time()
+            self.green_ghost.blue_time()
+            self.pink_ghost.blue_time()
+            self.orange_ghost.blue_time()
             self.danger = True
             self.music_play()
-            self.red_ghost.blue_time = pygame.time.get_ticks()
-            self.green_ghost.blue_time = pygame.time.get_ticks()
-            self.pink_ghost.blue_time = pygame.time.get_ticks()
-            self.orange_ghost.blue_time = pygame.time.get_ticks()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE_SIZE):

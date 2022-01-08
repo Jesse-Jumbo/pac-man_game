@@ -1,6 +1,6 @@
 import pygame.math
 
-from .collide_sprite_with_group import collide_with_walls
+from .collide_sprite_with_group import collide_with_walls, ghost_collide
 from .settings import *
 
 
@@ -40,7 +40,7 @@ class PacMan(pygame.sprite.Sprite):
         # collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
 
-        collide_with_walls(self, self.game.ghosts, 'ghost')
+        ghost_collide(self, self.game.ghosts, 'ghost')
 
 
 
