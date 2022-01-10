@@ -16,7 +16,6 @@ class RedGhost(Ghost):
 
     def update(self, *args, **kwargs) -> None:
         if self.is_out() and not self.is_blue:
-            self.move_up()
             collide_with_walls(self, self.game.right_walls, 'R')
             collide_with_walls(self, self.game.left_walls, 'L')
             collide_with_walls(self, self.game.up_walls, 'U')
@@ -25,6 +24,7 @@ class RedGhost(Ghost):
         else:
             self.frightened_module()
 
+        self.move_up()
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y

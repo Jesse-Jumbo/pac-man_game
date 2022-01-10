@@ -115,33 +115,21 @@ class Ghost(pygame.sprite.Sprite):
     def move_right(self):
         self.image = self.right_img
         self.vel.x = GHOST_SPEED
-        self.pos.x += self.vel.x * self.game.dt
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
         self.hit_rect.centerx = self.pos.x
 
     def move_down(self):
         self.image = self.origin_img
         self.vel.y = GHOST_SPEED
-        self.pos.y += self.vel.y * self.game.dt
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
         self.hit_rect.centery = self.pos.y
 
     def move_left(self):
         self.image = self.left_image
         self.vel.x = -GHOST_SPEED
-        self.pos.x += self.vel.x * self.game.dt
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
         self.hit_rect.centerx = self.pos.x
 
     def move_up(self):
         self.image = self.up_img
         self.vel.y = -GHOST_SPEED
-        self.pos.y += self.vel.y * self.game.dt
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
         self.hit_rect.centery = self.pos.y
 
 # TODO 改成任何情況下都能適用

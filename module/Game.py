@@ -232,6 +232,8 @@ class Game:
                 pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
             for wall in self.down_walls:
                 pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
+            for wall in self.l_r_walls:
+                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
             for ghost in self.ghosts:
                 pygame.draw.rect(self.window, CYAN_BLUE, ghost.hit_rect, 1)
             pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
