@@ -27,6 +27,33 @@ def collide_with_walls(sprite, group, dir):
             sprite.rect.x = random.randint(0 + TILE_SIZE, WIDTH - TILE_SIZE)
             sprite.rect.y = random.randint(0 + TILE_SIZE, HEIGHT - TILE_SIZE)
 
+    if dir == 'R':
+        hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        if hits:
+            if hits[0].rect.centerx > sprite.hit_rect.centerx:
+                sprite.move_right()
+    if dir == 'L':
+        hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        if hits:
+            if hits[0].rect.centerx < sprite.hit_rect.centerx:
+                sprite.move_left()
+    if dir == 'U':
+        hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        if hits:
+            if hits[0].rect.centery < sprite.hit_rect.centery:
+                sprite.move_up()
+    if dir == 'D':
+        hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        if hits:
+            if hits[0].rect.centery > sprite.hit_rect.centery:
+                sprite.move_down()
+    if dir == 'LR':
+        hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        if hits:
+            if hits[0].rect.centery > sprite.hit_rect.centery:
+                pygame.random.choice(sprite.move_left_or_right)
+
+
 def ghost_collide(sprite, group, dir):
     if dir == 'ghost':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)

@@ -16,7 +16,12 @@ class RedGhost(Ghost):
 
     def update(self, *args, **kwargs) -> None:
         if self.is_out() and not self.is_blue:
-            self.red_module()
+            self.move_up()
+            collide_with_walls(self, self.game.right_walls, 'R')
+            collide_with_walls(self, self.game.left_walls, 'L')
+            collide_with_walls(self, self.game.up_walls, 'U')
+            collide_with_walls(self, self.game.down_walls, 'D')
+            # self.red_module()
         else:
             self.frightened_module()
 

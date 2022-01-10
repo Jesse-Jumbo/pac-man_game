@@ -2,8 +2,8 @@ from .settings import *
 
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, game, x, y, width, height):
-        self.groups = game.walls
+    def __init__(self, game, walls, x, y, width, height):
+        self.groups = walls
         super().__init__(self.groups)
         self.game = game
         self.rect = pygame.Rect(x, y, width, height)

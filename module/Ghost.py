@@ -42,6 +42,7 @@ class Ghost(pygame.sprite.Sprite):
         self.go_out_limit = 100
         self.is_blue = False
         self.get_blue_time = pygame.time.get_ticks()
+        self.move_left_or_right = [self.move_left(), self.move_right()]
 
     def is_out(self):
         if len(self.game.dots) <= self.go_out_limit:
@@ -112,20 +113,36 @@ class Ghost(pygame.sprite.Sprite):
                 self.move_down()
 
     def move_right(self):
-        self.rect.centerx += 1
         self.image = self.right_img
+        self.vel.x = GHOST_SPEED
+        self.pos.x += self.vel.x * self.game.dt
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.hit_rect.centerx = self.pos.x
 
     def move_down(self):
-        self.rect.centery += 1
         self.image = self.origin_img
+        self.vel.y = GHOST_SPEED
+        self.pos.y += self.vel.y * self.game.dt
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.hit_rect.centery = self.pos.y
 
     def move_left(self):
-        self.rect.centerx += -1
         self.image = self.left_image
+        self.vel.x = -GHOST_SPEED
+        self.pos.x += self.vel.x * self.game.dt
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.hit_rect.centerx = self.pos.x
 
     def move_up(self):
-        self.rect.centery += -1
         self.image = self.up_img
+        self.vel.y = -GHOST_SPEED
+        self.pos.y += self.vel.y * self.game.dt
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+        self.hit_rect.centery = self.pos.y
 
 # TODO 改成任何情況下都能適用
     def scatter_model(self, x, y):
