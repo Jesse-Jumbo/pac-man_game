@@ -1,6 +1,7 @@
 import random
 
 from games.pac_man.module.Game import Game
+from games.pac_man.module.settings import DOT_COUNT
 
 
 def blue_ghost_movement(x_move, y_move):
@@ -40,4 +41,4 @@ def test_blue_ghost_movement():
 def test_create_dots():
     game = Game()
     game.create_dots()
-    assert len(game.dots) == 100
+    assert len(game.dots) == DOT_COUNT

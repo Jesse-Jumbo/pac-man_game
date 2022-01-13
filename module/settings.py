@@ -61,7 +61,6 @@ ORANGE_GO = 55
 '''wall setting'''
 WALL_IMG = "wall.png"
 '''dot setting'''
-dot_amount = range(100)
 DOT_COUNT = 100
 '''node setting'''
 node_width = 50

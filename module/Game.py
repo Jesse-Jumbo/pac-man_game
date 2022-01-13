@@ -170,9 +170,8 @@ class Game:
         """
         新增dots
         """
-        for i in dot_amount:
+        for i in range(DOT_COUNT):
             dot = Dot(self)
-            self.dots.add(dot)
 
     def run(self):
         # game loop - set self.playing = False to end the game
