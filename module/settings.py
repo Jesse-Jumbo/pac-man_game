@@ -32,6 +32,7 @@ POINT_LAYER = 2
 PLAYER_LAYER = 2
 GHOST_LAYER = 3
 EFFECTS_LAYER = 4
+NODE_LAYER = 4
 
 '''BG View'''
 TITLE = "Pac-Man!"
@@ -61,6 +62,10 @@ ORANGE_GO = 55
 WALL_IMG = "wall.png"
 '''dot setting'''
 dot_amount = range(100)
+
+'''node setting'''
+node_width = 50
+node_height = 50
 
 '''img'''
 '''player'''

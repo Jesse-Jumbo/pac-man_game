@@ -16,6 +16,7 @@ from .PinkGhost import PinkGhost
 from .OrangeGhost import OrangeGhost
 from .Wall import Wall
 from .Map import Map
+from .Node import *
 
 
 class Game:
@@ -41,7 +42,7 @@ class Game:
         self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
-        for i in range(3, 4):
+        for i in range(4, 5):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
             self.map_img = self.map.make_map()
             self.map_rect = self.map_img.get_rect()
@@ -102,14 +103,12 @@ class Game:
         # initialize all variables and so all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
-        self.l_r_walls = pygame.sprite.Group()
-        self.left_walls = pygame.sprite.Group()
-        self.right_walls = pygame.sprite.Group()
-        self.up_walls = pygame.sprite.Group()
-        self.down_walls = pygame.sprite.Group()
+        nodes = pygame.sprite.Group()
+        self.nodes = pygame.sprite.Group()
         self.ghosts = pygame.sprite.Group()
         self.dots = pygame.sprite.Group()
         self.points = pygame.sprite.Group()
+        tree = Binary_search_tree()
         #
         # self.all_sprites.add(self.player)
         # #
@@ -139,16 +138,10 @@ class Game:
                                              tile_object.y + tile_object.height / 2)
             if tile_object.name == 'player':
                 self.player = PacMan(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'R':
-                Obstacle(self, self.right_walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'L':
-                Obstacle(self, self.left_walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'U':
-                Obstacle(self, self.up_walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'D':
-                Obstacle(self, self.down_walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'LR':
-                Obstacle(self, self.l_r_walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+            if tile_object.name == 'wall':
+                Obstacle(self, self.walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+            if tile_object.name == 'node':
+                tree = fill_tree(self, tree, tile_object.id, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
             if tile_object.name == 'red':
                 self.red_ghost = RedGhost(self, obj_center.x, obj_center.y)
                 self.red_origin_pos = pygame.math.Vector2(obj_center.x, obj_center.y)
@@ -160,6 +153,7 @@ class Game:
                 self.orange_ghost = OrangeGhost(self, obj_center.x, obj_center.y)
             if tile_object.name == 'point':
                 Point(self, obj_center.x, obj_center.y)
+
         self.draw_debug = False
         self.paused = False
         self.waiting = False
@@ -224,18 +218,8 @@ class Game:
             if self.draw_debug:
                 pygame.draw.rect(self.window, CYAN_BLUE, sprite.rect, 1)
         if self.draw_debug:
-            for wall in self.right_walls:
-                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
-            for wall in self.left_walls:
-                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
-            for wall in self.up_walls:
-                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
-            for wall in self.down_walls:
-                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
-            for wall in self.l_r_walls:
-                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
-            for ghost in self.ghosts:
-                pygame.draw.rect(self.window, CYAN_BLUE, ghost.hit_rect, 1)
+            for node in self.nodes:
+                pygame.draw.rect(self.window, RED, node.rect, 1)
             pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
             # pygame.draw.circle(self.window, CYAN_BLUE, self.red_ghost.rect.center, AVOID_RADIUS, 1)
 

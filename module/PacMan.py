@@ -1,6 +1,6 @@
 import pygame.math
 
-from .collide_sprite_with_group import collide_with_walls, ghost_collide
+from .collide_sprite_with_group import collide_with_walls, ghost_collide, collide_with_nodes
 from .settings import *
 
 
@@ -24,6 +24,8 @@ class PacMan(pygame.sprite.Sprite):
         self.left_img = game.player_left_images[int(self.present_player)]
         self.front_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.img_change_control = 0.4
+        self.node_value = 0
+        self.node_pos = pygame.math.Vector2(0, 0)
 
     def update(self):
         self.present_player += self.img_change_control
@@ -41,6 +43,7 @@ class PacMan(pygame.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
         ghost_collide(self, self.game.ghosts, 'ghost')
+        collide_with_nodes(self, self.game.nodes, 'update_node')
 
 
 

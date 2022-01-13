@@ -43,6 +43,8 @@ class Ghost(pygame.sprite.Sprite):
         self.is_blue = False
         self.get_blue_time = pygame.time.get_ticks()
         self.move_left_or_right = [self.move_left(), self.move_right()]
+        self.node_value = 0
+        self.node_pos = pygame.math.Vector2(0, 0)
 
     def is_out(self):
         if len(self.game.dots) <= self.go_out_limit:
