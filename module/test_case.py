@@ -1,5 +1,7 @@
 import random
 
+from games.pac_man.module.Game import Game
+
 
 def blue_ghost_movement(x_move, y_move):
     x_move = x_move
@@ -14,6 +16,7 @@ def blue_ghost_movement(x_move, y_move):
             return "d"
         else:
             return "u"
+
 
 def test_blue_ghost_movement():
     assert blue_ghost_movement(0, 0) == "d"
@@ -32,3 +35,9 @@ def test_blue_ghost_movement():
     assert blue_ghost_movement(2, 2) == "d"
     assert blue_ghost_movement(-2, -2) == "u"
     assert blue_ghost_movement(-3, 0) == "l"
+
+
+def test_create_dots():
+    game = Game()
+    game.create_dots()
+    assert len(game.dots) == 100

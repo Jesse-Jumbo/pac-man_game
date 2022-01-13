@@ -16,8 +16,9 @@ class RedGhost(Ghost):
 
     def update(self, *args, **kwargs) -> None:
         if self.is_out() and not self.is_blue and self.game.nodes:
-            collide_with_nodes(self, self.game.nodes, 'node')
-            collide_with_nodes(self, self.game.nodes, 'target')
+            pass
+            # collide_with_nodes(self, self.game.nodes, 'node')
+            # collide_with_nodes(self, self.game.nodes, 'target')
             # self.red_module()
         else:
             self.frightened_module()

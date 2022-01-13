@@ -43,7 +43,7 @@ class PacMan(pygame.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
         ghost_collide(self, self.game.ghosts, 'ghost')
-        collide_with_nodes(self, self.game.nodes, 'update_node')
+        # collide_with_nodes(self, self.game.nodes, 'update_node')
 
 
 

@@ -27,6 +27,8 @@ class Game:
         self.clock = pygame.time.Clock()
         # pygame.key.set_repeat(500, 100)
         self.load_data()
+        self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.dots = pygame.sprite.Group()
 
 
 
@@ -42,7 +44,7 @@ class Game:
         self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
-        for i in range(4, 5):
+        for i in range(2, 3):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
             self.map_img = self.map.make_map()
             self.map_rect = self.map_img.get_rect()
@@ -101,7 +103,6 @@ class Game:
 
     def new(self):
         # initialize all variables and so all the setup for a new game
-        self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
         nodes = pygame.sprite.Group()
         self.nodes = pygame.sprite.Group()
@@ -112,9 +113,9 @@ class Game:
         #
         # self.all_sprites.add(self.player)
         # #
-        for i in dot_amount:
-            dot = Dot(self)
-            self.dots.add(dot)
+        # create dot
+
+        self.create_dots()
 
         # #
         # Point(self, 30, 30)
@@ -164,6 +165,14 @@ class Game:
         self.score = 0
 
         self.show_start_screen()
+
+    def create_dots(self):
+        """
+        新增dots
+        """
+        for i in dot_amount:
+            dot = Dot(self)
+            self.dots.add(dot)
 
     def run(self):
         # game loop - set self.playing = False to end the game
