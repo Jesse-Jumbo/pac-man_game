@@ -27,6 +27,7 @@ class PacMan(pygame.sprite.Sprite):
         self.img_change_control = 0.4
         self.node_value = 0
         self.node_pos = pygame.math.Vector2(0, 0)
+        self.score = 0
 
     def update(self):
         self.present_player += self.img_change_control
@@ -46,7 +47,13 @@ class PacMan(pygame.sprite.Sprite):
         ghost_collide(self, self.game.ghosts, 'ghost')
         # collide_with_nodes(self, self.game.nodes, 'update_node')
 
+        hits = pygame.sprite.spritecollide(self, self.game.dots, True)
+        for hit in hits:
+            self.score += 10
 
+        hits = pygame.sprite.spritecollide(self, self.game.points, True)
+        for hit in hits:
+            self.score += 50
 
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH

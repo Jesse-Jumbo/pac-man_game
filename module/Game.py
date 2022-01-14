@@ -37,7 +37,14 @@ class Game:
         self.points = pygame.sprite.Group()
         tree = Binary_search_tree()
         # create map object
-        self.map.make_map(self)
+        self.map.make_map(self, 'walls')
+        self.map.make_map(self, 'points')
+        self.red_ghost = self.map.make_map(self, 'red_ghost')
+        self.pink_ghost = self.map.make_map(self, 'pink_ghost')
+        self.green_ghost = self.map.make_map(self, 'green_ghost')
+        self.orange_ghost = self.map.make_map(self, 'orange_ghost')
+        self.player = self.map.make_map(self, 'player')
+        self.map.make_map(self, 'dots')
         #     if tile_object.name == 'node':
         #         tree = fill_tree(self, tree, tile_object.id, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
         self.draw_debug = False
@@ -118,13 +125,6 @@ class Game:
             image = self.orange_ghost_images[key]
             self.orange_ghost_images[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
 
-    # def create_dots(self):
-    #     """
-    #     新增dots
-    #     """
-    #     for i in range(DOT_COUNT):
-    #         dot = Dot(self)
-
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
@@ -146,10 +146,7 @@ class Game:
         if len(self.dots) == 0 and self.dt != 0:
             self.playing = False
 
-        # hits = pygame.sprite.spritecollide(self.player, self.dots, True)
-        # for hit in hits:
-        #     self.score += 10
-        #
+
         # hits = pygame.sprite.spritecollide(self.player, self.points, True)
         # for hit in hits:
         #     self.score += 50
