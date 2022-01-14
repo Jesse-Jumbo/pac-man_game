@@ -27,8 +27,27 @@ class Game:
         self.clock = pygame.time.Clock()
         # pygame.key.set_repeat(500, 100)
         self.load_data()
+        # initialize all variables and so all the setup for a new game
         self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.walls = pygame.sprite.Group()
+        nodes = pygame.sprite.Group()
+        self.nodes = pygame.sprite.Group()
+        self.ghosts = pygame.sprite.Group()
         self.dots = pygame.sprite.Group()
+        self.points = pygame.sprite.Group()
+        tree = Binary_search_tree()
+        # create map object
+        self.map.make_map(self)
+        #     if tile_object.name == 'node':
+        #         tree = fill_tree(self, tree, tile_object.id, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+        self.draw_debug = False
+        self.paused = False
+        self.waiting = False
+        self.danger = False
+        self.stop_music = False
+        self.blue_time = pygame.time.get_ticks()
+
+        self.score = 0
 
 
 
@@ -44,10 +63,8 @@ class Game:
         self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
-        for i in range(2, 3):
+        for i in range(5, 6):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
-            self.map_img = self.map.make_map()
-            self.map_rect = self.map_img.get_rect()
         """img"""
         """wall"""
         self.wall_img = pygame.image.load(path.join(img_dir, WALL_IMG)).convert_alpha()
@@ -101,77 +118,12 @@ class Game:
             image = self.orange_ghost_images[key]
             self.orange_ghost_images[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
 
-    def new(self):
-        # initialize all variables and so all the setup for a new game
-        self.walls = pygame.sprite.Group()
-        nodes = pygame.sprite.Group()
-        self.nodes = pygame.sprite.Group()
-        self.ghosts = pygame.sprite.Group()
-        self.dots = pygame.sprite.Group()
-        self.points = pygame.sprite.Group()
-        tree = Binary_search_tree()
-        #
-        # self.all_sprites.add(self.player)
-        # #
-        # create dot
-
-        self.create_dots()
-
-        # #
-        # Point(self, 30, 30)
-        # #
-        # Point(self, WIDTH - 30, 30)
-        # #
-        # Point(self, 30, HEIGHT - 30)
-        # #
-        # Point(self, WIDTH - 30, HEIGHT - 30)
-        #
-        # Wall
-        # for row, tiles in enumerate(self.map.map_data):
-        #     for col, tile in enumerate(tiles):
-        #         if tile == '1':
-        #             wall = Wall(self, col, row)
-        #             self.walls.add(wall)
-        #         if tile == 'p':
-        #             self.player = PacMan(self, col, row)
-        for tile_object in self.map.tmxdata.objects:
-            obj_center = pygame.math.Vector2(tile_object.x + tile_object.width / 2,
-                                             tile_object.y + tile_object.height / 2)
-            if tile_object.name == 'player':
-                self.player = PacMan(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'wall':
-                Obstacle(self, self.walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'node':
-                tree = fill_tree(self, tree, tile_object.id, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'red':
-                self.red_ghost = RedGhost(self, obj_center.x, obj_center.y)
-                self.red_origin_pos = pygame.math.Vector2(obj_center.x, obj_center.y)
-            if tile_object.name == 'green':
-                self.green_ghost = GreenGhost(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'pink':
-                self.pink_ghost = PinkGhost(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'orange':
-                self.orange_ghost = OrangeGhost(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'point':
-                Point(self, obj_center.x, obj_center.y)
-
-        self.draw_debug = False
-        self.paused = False
-        self.waiting = False
-        self.danger = False
-        self.stop_music = False
-        self.blue_time = pygame.time.get_ticks()
-
-        self.score = 0
-
-        self.show_start_screen()
-
-    def create_dots(self):
-        """
-        新增dots
-        """
-        for i in range(DOT_COUNT):
-            dot = Dot(self)
+    # def create_dots(self):
+    #     """
+    #     新增dots
+    #     """
+    #     for i in range(DOT_COUNT):
+    #         dot = Dot(self)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -193,21 +145,20 @@ class Game:
         # game over?
         if len(self.dots) == 0 and self.dt != 0:
             self.playing = False
-            self.show_win_screen()
 
-        hits = pygame.sprite.spritecollide(self.player, self.dots, True)
-        for hit in hits:
-            self.score += 10
-
-        hits = pygame.sprite.spritecollide(self.player, self.points, True)
-        for hit in hits:
-            self.score += 50
-            self.red_ghost.blue_time()
-            self.green_ghost.blue_time()
-            self.pink_ghost.blue_time()
-            self.orange_ghost.blue_time()
-            self.danger = True
-            self.music_play()
+        # hits = pygame.sprite.spritecollide(self.player, self.dots, True)
+        # for hit in hits:
+        #     self.score += 10
+        #
+        # hits = pygame.sprite.spritecollide(self.player, self.points, True)
+        # for hit in hits:
+        #     self.score += 50
+        #     self.red_ghost.blue_time()
+        #     self.green_ghost.blue_time()
+        #     self.pink_ghost.blue_time()
+        #     self.orange_ghost.blue_time()
+        #     self.danger = True
+        #     self.music_play()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILE_SIZE):
@@ -217,8 +168,7 @@ class Game:
 
     def draw(self):
         pygame.display.set_caption(TITLE+"{:.2f}".format(self.clock.get_fps()))
-        # self.window.fill(BG_COLOR)
-        self.window.blit(self.map_img, self.map_rect)
+        self.window.fill(BG_COLOR)
         # self.draw_grid()
         draw_text(self.window, str(self.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
         for sprite in self.all_sprites:
@@ -226,9 +176,11 @@ class Game:
             if self.draw_debug:
                 pygame.draw.rect(self.window, CYAN_BLUE, sprite.rect, 1)
         if self.draw_debug:
-            for node in self.nodes:
-                pygame.draw.rect(self.window, RED, node.rect, 1)
-            pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
+            for wall in self.walls:
+                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
+            # for node in self.nodes:
+            #     pygame.draw.rect(self.window, RED, node.rect, 1)
+            # pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
             # pygame.draw.circle(self.window, CYAN_BLUE, self.red_ghost.rect.center, AVOID_RADIUS, 1)
 
         if self.paused:
@@ -249,31 +201,9 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     self.stop_music = not self.stop_music
 
-    def show_start_screen(self, status="start"):
-        self.window.fill(WHITE)
-        draw_text(self.window, "PacMan!", self.font_name, 100, DARKGREY, WIDTH / 2, HEIGHT / 2, "center")
-        if status == "again":
-            draw_text(self.window, "Press a key to start", self.font_name, 20, BLACK, WIDTH / 2, HEIGHT - 50, "center")
-        else:
-            draw_text(self.window, "Press a key twice to start", self.font_name, 20, BLACK, WIDTH / 2, HEIGHT - 50, "center")
-
-        pygame.display.flip()
-        self.wait_for_key()
-
-    def show_win_screen(self):
-        self.window.blit(self.dim_window, (0, 0))
-        draw_text(self.window, "YOU WIN", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2 - 100, "center")
-        draw_text(self.window, f"Your score:{self.score}", self.font_name, 80, WHITE, WIDTH / 2, HEIGHT / 2 , "center")
-        draw_text(self.window, "Press a key to start again", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
-
-        pygame.display.flip()
-        self.wait_for_key()
-        self.show_start_screen("again")
-
-
     def show_go_screen(self):
         self.window.blit(self.dim_window, (0, 0))
-        draw_text(self.window, "GAME OVER", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
+        draw_text(self.window, f"SCORE: {self.score}", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
         draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
 
         pygame.display.flip()

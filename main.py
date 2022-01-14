@@ -7,6 +7,5 @@ from module.Game import Game
 
 game = Game()
 while True:
-    game.new()
     game.run()
 

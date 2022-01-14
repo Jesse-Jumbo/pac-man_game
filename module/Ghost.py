@@ -13,17 +13,19 @@ def move():
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, img, x, y):
         self._layer = GHOST_LAYER
         self.groups = game.all_sprites, game.ghosts
         super().__init__(self.groups)
-        self.image = game.blue_ghost_images['down']
+        self.image = img
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.x = x
+        self.rect.y = y
         self.hit_rect = GHOST_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
-        self.pos = pygame.math.Vector2(x, y)
-        self.rect.center = self.pos
+        self.pos = pygame.math.Vector2(0, 0)
+        self.pos.x = self.rect.x
+        self.pos.y = self.rect.y
         self.last_move = pygame.time.get_ticks()
         self.move_delay = 100
         self.origin_img = game.blue_ghost_images['down']

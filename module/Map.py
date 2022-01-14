@@ -9,7 +9,5 @@ class Map:
                 self.map_data.append(line.strip())
 
 
-        self.tile_width = len(self.map_data[0])
-        self.tile_height = len(self.map_data)
-        self.width = self.tile_width * TILE_SIZE
-        self.height = self.tile_height * TILE_SIZE
+        self.width = TILE_SIZE
+        self.height = TILE_SIZE

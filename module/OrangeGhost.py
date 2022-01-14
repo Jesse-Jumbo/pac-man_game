@@ -6,9 +6,9 @@ from .Ghost import Ghost
 
 
 class OrangeGhost(Ghost):
-    def __init__(self, game, x, y):
-        super().__init__(game, x, y)
-        self.image = game.orange_ghost_images['down']
+    def __init__(self, game, img, x, y):
+        super().__init__(game, img, x, y)
+        self.image = img
         self.origin_img = game.orange_ghost_images['down']
         self.up_img = game.orange_ghost_images['up']
         self.right_img = game.orange_ghost_images['right']
@@ -16,16 +16,17 @@ class OrangeGhost(Ghost):
         self.go_out_limit = ORANGE_GO
 
     def update(self, *args, **kwargs) -> None:
-        if self.is_out() and not self.is_blue:
-            self.orange_module()
-        elif self.is_blue:
-            self.frightened_module()
-
-        self.rect.center = self.hit_rect.center
-        self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
-        self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
+        pass
+        # if self.is_out() and not self.is_blue:
+        #     self.orange_module()
+        # elif self.is_blue:
+        #     self.frightened_module()
+        #
+        # self.rect.center = self.hit_rect.center
+        # self.hit_rect.centerx = self.pos.x
+        # collide_with_walls(self, self.game.walls, 'x')
+        # self.hit_rect.centery = self.pos.y
+        # collide_with_walls(self, self.game.walls, 'y')
 
     def orange_module(self):
         self.origin_img = self.game.orange_ghost_images['down']

@@ -8,8 +8,8 @@ from os import path
 
 
 '''window'''
-WIDTH = 1024
-HEIGHT = 768
+WIDTH = 640
+HEIGHT = 480
 FPS = 64
 
 '''color'''
@@ -37,7 +37,7 @@ NODE_LAYER = 4
 '''BG View'''
 TITLE = "Pac-Man!"
 BG_COLOR = DARKGREY
-TILE_SIZE = 32
+TILE_SIZE = 20
 GRID_WIDTH = WIDTH/TILE_SIZE
 GRID_HEIGHT = HEIGHT/TILE_SIZE
 

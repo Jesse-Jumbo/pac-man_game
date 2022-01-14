@@ -13,7 +13,8 @@ class PacMan(pygame.sprite.Sprite):
         self.present_player = 0
         self.image = game.player_right_images[self.present_player]
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.x = x
+        self.rect.y = y
         self.hit_rect = PLAYRE_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
         self.vel = pygame.math.Vector2(0, 0)

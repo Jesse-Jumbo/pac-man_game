@@ -6,29 +6,30 @@ from .Ghost import Ghost
 
 
 class RedGhost(Ghost):
-    def __init__(self, game, x, y):
-        super().__init__(game, x, y)
-        self.image = game.red_ghost_images['down']
+    def __init__(self, game, img, x, y):
+        super().__init__(game, img, x, y)
+        self.image = img
         self.origin_img = game.red_ghost_images['down']
         self.up_img = game.red_ghost_images['up']
         self.right_img = game.red_ghost_images['right']
         self.left_image = game.red_ghost_images['left']
 
     def update(self, *args, **kwargs) -> None:
-        if self.is_out() and not self.is_blue and self.game.nodes:
-            pass
-            # collide_with_nodes(self, self.game.nodes, 'node')
-            # collide_with_nodes(self, self.game.nodes, 'target')
-            # self.red_module()
-        else:
-            self.frightened_module()
-
-        self.move_up()
-        self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
-        self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
-        self.rect.center = self.hit_rect.center
+        pass
+        # if self.is_out() and not self.is_blue and self.game.nodes:
+        #     pass
+        #     # collide_with_nodes(self, self.game.nodes, 'node')
+        #     # collide_with_nodes(self, self.game.nodes, 'target')
+        #     # self.red_module()
+        # else:
+        #     self.frightened_module()
+        #
+        # self.move_up()
+        # self.hit_rect.centerx = self.pos.x
+        # collide_with_walls(self, self.game.walls, 'x')
+        # self.hit_rect.centery = self.pos.y
+        # collide_with_walls(self, self.game.walls, 'y')
+        # self.rect.center = self.hit_rect.center
 
     def red_module(self):
         self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
