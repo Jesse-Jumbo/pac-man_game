@@ -4,7 +4,7 @@ import pygame.event
 
 from .Obstacle import Obstacle
 from .TiledMap import TiledMap
-from .collide_sprite_with_group import collide_with_walls
+from .collide_sprite_with_walls import collide_with_walls
 from .draw_text import draw_text
 from .settings import *
 from .PacMan import PacMan
@@ -21,42 +21,38 @@ from .Node import *
 
 class Game:
     def __init__(self):
+        # pygame base setting
         pygame.init()
         pygame.mixer.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
-        # pygame.key.set_repeat(500, 100)
-        self.load_data()
         # initialize all variables and so all the setup for a new game
-        self.all_sprites = pygame.sprite.LayeredUpdates()
-        self.walls = pygame.sprite.Group()
-        nodes = pygame.sprite.Group()
-        self.nodes = pygame.sprite.Group()
-        self.ghosts = pygame.sprite.Group()
-        self.dots = pygame.sprite.Group()
-        self.points = pygame.sprite.Group()
-        tree = Binary_search_tree()
-        # create map object
-        self.map.make_map(self, 'walls')
-        self.map.make_map(self, 'points')
-        self.red_ghost = self.map.make_map(self, 'red_ghost')
-        self.pink_ghost = self.map.make_map(self, 'pink_ghost')
-        self.green_ghost = self.map.make_map(self, 'green_ghost')
-        self.orange_ghost = self.map.make_map(self, 'orange_ghost')
-        self.player = self.map.make_map(self, 'player')
-        self.map.make_map(self, 'dots')
-        #     if tile_object.name == 'node':
-        #         tree = fill_tree(self, tree, tile_object.id, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
+        # control variables
         self.draw_debug = False
         self.paused = False
         self.waiting = False
         self.danger = False
         self.stop_music = False
+        # load all img and music data from folder
+        self.load_data()
+        # initialize sprites group
+        self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.walls = pygame.sprite.Group()
+        self.nodes = pygame.sprite.Group()
+        self.ghosts = pygame.sprite.Group()
+        self.dots = pygame.sprite.Group()
+        self.points = pygame.sprite.Group()
+        # create map object
+        self.map.make_map(self, WALL_LAYER_NAME)
+        self.map.make_map(self, POINT_LAYER_NAME)
+        self.red_ghost = self.map.make_map(self, RED_GHOST_LAYER_NAME)
+        self.pink_ghost = self.map.make_map(self, PINK_GHOST_LAYER_NAME)
+        self.green_ghost = self.map.make_map(self, GREEN_GHOST_LAYER_NAME)
+        self.orange_ghost = self.map.make_map(self, ORANGE_GHOST_LAYER_NAME)
+        self.player = self.map.make_map(self, PLAYER_LAYER_NAME)
+        self.map.make_map(self, DOTS_LAYER_NAME)
+        # track time variables
         self.blue_time = pygame.time.get_ticks()
-
-        self.score = 0
-
-
 
     def load_data(self):
         """folder path"""
@@ -66,17 +62,17 @@ class Game:
         map_dir = path.join(game_dir, '../maps')
         '''font'''
         self.font_name = pygame.font.match_font('arial')
-        '''stop window'''
+        '''pause view'''
         self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
         for i in range(5, 6):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
         """img"""
-        """wall"""
-        self.wall_img = pygame.image.load(path.join(img_dir, WALL_IMG)).convert_alpha()
-        self.wall_img = pygame.transform.scale(self.wall_img, (TILE_SIZE, TILE_SIZE))
-        """player"""
+        # """wall"""
+        # self.wall_img = pygame.image.load(path.join(img_dir, WALL_IMG)).convert_alpha()
+        # self.wall_img = pygame.transform.scale(self.wall_img, (TILE_SIZE, TILE_SIZE))
+        """player movement animation"""
         self.player_images = []
         self.player_right_images = []
         self.player_up_images = []
@@ -86,14 +82,17 @@ class Game:
             self.player_images.append(pygame.image.load(path.join(img_dir, f"pac_man_{i}.png")).convert_alpha())
         for player_img in self.player_images:
             self.player_right_images.append(pygame.transform.scale(player_img, (TILE_SIZE, TILE_SIZE)))
-            self.player_up_images.append(pygame.transform.scale((pygame.transform.rotate(player_img, 90)), (TILE_SIZE, TILE_SIZE)))
-            self.player_down_images.append(pygame.transform.scale((pygame.transform.rotate(player_img, 270)), (TILE_SIZE, TILE_SIZE)))
-            self.player_left_images.append(pygame.transform.scale((pygame.transform.flip(player_img, True, False)), (TILE_SIZE, TILE_SIZE)))
-        """dot"""
-        self.small_dot_img = pygame.image.load(path.join(img_dir, DOT_IMG)).convert_alpha()
-        self.big_dot_img = pygame.image.load(path.join(img_dir, POINT_IMG)).convert_alpha()
-        self.small_dot_img = pygame.transform.scale(self.small_dot_img, (8, 8))
-        self.big_dot_img = pygame.transform.scale(self.big_dot_img, (20, 20))
+            self.player_up_images.append(
+                pygame.transform.scale((pygame.transform.rotate(player_img, 90)), (TILE_SIZE, TILE_SIZE)))
+            self.player_down_images.append(
+                pygame.transform.scale((pygame.transform.rotate(player_img, 270)), (TILE_SIZE, TILE_SIZE)))
+            self.player_left_images.append(
+                pygame.transform.scale((pygame.transform.flip(player_img, True, False)), (TILE_SIZE, TILE_SIZE)))
+        # """dot and point"""
+        # self.small_dot_img = pygame.image.load(path.join(img_dir, DOT_IMG)).convert_alpha()
+        # self.big_dot_img = pygame.image.load(path.join(img_dir, POINT_IMG)).convert_alpha()
+        # self.small_dot_img = pygame.transform.scale(self.small_dot_img, (8, 8))
+        # self.big_dot_img = pygame.transform.scale(self.big_dot_img, (20, 20))
         """blue ghost"""
         self.blue_ghost_images = {}
         for key, value, in blue_ghost_image_dic.items():
@@ -132,8 +131,8 @@ class Game:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             if not self.paused:
-                self.update()
-            self.draw()
+                self.draw()
+            self.update()
 
     def quit(self):
         pygame.quit()
@@ -146,7 +145,6 @@ class Game:
         if len(self.dots) == 0 and self.dt != 0:
             self.playing = False
 
-
         # hits = pygame.sprite.spritecollide(self.player, self.points, True)
         # for hit in hits:
         #     self.score += 50
@@ -158,31 +156,34 @@ class Game:
         #     self.music_play()
 
     def draw_grid(self):
+        # check the background is drawn correctly with the tile size
         for x in range(0, WIDTH, TILE_SIZE):
             pygame.draw.line(self.window, LIGHTGREY, (x, 0), (x, HEIGHT))
         for y in range(0, HEIGHT, TILE_SIZE):
             pygame.draw.line(self.window, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
-        pygame.display.set_caption(TITLE+"{:.2f}".format(self.clock.get_fps()))
+        # cover last update
         self.window.fill(BG_COLOR)
+        # check FPS is correctly
+        pygame.display.set_caption(TITLE + "{:.2f}".format(self.clock.get_fps()))
+        # here the player is None than program will error, so I'll annotate first
+        # draw_text(self.window, str(self.player.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
         # self.draw_grid()
-        draw_text(self.window, str(self.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
+        # draw all sprites according to sprite's rect
         for sprite in self.all_sprites:
             self.window.blit(sprite.image, sprite.rect)
+            # press H to check sprite rect
             if self.draw_debug:
                 pygame.draw.rect(self.window, CYAN_BLUE, sprite.rect, 1)
         if self.draw_debug:
             for wall in self.walls:
                 pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
-            # for node in self.nodes:
-            #     pygame.draw.rect(self.window, RED, node.rect, 1)
-            # pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
-            # pygame.draw.circle(self.window, CYAN_BLUE, self.red_ghost.rect.center, AVOID_RADIUS, 1)
-
+        # press P to pause game
         if self.paused:
             self.window.blit(self.dim_window, (0, 0))
             draw_text(self.window, "PAUSED", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
+        # update game view
         pygame.display.flip()
 
     def events(self):
@@ -224,15 +225,15 @@ class Game:
         self.music_play()
 
     def music_play(self):
-        if self.waiting == True or self.paused == True:
+        if self.waiting or self.paused:
             pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
             pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(loops=-1)
-        elif self.danger == True:
+        elif self.danger:
             pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
             pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(loops=-1)
-        elif self.stop_music == True:
+        elif self.stop_music:
             pygame.mixer.music.stop()
         else:
             pygame.mixer.music.load(path.join(self.snd_dir, BGM))

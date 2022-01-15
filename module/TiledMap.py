@@ -23,39 +23,40 @@ class TiledMap:
         ti = self.tmxdata.get_tile_image_by_gid
         for layer in self.tmxdata.visible_layers:
             for x, y, gid, in layer:
-                if isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'walls' and object_name == 'walls':
+                if isinstance(layer, pytmx.TiledTileLayer) and layer.name == WALL_LAYER_NAME and object_name == WALL_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Obstacle(game, game.walls, tile, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'points' and object_name == 'points':
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == PLAYER_LAYER_NAME and object_name == PLAYER_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Point(game, tile, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'red_ghost' and object_name == 'red_ghost':
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == RED_GHOST_LAYER_NAME and object_name == RED_GHOST_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        RedGhost(game, tile, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'pink_ghost' and object_name == 'pink_ghost':
+                        red_ghost = RedGhost(game, x * TILE_SIZE, y * TILE_SIZE)
+                        return red_ghost
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == PLAYER_LAYER_NAME and object_name == PLAYER_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        PinkGhost(game, tile, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'green_ghost' and object_name == 'green_ghost':
+                        return PinkGhost(game, x * TILE_SIZE, y * TILE_SIZE)
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == GREEN_GHOST_LAYER_NAME and object_name == GREEN_GHOST_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        GreenGhost(game, tile, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'orange_ghost' and object_name == 'orange_ghost':
+                        return GreenGhost(game, x * TILE_SIZE, y * TILE_SIZE)
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == ORANGE_GHOST_LAYER_NAME and object_name == ORANGE_GHOST_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        OrangeGhost(game, tile, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'player' and object_name == 'player':
+                        OrangeGhost(game, x * TILE_SIZE, y * TILE_SIZE)
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == PLAYER_LAYER_NAME and object_name == PLAYER_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        PacMan(game, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == 'dots' and object_name == 'dots':
+                        player = PacMan(game, x * TILE_SIZE, y * TILE_SIZE)
+                        return player
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == DOTS_LAYER_NAME and object_name == DOTS_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Dot(game, tile, x * TILE_SIZE, y * TILE_SIZE)
-
 
     def make_map(self, game, object_name):
         self.render(game, object_name)

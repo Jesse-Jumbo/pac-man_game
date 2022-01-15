@@ -1,12 +1,12 @@
-from .collide_sprite_with_group import collide_with_walls
+from .collide_sprite_with_walls import collide_with_walls
 from .settings import *
 from .Ghost import Ghost
 
 
 class GreenGhost(Ghost):
-    def __init__(self, game, img, x, y):
-        super().__init__(game, img, x, y)
-        self.image = img
+    def __init__(self, game, x, y):
+        super().__init__(game, x, y)
+        self.image = game.green_ghost_images['down']
         self.origin_img = game.green_ghost_images['down']
         self.up_img = game.green_ghost_images['up']
         self.right_img = game.green_ghost_images['right']
