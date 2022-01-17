@@ -27,7 +27,7 @@ class TiledMap:
                     tile = ti(gid)
                     if tile:
                         Obstacle(game, game.walls, tile, x * TILE_SIZE, y * TILE_SIZE)
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == PLAYER_LAYER_NAME and object_name == PLAYER_LAYER_NAME:
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME and object_name == POINT_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Point(game, tile, x * TILE_SIZE, y * TILE_SIZE)
@@ -36,7 +36,7 @@ class TiledMap:
                     if tile:
                         red_ghost = RedGhost(game, x * TILE_SIZE, y * TILE_SIZE)
                         return red_ghost
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == PLAYER_LAYER_NAME and object_name == PLAYER_LAYER_NAME:
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == PINK_GHOST_LAYER_NAME and object_name == PINK_GHOST_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         return PinkGhost(game, x * TILE_SIZE, y * TILE_SIZE)
@@ -47,7 +47,7 @@ class TiledMap:
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == ORANGE_GHOST_LAYER_NAME and object_name == ORANGE_GHOST_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        OrangeGhost(game, x * TILE_SIZE, y * TILE_SIZE)
+                        return OrangeGhost(game, x * TILE_SIZE, y * TILE_SIZE)
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == PLAYER_LAYER_NAME and object_name == PLAYER_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
@@ -59,4 +59,4 @@ class TiledMap:
                         Dot(game, tile, x * TILE_SIZE, y * TILE_SIZE)
 
     def make_map(self, game, object_name):
-        self.render(game, object_name)
+        return self.render(game, object_name)

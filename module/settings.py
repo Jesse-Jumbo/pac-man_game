@@ -56,10 +56,10 @@ WITH_GHOST = 'ghost'
 WITH_PLAYER = 'player'
 '''player setting'''
 PLAYER_SPEED = 200.0
-PLAYRE_HIT_RECT = pygame.Rect(0, 0, 28, 28)
+PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 
 '''ghost setting'''
-GHOST_HIT_RECT = pygame.Rect(0, 0, 28, 28)
+GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 GHOST_SPEED = 90.0
 SPEED_SLOW = -10
 RED_MODULE = 'red'
@@ -82,6 +82,10 @@ ORANGE_GO = 55
 WALL_IMG = "wall.png"
 
 '''dot setting'''
+DOT_HIT_RECT = pygame.Rect(0, 0, 8, 8)
+
+'''point setting'''
+POINT_HIT_RECT = pygame.Rect(0, 0, 12, 12)
 
 '''node setting'''
 node_width = 50

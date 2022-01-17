@@ -12,9 +12,10 @@ class Dot(pygame.sprite.Sprite):
         self.angle = 0
         self.image = img
         self.rect = self.image.get_rect()
-        self.hit_rect = self.rect
+        self.hit_rect = DOT_HIT_RECT
         self.rect.x = x
         self.rect.y = y
+        self.hit_rect.center = self.rect.center
 
     def update(self) -> None:
         pass

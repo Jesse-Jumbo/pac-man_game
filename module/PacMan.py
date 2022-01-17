@@ -1,5 +1,6 @@
 import pygame.math
 
+from .collide_hit_rect import collide_hit_rect
 from .collide_sprite_with_walls import collide_with_walls
 from .collide_player_with_ghosts import collide_player_with_ghosts
 from .collide_sprite_with_nodes import collide_with_nodes
@@ -31,6 +32,10 @@ class PacMan(pygame.sprite.Sprite):
         self.node_value = 0
         self.node_pos = pygame.math.Vector2(0, 0)
         self.score = 0
+        self.up_move = False
+        self.down_move = False
+        self.left_move = False
+        self.right_move = False
 
     def update(self):
         self.present_player += self.img_change_control
@@ -42,19 +47,19 @@ class PacMan(pygame.sprite.Sprite):
         self.pos += self.vel * self.game.dt
 
         self.hit_rect.centerx = self.pos.x
-        # collide_with_walls(self, self.game.walls, 'x')
+        collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
-        # collide_with_walls(self, self.game.walls, 'y')
+        collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
 
         collide_player_with_ghosts(self, self.game.ghosts, WITH_GHOST)
         # collide_with_nodes(self, self.game.nodes, 'update_node')
 
-        hits = pygame.sprite.spritecollide(self, self.game.dots, True)
+        hits = pygame.sprite.spritecollide(self, self.game.dots, True, collide_hit_rect)
         for hit in hits:
             self.score += 10
 
-        hits = pygame.sprite.spritecollide(self, self.game.points, True)
+        hits = pygame.sprite.spritecollide(self, self.game.points, True, collide_hit_rect)
         for hit in hits:
             self.score += 50
 
@@ -67,25 +72,21 @@ class PacMan(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.rect.top = 0
 
+# TODO make player not to fall in walls (maybe add a keyup or something)
     def get_keys(self):
         self.vel = pygame.math.Vector2(0, 0)
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_UP] or keystate[pygame.K_w]:
+        if self.up_move:
             self.image = self.game.player_up_images[int(self.present_player)]
             self.vel.y = -PLAYER_SPEED
-            self.front_pos = (self.rect.centerx, self.rect.top - TILE_SIZE)
-        elif keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
+        if self.down_move:
             self.image = self.game.player_down_images[int(self.present_player)]
             self.vel.y = PLAYER_SPEED
-            self.front_pos = (self.rect.centerx, self.rect.bottom + TILE_SIZE)
-        elif keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
+        if self.left_move:
             self.image = self.game.player_left_images[int(self.present_player)]
             self.vel.x = -PLAYER_SPEED
-            self.front_pos = (self.rect.left - TILE_SIZE, self.rect.centery)
-        elif keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
+        if self.right_move:
             self.image = self.game.player_right_images[int(self.present_player)]
             self.vel.x = PLAYER_SPEED
-            self.front_pos = (self.rect.right + TILE_SIZE, self.rect.centery)
         # to slow the speed when move to corner
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071

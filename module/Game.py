@@ -131,8 +131,8 @@ class Game:
             self.dt = self.clock.tick(FPS) / 1000
             self.events()
             if not self.paused:
-                self.draw()
-            self.update()
+                self.update()
+            self.draw()
 
     def quit(self):
         pygame.quit()
@@ -167,8 +167,7 @@ class Game:
         self.window.fill(BG_COLOR)
         # check FPS is correctly
         pygame.display.set_caption(TITLE + "{:.2f}".format(self.clock.get_fps()))
-        # here the player is None than program will error, so I'll annotate first
-        # draw_text(self.window, str(self.player.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
+        draw_text(self.window, str(self.player.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
         # self.draw_grid()
         # draw all sprites according to sprite's rect
         for sprite in self.all_sprites:
@@ -176,9 +175,17 @@ class Game:
             # press H to check sprite rect
             if self.draw_debug:
                 pygame.draw.rect(self.window, CYAN_BLUE, sprite.rect, 1)
+                pygame.draw.rect(self.window, CYAN_BLUE, sprite.hit_rect, 1)
         if self.draw_debug:
             for wall in self.walls:
-                pygame.draw.rect(self.window, CYAN_BLUE, wall.rect, 1)
+                pygame.draw.rect(self.window, CYAN_BLUE, wall.hit_rect, 1)
+        # TODO check hit rect by draw
+        if self.draw_debug:
+            for dot in self.dots:
+                pygame.draw.rect(self.window, CYAN_BLUE, dot.hit_rect, 1)
+        if self.draw_debug:
+            for point in self.points:
+                pygame.draw.rect(self.window, CYAN_BLUE, point.hit_rect, 1)
         # press P to pause game
         if self.paused:
             self.window.blit(self.dim_window, (0, 0))
@@ -198,10 +205,31 @@ class Game:
                     self.paused = not self.paused
                 if event.key == pygame.K_ESCAPE:
                     self.stop_music = not self.stop_music
+                # for player
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                    self.player.up_move = True
+                    self.player.down_move = False
+                    self.player.right_move = False
+                    self.player.left_move = False
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    self.player.down_move = True
+                    self.player.up_move = False
+                    self.player.right_move = False
+                    self.player.left_move = False
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    self.player.left_move = True
+                    self.player.up_move = False
+                    self.player.down_move = False
+                    self.player.right_move = False
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    self.player.right_move = True
+                    self.player.up_move = False
+                    self.player.down_move = False
+                    self.player.left_move = False
 
     def show_go_screen(self):
         self.window.blit(self.dim_window, (0, 0))
-        draw_text(self.window, f"SCORE: {self.score}", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
+        draw_text(self.window, f"SCORE: {self.player.score}", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
         draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
 
         pygame.display.flip()
