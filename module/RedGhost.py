@@ -9,11 +9,11 @@ from .Ghost import Ghost
 class RedGhost(Ghost):
     def __init__(self, game, x, y):
         super().__init__(game, x, y)
-        self.image = game.red_ghost_images[DOWN_IMG]
-        self.origin_img = game.red_ghost_images[DOWN_IMG]
-        self.up_img = game.red_ghost_images[UP_IMG]
-        self.right_img = game.red_ghost_images[RIGHT_IMG]
-        self.left_image = game.red_ghost_images[LEFT_IMG]
+        self.image = game.ghosts_images[RED_IMG][DOWN_IMG]
+        self.origin_img = game.ghosts_images[RED_IMG][DOWN_IMG]
+        self.up_img = game.ghosts_images[RED_IMG][UP_IMG]
+        self.right_img = game.ghosts_images[RED_IMG][RIGHT_IMG]
+        self.left_image = game.ghosts_images[RED_IMG][LEFT_IMG]
 
     def update(self, *args, **kwargs) -> None:
         if self.is_out() and not self.is_blue:
@@ -22,8 +22,7 @@ class RedGhost(Ghost):
             self.chase_module(RED_MODULE)
         else:
             self.frightened_module()
-        #
-        # self.move_up()
+
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y

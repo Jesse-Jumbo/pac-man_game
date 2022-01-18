@@ -58,6 +58,7 @@ WITH_PLAYER = 'player'
 PLAYER_SPEED = 200.0
 PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 
+
 '''ghost setting'''
 GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 GHOST_SPEED = 90.0
@@ -66,6 +67,13 @@ RED_MODULE = 'red'
 PINK_MODULE = 'pink'
 GREEN_MODULE = 'green'
 ORANGE_MODULE = 'orange'
+BLUE_IMG = 'blue_ghost_img'
+RED_IMG = 'red_ghost_img'
+PINK_IMG = 'pink_ghost_img'
+GREEN_IMG = 'green_ghost_img'
+ORANGE_IMG = 'orange_ghost_img'
+
+"""all setting"""
 DOWN_IMG = 'down'
 RIGHT_IMG = 'right'
 UP_IMG = 'up'

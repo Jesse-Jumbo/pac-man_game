@@ -6,11 +6,11 @@ from .Ghost import Ghost
 class GreenGhost(Ghost):
     def __init__(self, game, x, y):
         super().__init__(game, x, y)
-        self.image = game.green_ghost_images['down']
-        self.origin_img = game.green_ghost_images['down']
-        self.up_img = game.green_ghost_images['up']
-        self.right_img = game.green_ghost_images['right']
-        self.left_image = game.green_ghost_images['left']
+        self.image = game.ghosts_images[GREEN_IMG][DOWN_IMG]
+        self.origin_img = game.ghosts_images[GREEN_IMG][DOWN_IMG]
+        self.up_img = game.ghosts_images[GREEN_IMG][UP_IMG]
+        self.right_img = game.ghosts_images[GREEN_IMG][RIGHT_IMG]
+        self.left_image = game.ghosts_images[GREEN_IMG][LEFT_IMG]
         self.go_out_limit = GREEN_GO
 
     def update(self, *args, **kwargs) -> None:

@@ -8,11 +8,11 @@ from .Ghost import Ghost
 class OrangeGhost(Ghost):
     def __init__(self, game, x, y):
         super().__init__(game, x, y)
-        self.image = game.orange_ghost_images['down']
-        self.origin_img = game.orange_ghost_images['down']
-        self.up_img = game.orange_ghost_images['up']
-        self.right_img = game.orange_ghost_images['right']
-        self.left_image = game.orange_ghost_images['left']
+        self.image = game.ghosts_images[ORANGE_IMG][DOWN_IMG]
+        self.origin_img = game.ghosts_images[ORANGE_IMG][DOWN_IMG]
+        self.up_img = game.ghosts_images[ORANGE_IMG][UP_IMG]
+        self.right_img = game.ghosts_images[ORANGE_IMG][RIGHT_IMG]
+        self.left_image = game.ghosts_images[ORANGE_IMG][LEFT_IMG]
         self.go_out_limit = ORANGE_GO
 
     def update(self, *args, **kwargs) -> None:
@@ -29,10 +29,10 @@ class OrangeGhost(Ghost):
         # collide_with_walls(self, self.game.walls, 'y')
 
     def orange_module(self):
-        self.origin_img = self.game.orange_ghost_images['down']
-        self.up_img = self.game.orange_ghost_images['up']
-        self.right_img = self.game.orange_ghost_images['right']
-        self.left_image = self.game.orange_ghost_images['left']
+        self.origin_img = self.game.ghosts_images[ORANGE_IMG][DOWN_IMG]
+        self.up_img = self.game.ghosts_images[ORANGE_IMG][UP_IMG]
+        self.right_img = self.game.ghosts_images[ORANGE_IMG][RIGHT_IMG]
+        self.left_image = self.game.ghosts_images[ORANGE_IMG][LEFT_IMG]
         now = pygame.time.get_ticks()
         if now - self.last_move > self.move_delay:
             self.move_delay = random.randrange(5000, 10000)

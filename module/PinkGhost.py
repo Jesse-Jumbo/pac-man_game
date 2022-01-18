@@ -6,11 +6,11 @@ from .Ghost import Ghost
 class PinkGhost(Ghost):
     def __init__(self, game, x, y):
         super().__init__(game, x, y)
-        self.image = game.pink_ghost_images['down']
-        self.origin_img = game.pink_ghost_images['down']
-        self.up_img = game.pink_ghost_images['up']
-        self.right_img = game.pink_ghost_images['right']
-        self.left_image = game.pink_ghost_images['left']
+        self.image = game.ghosts_images[PINK_IMG][DOWN_IMG]
+        self.origin_img = game.ghosts_images[PINK_IMG][DOWN_IMG]
+        self.up_img = game.ghosts_images[PINK_IMG][UP_IMG]
+        self.right_img = game.ghosts_images[PINK_IMG][RIGHT_IMG]
+        self.left_image = game.ghosts_images[PINK_IMG][LEFT_IMG]
         self.go_out_limit = PINK_GO
 
     def update(self, *args, **kwargs) -> None:
@@ -27,10 +27,10 @@ class PinkGhost(Ghost):
         # collide_with_walls(self, self.game.walls, 'y')
 
     def pink_module(self):
-        self.origin_img = self.game.pink_ghost_images['down']
-        self.up_img = self.game.pink_ghost_images['up']
-        self.right_img = self.game.pink_ghost_images['right']
-        self.left_image = self.game.pink_ghost_images['left']
+        self.origin_img = self.game.ghosts_images[PINK_IMG][DOWN_IMG]
+        self.up_img = self.game.ghosts_images[PINK_IMG][UP_IMG]
+        self.right_img = self.game.ghosts_images[PINK_IMG][RIGHT_IMG]
+        self.left_image = self.game.ghosts_images[PINK_IMG][LEFT_IMG]
         self.rot = (self.game.player.front_pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
         if -45 <= self.rot < 45:
             self.image = self.right_img

@@ -18,7 +18,7 @@ class Ghost(pygame.sprite.Sprite):
         self.groups = game.all_sprites, game.ghosts
         super().__init__(self.groups)
         self.game = game
-        self.image = game.blue_ghost_images[DOWN_IMG]
+        self.image = game.ghosts_images[BLUE_IMG][DOWN_IMG]
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -28,10 +28,10 @@ class Ghost(pygame.sprite.Sprite):
         self.pos.xy = self.rect.center
         self.last_move = pygame.time.get_ticks()
         self.move_delay = 100
-        self.origin_img = game.blue_ghost_images[DOWN_IMG]
-        self.up_img = game.blue_ghost_images[UP_IMG]
-        self.right_img = game.blue_ghost_images[RIGHT_IMG]
-        self.left_image = game.blue_ghost_images[LEFT_IMG]
+        self.origin_img = game.ghosts_images[BLUE_IMG][DOWN_IMG]
+        self.up_img = game.ghosts_images[BLUE_IMG][UP_IMG]
+        self.right_img = game.ghosts_images[BLUE_IMG][RIGHT_IMG]
+        self.left_image = game.ghosts_images[BLUE_IMG][LEFT_IMG]
         self.rot = 0
         self.vel = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
@@ -62,19 +62,19 @@ class Ghost(pygame.sprite.Sprite):
                 self.is_blue = False
             self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
             if -45 <= self.rot < 45:
-                self.image = self.game.blue_ghost_images[LEFT_IMG]
+                self.image = self.game.ghosts_images[BLUE_IMG][LEFT_IMG]
                 self.vel.x = -(self.speed + self.speed_slow)
                 self.pos.x += self.vel.x * self.game.dt
             elif 45 <= self.rot < 135:
-                self.image = self.game.blue_ghost_images[DOWN_IMG]
+                self.image = self.game.ghosts_images[BLUE_IMG][DOWN_IMG]
                 self.vel.y = self.speed + self.speed_slow
                 self.pos.y += self.vel.y * self.game.dt
             elif -135 >= self.rot or 180 >= self.rot >= 135:
-                self.image = self.game.blue_ghost_images[RIGHT_IMG]
+                self.image = self.game.ghosts_images[BLUE_IMG][RIGHT_IMG]
                 self.vel.x = self.speed + self.speed_slow
                 self.pos.x += self.vel.x * self.game.dt
             else:
-                self.image = self.game.blue_ghost_images[UP_IMG]
+                self.image = self.game.ghosts_images[BLUE_IMG][UP_IMG]
                 self.vel.y = -(self.speed + self.speed_slow)
                 self.pos.y += self.vel.y * self.game.dt
             self.rect = self.image.get_rect()

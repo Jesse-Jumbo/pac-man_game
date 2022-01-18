@@ -14,7 +14,11 @@ class PacMan(pygame.sprite.Sprite):
         super().__init__(self.groups)
         self.game = game
         self.present_player = 0
-        self.image = game.player_right_images[self.present_player]
+        self.image = game.player_images["right"][int(self.present_player)]
+        self.right_img = self.game.player_images["right"]
+        self.up_img = self.game.player_images["up"]
+        self.down_img = self.game.player_images["down"]
+        self.left_img = self.game.player_images["left"]
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -23,10 +27,6 @@ class PacMan(pygame.sprite.Sprite):
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2(0, 0)
         self.pos.xy = self.rect.center
-        self.right_img = game.player_right_images[int(self.present_player)]
-        self.up_img = game.player_up_images[int(self.present_player)]
-        self.down_img = game.player_down_images[int(self.present_player)]
-        self.left_img = game.player_left_images[int(self.present_player)]
         self.front_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.img_change_control = 0.4
         self.node_value = 0
@@ -39,7 +39,7 @@ class PacMan(pygame.sprite.Sprite):
 
     def update(self):
         self.present_player += self.img_change_control
-        if self.present_player >= len(self.game.player_right_images):
+        if self.present_player >= len(self.game.player_images["right"]):
             self.present_player = 0
         self.get_keys()
         self.rect = self.image.get_rect()
@@ -75,21 +75,20 @@ class PacMan(pygame.sprite.Sprite):
     def get_keys(self):
         self.vel = pygame.math.Vector2(0, 0)
         if self.up_move:
-            self.image = self.game.player_up_images[int(self.present_player)]
+            self.image = self.up_img[int(self.present_player)]
             self.vel.y = -PLAYER_SPEED
         if self.down_move:
-            self.image = self.game.player_down_images[int(self.present_player)]
+            self.image = self.down_img[int(self.present_player)]
             self.vel.y = PLAYER_SPEED
         if self.left_move:
-            self.image = self.game.player_left_images[int(self.present_player)]
+            self.image = self.left_img[int(self.present_player)]
             self.vel.x = -PLAYER_SPEED
         if self.right_move:
-            self.image = self.game.player_right_images[int(self.present_player)]
+            self.image = self.right_img[int(self.present_player)]
             self.vel.x = PLAYER_SPEED
         # to slow the speed when move to corner
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
-
 
     @property
     def player_data(self):
