@@ -72,7 +72,6 @@ class PacMan(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.rect.top = 0
 
-# TODO make player not to fall in walls (maybe add a keyup or something)
     def get_keys(self):
         self.vel = pygame.math.Vector2(0, 0)
         if self.up_move:

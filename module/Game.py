@@ -208,24 +208,31 @@ class Game:
                 # for player
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     self.player.up_move = True
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                    self.player.down_move = True
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                    self.player.left_move = True
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                    self.player.right_move = True
+            if event.type == pygame.KEYUP:
+                # for player
+                if event.key == pygame.K_UP or event.key == pygame.K_w:
                     self.player.down_move = False
                     self.player.right_move = False
                     self.player.left_move = False
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    self.player.down_move = True
                     self.player.up_move = False
                     self.player.right_move = False
                     self.player.left_move = False
                 if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    self.player.left_move = True
                     self.player.up_move = False
                     self.player.down_move = False
                     self.player.right_move = False
                 if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    self.player.right_move = True
                     self.player.up_move = False
                     self.player.down_move = False
                     self.player.left_move = False
+
 
     def show_go_screen(self):
         self.window.blit(self.dim_window, (0, 0))
