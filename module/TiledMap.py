@@ -23,11 +23,11 @@ class TiledMap:
         ti = self.tmxdata.get_tile_image_by_gid
         for layer in self.tmxdata.visible_layers:
             for x, y, gid, in layer:
-                if isinstance(layer, pytmx.TiledTileLayer) and layer.name == WALL_LAYER_NAME:
+                if isinstance(layer, pytmx.TiledTileLayer) and layer.name == WALL_LAYER_NAME and object_name == WALL_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Obstacle(game, game.walls, tile, x * TILE_SIZE, y * TILE_SIZE)
-                if isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME:
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME and object_name == POINT_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Point(game, tile, x * TILE_SIZE, y * TILE_SIZE)
@@ -53,10 +53,10 @@ class TiledMap:
                     if tile:
                         player = PacMan(game, x * TILE_SIZE, y * TILE_SIZE)
                         return player
-                if isinstance(layer, pytmx.TiledTileLayer) and layer.name == DOTS_LAYER_NAME:
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == DOTS_LAYER_NAME and object_name == DOTS_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Dot(game, tile, x * TILE_SIZE, y * TILE_SIZE)
 
-    def make_map(self, game, object_name=""):
+    def make_map(self, game, object_name):
         return self.render(game, object_name)

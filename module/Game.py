@@ -46,12 +46,14 @@ class Game:
         self.dots = pygame.sprite.Group()
         self.points = pygame.sprite.Group()
         # create map object
-        self.map.make_map(self)
+        self.map.make_map(self, WALL_LAYER_NAME)
+        self.map.make_map(self, POINT_LAYER_NAME)
         self.red_ghost = self.map.make_map(self, RED_GHOST_LAYER_NAME)
         self.pink_ghost = self.map.make_map(self, PINK_GHOST_LAYER_NAME)
         self.green_ghost = self.map.make_map(self, GREEN_GHOST_LAYER_NAME)
         self.orange_ghost = self.map.make_map(self, ORANGE_GHOST_LAYER_NAME)
         self.player = self.map.make_map(self, PLAYER_LAYER_NAME)
+        self.map.make_map(self, DOTS_LAYER_NAME)
         # track time variables
         self.blue_time = pygame.time.get_ticks()
 

@@ -8,7 +8,7 @@ class Point(pygame.sprite.Sprite):
         super().__init__(self.groups)
         self.image = img
         self.rect = self.image.get_rect()
-        self.hit_rect = POINT_HIT_RECT
+        self.hit_rect = POINT_HIT_RECT.copy()
         self.rect.x = x
         self.rect.y = y
         self.hit_rect.center = self.rect.center
