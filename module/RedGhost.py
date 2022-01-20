@@ -16,12 +16,12 @@ class RedGhost(Ghost):
         self.left_image = game.ghosts_images[RED_IMG][LEFT_IMG]
 
     def update(self, *args, **kwargs) -> None:
-        if self.is_out() and not self.is_blue:
-            # collide_with_nodes(self, self.game.nodes, 'node')
-            # collide_with_nodes(self, self.game.nodes, 'target')
-            self.chase_module(RED_MODULE)
-        else:
-            self.frightened_module()
+        # if self.is_out() and not self.is_blue:
+        #     # collide_with_nodes(self, self.game.nodes, 'node')
+        #     # collide_with_nodes(self, self.game.nodes, 'target')
+        self.chase_module(RED_MODULE)
+        # else:
+        #     self.frightened_module()
 
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')

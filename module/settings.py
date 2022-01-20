@@ -23,6 +23,7 @@ PINK = (255, 0, 255)
 DARKGREY = (40, 40, 40)
 LIGHTGREY = (100, 100, 100)
 BROWN = (100, 55, 5)
+FOREST = (34, 57, 10)
 
 '''Layers'''
 WALL_LAYER = 1
