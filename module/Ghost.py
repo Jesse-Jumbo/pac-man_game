@@ -38,11 +38,12 @@ class Ghost(pygame.sprite.Sprite):
         self.target_pos = pygame.math.Vector2(0, 0)
         self.blue_limit = 10000
         self.speed_slow = SPEED_SLOW
-        self.go_out_limit = 100
+        self.go_out_limit = len(game.dots) + RED_GO
         self.is_blue = False
         self.get_blue_time = pygame.time.get_ticks()
 
     def is_out(self):
+        print(self.go_out_limit)
         if len(self.game.dots) <= self.go_out_limit:
             return True
         else:

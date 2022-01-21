@@ -11,19 +11,19 @@ class GreenGhost(Ghost):
         self.up_img = game.ghosts_images[GREEN_IMG][UP_IMG]
         self.right_img = game.ghosts_images[GREEN_IMG][RIGHT_IMG]
         self.left_image = game.ghosts_images[GREEN_IMG][LEFT_IMG]
-        self.go_out_limit = GREEN_GO
+        self.go_out_limit = len(game.dots) + GREEN_GO
 
     def update(self, *args, **kwargs) -> None:
-        pass
-        # if self.is_out() and not self.is_blue:
-        #     self.green__module()
-        # else:
-        #     self.frightened_module()
-        #
-        # self.rect.center = self.hit_rect.center
-        # self.hit_rect.centerx = self.pos.x
-        # collide_with_walls(self, self.game.walls, 'x')
-        # self.hit_rect.centery = self.pos.y
-        # collide_with_walls(self, self.game.walls, 'y')
+        if self.is_out():
+            if not self.is_blue:
+                self.green__module()
+            elif self.is_blue:
+                self.frightened_module()
+
+        self.rect.center = self.hit_rect.center
+        self.hit_rect.centerx = self.pos.x
+        collide_with_walls(self, self.game.walls, 'x')
+        self.hit_rect.centery = self.pos.y
+        collide_with_walls(self, self.game.walls, 'y')
 
 

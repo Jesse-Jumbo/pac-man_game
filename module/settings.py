@@ -80,12 +80,13 @@ RIGHT_IMG = 'right'
 UP_IMG = 'up'
 LEFT_IMG = 'left'
 '''red'''
+RED_GO = 0
 '''pink'''
-PINK_GO = 85
+PINK_GO = -15
 '''green'''
-GREEN_GO = 70
+GREEN_GO = -30
 '''orange'''
-ORANGE_GO = 55
+ORANGE_GO = -45
 
 '''wall setting'''
 WALL_IMG = "wall.png"
