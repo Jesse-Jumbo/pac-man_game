@@ -62,6 +62,13 @@ class PacMan(pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self, self.game.points, True, collide_hit_rect)
         for hit in hits:
             self.score += 50
+            self.game.player.score += 50
+            self.game.red_ghost.blue_time()
+            self.game.green_ghost.blue_time()
+            self.game.pink_ghost.blue_time()
+            self.game.orange_ghost.blue_time()
+            self.game.danger = True
+            self.game.music_play()
 
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH

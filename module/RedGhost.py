@@ -19,7 +19,7 @@ class RedGhost(Ghost):
         if self.is_out() and not self.is_blue:
             self.chase_module(RED_MODULE)
         elif self.is_out() and self.is_blue:
-            self.frightened_module()
+            self.blue_time()
 
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
