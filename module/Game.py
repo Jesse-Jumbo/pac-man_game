@@ -139,16 +139,6 @@ class Game:
             self.show_go_screen()
             self.__init__()
 
-        hits = pygame.sprite.spritecollide(self.player, self.points, True, collide_hit_rect)
-        for hit in hits:
-            self.player.score += 50
-            self.red_ghost.blue_time()
-            self.green_ghost.blue_time()
-            self.pink_ghost.blue_time()
-            self.orange_ghost.blue_time()
-            self.danger = True
-            self.music_play()
-
     def draw_grid(self):
         # check the background is drawn correctly with the tile size
         for x in range(0, WIDTH, TILE_SIZE):

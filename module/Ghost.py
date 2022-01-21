@@ -43,7 +43,6 @@ class Ghost(pygame.sprite.Sprite):
         self.get_blue_time = pygame.time.get_ticks()
 
     def is_out(self):
-        print(self.go_out_limit)
         if len(self.game.dots) <= self.go_out_limit:
             return True
         else:
