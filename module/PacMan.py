@@ -27,10 +27,10 @@ class PacMan(pygame.sprite.Sprite):
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2(0, 0)
         self.pos.xy = self.rect.center
+        self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
+
         self.front_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
         self.img_change_control = 0.4
-        self.node_value = 0
-        self.node_pos = pygame.math.Vector2(0, 0)
         self.score = 0
         self.up_move = False
         self.down_move = False
@@ -53,7 +53,7 @@ class PacMan(pygame.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
         collide_player_with_ghosts(self, self.game.ghosts, WITH_GHOST)
-        # collide_with_nodes(self, self.game.nodes, 'update_node')
+        collide_with_nodes(self, self.game.nodes, 'node')
 
         hits = pygame.sprite.spritecollide(self, self.game.dots, True, collide_hit_rect)
         for hit in hits:

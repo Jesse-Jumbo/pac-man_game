@@ -1,7 +1,6 @@
 import pygame
 
-from games.pac_man.module.Game import Game
-from settings import *
+from .settings import *
 import heapq
 from collections import deque
 
@@ -10,9 +9,13 @@ vec = pygame.math.Vector2
 
 class SquareGrid:
     def __init__(self, game, width, height):
+        self.game = game
         self.width = width
         self.height = height
-        self.walls = game.walls
+        walls = []
+        for wall in game.walls:
+            walls.append(vec(wall.pos))
+        self.walls = walls
         self.connections = [vec(1, 0), vec(-1, 0), vec(0, 1), vec(0, -1)]
 
     def in_bounds(self, node):
@@ -29,29 +32,33 @@ class SquareGrid:
         neighbors = filter(self.passable, neighbors)
         return neighbors
 
-    def draw(self, game):
-        for wall in self.walls:
-            rect = pygame.Rect(wall * TILE_SIZE, (TILE_SIZE, TILE_SIZE))
-            pygame.draw.rect(game.window, LIGHTGREY, rect)
+    # def draw(self):
+    #     for wall in self.walls:
+    #         rect = pygame.Rect(wall * TILE_SIZE, (TILE_SIZE, TILE_SIZE))
+    #         pygame.draw.rect(game.window, LIGHTGREY, rect)
 
 
 class WeightedGrid(SquareGrid):
     def __init__(self, game, width, height):
         super().__init__(game, width, height)
         self.weights = {}
+        for hose in game.home:
+            self.weights[hose.pos] = 500
 
     def cost(self, from_node, to_node):
+        # is go up or down or right or left
         if (vec(to_node) - vec(from_node)).length_squared() == 1:
-            return self.weights.get(to_node, 0) + 0
+            # + cost on key node's value
+            return self.weights.get(to_node, 0) + 10
 
-    def draw(self, game):
+    def draw(self):
         for wall in self.walls:
             rect = pygame.Rect(wall * TILE_SIZE, (TILE_SIZE, TILE_SIZE))
-            pygame.draw.rect(game.window, LIGHTGREY, rect)
+            pygame.draw.rect(self.game.window, LIGHTGREY, rect)
         for tile in self.weights:
             x, y = tile
             rect = pygame.Rect(x * TILE_SIZE + 3, y * TILE_SIZE + 3, TILE_SIZE - 3, TILE_SIZE - 3)
-            pygame.draw.rect(game.window, FOREST, rect)
+            pygame.draw.rect(self.game.window, FOREST, rect)
 
 
 class PriorityQueue:
@@ -92,12 +99,12 @@ def heuristic(node1, node2):
     return abs(node1.x - node2.x) + abs(node1.y - node2.y) * 10
 
 
-def a_start_search(graph, start, end):
+def a_star_search(graph, start, end):
     frontier = PriorityQueue()
     frontier.put(vec2int(start), 0)
     path = {}
     cost = {}
-    path[vec2int(start)] = None
+    path[vec2int(start)] = vec(0, 0)
     cost[vec2int(start)] = 0
 
     while not frontier.empty():
@@ -137,11 +144,20 @@ def dijkstra_search(graph, start, end):
                 path[next] = vec(current) - vec(next)
     return path, cost
 
-game = Game()
+# game = Game()
 
-g = WeightedGrid(game, GRID_WIDTH, GRID_HEIGHT)
+# g = WeightedGrid(game, GRID_WIDTH, GRID_HEIGHT)
 
 
-goal = vec(14, 8)
-start = vec(20, 0)
-path = dijkstra_search(g, goal, start)
+# goal = vec(14, 8)
+# start = vec(20, 0)
+# path, c = a_star_search(g, goal, start)
+#
+# for node in path:
+#     x, y = node
+#
+# current = start
+#
+# while current != goal:
+#     v = path[(current.x, current.y)]
+#     current = current + path[vec2int(current)]

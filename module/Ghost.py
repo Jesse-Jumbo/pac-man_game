@@ -2,6 +2,7 @@ import pygame.transform
 
 from .collide_player_with_ghosts import collide_player_with_ghosts
 from .settings import *
+from .SquareGrid import *
 
 
 def move():
@@ -41,6 +42,15 @@ class Ghost(pygame.sprite.Sprite):
         self.go_out_limit = len(game.dots) + RED_GO
         self.is_blue = False
         self.get_blue_time = pygame.time.get_ticks()
+        self.ghost_origin_pos = pygame.math.Vector2(0, 0)
+        self.ghost_origin_pos.xy = self.rect.center
+
+
+        self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
+        self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
+        self.goal = vec(self.game.player.node_pos)
+        self.start = vec(self.node_pos)
+        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
     def is_out(self):
         if len(self.game.dots) <= self.go_out_limit:
@@ -100,7 +110,11 @@ class Ghost(pygame.sprite.Sprite):
         pass
 
     def red_module(self):
-        pass
+        # red ghost search player
+        self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
+        self.goal = vec(self.game.player.node_pos)
+        self.start = vec(self.node_pos)
+        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
     def move_right(self):
         self.image = self.right_img

@@ -24,6 +24,8 @@ DARKGREY = (40, 40, 40)
 LIGHTGREY = (100, 100, 100)
 BROWN = (100, 55, 5)
 FOREST = (34, 57, 10)
+MAGENTA = (255, 0, 255)
+MEDGRAY = (75, 75, 75)
 
 '''Layers'''
 WALL_LAYER = 1
@@ -51,6 +53,7 @@ GREEN_GHOST_LAYER_NAME = 'green_ghost'
 ORANGE_GHOST_LAYER_NAME = 'orange_ghost'
 PLAYER_LAYER_NAME = 'player'
 DOTS_LAYER_NAME = 'dots'
+HOME_LAYER_NAME = 'home'
 
 """collide setting"""
 WITH_GHOST = 'ghost'
