@@ -1,7 +1,9 @@
+import math
 import sys
 
 import pygame.event
 
+from .Node import Node
 from .Obstacle import Obstacle
 from .TiledMap import TiledMap
 from .collide_hit_rect import collide_hit_rect
@@ -17,7 +19,7 @@ from .PinkGhost import PinkGhost
 from .OrangeGhost import OrangeGhost
 from .Wall import Wall
 from .Map import Map
-from .Node import *
+from .SquareGrid import *
 
 
 class Game:
@@ -30,6 +32,7 @@ class Game:
         # initialize all variables and so all the setup for a new game
         # control variables
         self.draw_debug = False
+        self.check_path = False
         self.paused = False
         self.waiting = False
         self.danger = False
@@ -41,21 +44,41 @@ class Game:
         # initialize sprites group
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
-        self.nodes = pygame.sprite.Group()
         self.ghosts = pygame.sprite.Group()
         self.dots = pygame.sprite.Group()
         self.points = pygame.sprite.Group()
+        self.home = pygame.sprite.Group()
+        self.nodes = pygame.sprite.Group()
         # create map object
         self.map.make_map(self, WALL_LAYER_NAME)
         self.map.make_map(self, DOTS_LAYER_NAME)
         self.map.make_map(self, POINT_LAYER_NAME)
+        self.map.make_map(self, HOME_LAYER_NAME)
         self.red_ghost = self.map.make_map(self, RED_GHOST_LAYER_NAME)
         self.pink_ghost = self.map.make_map(self, PINK_GHOST_LAYER_NAME)
         self.green_ghost = self.map.make_map(self, GREEN_GHOST_LAYER_NAME)
         self.orange_ghost = self.map.make_map(self, ORANGE_GHOST_LAYER_NAME)
         self.player = self.map.make_map(self, PLAYER_LAYER_NAME)
-        # track time variables
-        self.blue_time = pygame.time.get_ticks()
+        # create nodes
+        node_pos = {}
+        pos_x = []
+        pos_y = []
+        name = 0
+        for x in range(0, WIDTH, TILE_SIZE):
+            pos_x.append(x)
+        for y in range(0, HEIGHT, TILE_SIZE):
+            pos_y.append(y)
+        for x in pos_x:
+            for y in pos_y:
+                node_pos[name] = [x, y]
+                name += 1
+        for i in node_pos.values():
+            Node(self, i[0], i[1])
+        # define variable for search
+        self.g = WeightedGrid(self, GRID_WIDTH, GRID_HEIGHT)
+        self.goal = vec(self.player.node_pos)
+        self.start = vec(self.red_ghost.node_pos)
+        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
     def load_data(self):
         """folder path"""
@@ -138,38 +161,54 @@ class Game:
             self.playing = False
             self.show_go_screen()
             self.__init__()
+        # search player
+        self.goal = vec(self.player.node_pos)
+        self.start = vec(self.red_ghost.node_pos)
+        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
-    def draw_grid(self):
+    def draw_path(self):
         # check the background is drawn correctly with the tile size
-        for x in range(0, WIDTH, TILE_SIZE):
-            pygame.draw.line(self.window, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILE_SIZE):
-            pygame.draw.line(self.window, LIGHTGREY, (0, y), (WIDTH, y))
+        current = self.start  # + self.path[vec2int(self.start)]
+        while current != self.goal:
+            current += self.path[vec2int(current)]
+            img = self.red_ghost.origin_img
+            r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
+            self.window.blit(img, r)
+        return path
 
     def draw(self):
         # cover last update
-        self.window.fill(BG_COLOR)
+        self.window.fill(BLACK)
         # check FPS is correctly
         pygame.display.set_caption(TITLE + "{:.2f}".format(self.clock.get_fps()))
         draw_text(self.window, str(self.player.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
-        # self.draw_grid()
         # draw all sprites according to sprite's rect
         for sprite in self.all_sprites:
             self.window.blit(sprite.image, sprite.rect)
             # press H to check sprite rect
             if self.draw_debug:
-                pygame.draw.rect(self.window, CYAN_BLUE, sprite.rect, 1)
-                pygame.draw.rect(self.window, CYAN_BLUE, sprite.hit_rect, 1)
+                pygame.draw.rect(self.window, BG_COLOR, sprite.rect, 1)
+                pygame.draw.rect(self.window, BG_COLOR, sprite.hit_rect, 1)
+        if self.check_path:
+            # draw path from start to goal
+            self.draw_path()
+
         if self.draw_debug:
+            # search area
+            for node in self.path:
+                self.x, self.y = node
+                self.draw_rect = pygame.Rect(self.x * TILE_SIZE, self.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                pygame.draw.rect(self.window, CYAN_BLUE, self.draw_rect, 1)
+            for node in self.nodes:
+                pygame.draw.rect(self.window, RED, node.pos_rect, 1)
             for wall in self.walls:
-                pygame.draw.rect(self.window, CYAN_BLUE, wall.hit_rect, 1)
-        # TODO check hit rect by draw
+                pygame.draw.rect(self.window, BG_COLOR, wall.hit_rect, 1)
         if self.draw_debug:
             for dot in self.dots:
-                pygame.draw.rect(self.window, CYAN_BLUE, dot.hit_rect, 1)
+                pygame.draw.rect(self.window, BG_COLOR, dot.hit_rect, 1)
         if self.draw_debug:
             for point in self.points:
-                pygame.draw.rect(self.window, CYAN_BLUE, point.hit_rect, 1)
+                pygame.draw.rect(self.window, BG_COLOR, point.hit_rect, 1)
         # press P to pause game
         if self.paused:
             self.window.blit(self.dim_window, (0, 0))
@@ -189,6 +228,11 @@ class Game:
                     self.paused = not self.paused
                 if event.key == pygame.K_ESCAPE:
                     self.stop_music = not self.stop_music
+                if event.key == pygame.K_b:
+                    self.check_path = not self.check_path
+
+                if event.key == pygame.K_u:
+                    self.quit()
                 # for player
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     self.player.up_move = True
@@ -225,6 +269,7 @@ class Game:
 
         pygame.display.flip()
         self.wait_for_key()
+        self.__init__()
 
     def wait_for_key(self):
         self.music_play()

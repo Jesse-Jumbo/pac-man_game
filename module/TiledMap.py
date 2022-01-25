@@ -57,6 +57,10 @@ class TiledMap:
                     tile = ti(gid)
                     if tile:
                         Dot(game, tile, x * TILE_SIZE, y * TILE_SIZE)
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == HOME_LAYER_NAME and object_name == HOME_LAYER_NAME:
+                    tile = ti(gid)
+                    if tile:
+                        Obstacle(game, game.home, tile, x * TILE_SIZE, y * TILE_SIZE)
 
     def make_map(self, game, object_name):
         return self.render(game, object_name)

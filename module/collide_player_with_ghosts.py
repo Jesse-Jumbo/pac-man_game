@@ -15,6 +15,6 @@ def collide_player_with_ghosts(sprite, group, dir):
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
             if hits[0].is_blue:
-                sprite.game.score += 200
-                hits[0].pos.xy = sprite.game.red_origin_pos
+                sprite.game.player.score += 200
+                hits[0].pos.xy = hits[0].ghost_origin_pos
                 hits[0].is_blue = False

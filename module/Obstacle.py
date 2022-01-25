@@ -15,5 +15,6 @@ class Obstacle(pygame.sprite.Sprite):
         self.y = y
         self.rect.x = x
         self.rect.y = y
+        self.pos = (x / TILE_SIZE, y / TILE_SIZE)
         # self.node_value = object_id
         self.node_pos = pygame.math.Vector2(x, y)

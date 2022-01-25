@@ -42,3 +42,8 @@ def test_create_dots():
     game = Game()
     game.create_dots()
     assert len(game.dots) == DOT_COUNT
+
+
+def test_ghost_pos():
+    game = Game()
+    game
