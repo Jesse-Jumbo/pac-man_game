@@ -38,7 +38,7 @@ class Game:
         self.danger = False
         self.stop_music = False
         # load all img and music data from folder
-        self.player_images = {RIGHT_IMG: [], DOWN_IMG: [], LEFT_IMG: [], UP_IMG: []}
+        self.player_images = []
         self.ghosts_images = {BLUE_IMG: {}, RED_IMG: {}, PINK_IMG: {}, GREEN_IMG: {}, ORANGE_IMG: {}}
         self.load_data()
         # initialize sprites group
@@ -90,24 +90,9 @@ class Game:
         for i in range(5, 6):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
         """img"""
-        # """wall"""
-        # self.wall_img = pygame.image.load(path.join(img_dir, WALL_IMG)).convert_alpha()
-        # self.wall_img = pygame.transform.scale(self.wall_img, (TILE_SIZE, TILE_SIZE))
         """player movement animation"""
         for i in ["cc", "c", "o", "oo"]:
-            self.player_images[RIGHT_IMG].append(pygame.transform.scale(pygame.image.load(path.join(img_dir, f"pac_man_{i}.png")).convert_alpha(), (TILE_SIZE, TILE_SIZE)))
-        for player_img in self.player_images[RIGHT_IMG]:
-            self.player_images[UP_IMG].append(
-                pygame.transform.scale((pygame.transform.rotate(player_img, 90)), (TILE_SIZE, TILE_SIZE)))
-            self.player_images[DOWN_IMG].append(
-                pygame.transform.scale((pygame.transform.rotate(player_img, 270)), (TILE_SIZE, TILE_SIZE)))
-            self.player_images[LEFT_IMG].append(
-                pygame.transform.scale((pygame.transform.flip(player_img, True, False)), (TILE_SIZE, TILE_SIZE)))
-        # """dot and point"""
-        # self.small_dot_img = pygame.image.load(path.join(img_dir, DOT_IMG)).convert_alpha()
-        # self.big_dot_img = pygame.image.load(path.join(img_dir, POINT_IMG)).convert_alpha()
-        # self.small_dot_img = pygame.transform.scale(self.small_dot_img, (8, 8))
-        # self.big_dot_img = pygame.transform.scale(self.big_dot_img, (20, 20))
+            self.player_images.append(pygame.transform.scale(pygame.image.load(path.join(img_dir, f"pac_man_{i}.png")).convert_alpha(), (TILE_SIZE, TILE_SIZE)))
         """blue ghost"""
         for key, value, in blue_ghost_image_dic.items():
             self.ghosts_images[BLUE_IMG][key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
@@ -199,7 +184,7 @@ class Game:
         # press P to pause game
         if self.paused:
             self.window.blit(self.dim_window, (0, 0))
-            draw_text(self.window, "PAUSED", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
+            draw_text(self.window, "PAUSED", self.font_name, TITLE_SIZE, WHITE, WIDTH_CENTER, HEIGHT_CENTER, "center")
         # update game view
         pygame.display.flip()
 
@@ -228,29 +213,29 @@ class Game:
                     self.green_ghost.check_path = not self.green_ghost.check_path
 
                 # for player
-                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
                     self.player.up_move = True
-                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
                     self.player.down_move = True
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
                     self.player.left_move = True
-                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
                     self.player.right_move = True
             if event.type == pygame.KEYUP:
                 # for player
-                if event.key == pygame.K_UP or event.key == pygame.K_w:
+                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
                     self.player.down_move = False
                     self.player.right_move = False
                     self.player.left_move = False
-                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
                     self.player.up_move = False
                     self.player.right_move = False
                     self.player.left_move = False
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
                     self.player.up_move = False
                     self.player.down_move = False
                     self.player.right_move = False
-                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
                     self.player.up_move = False
                     self.player.down_move = False
                     self.player.left_move = False
@@ -258,8 +243,8 @@ class Game:
 
     def show_go_screen(self):
         self.window.blit(self.dim_window, (0, 0))
-        draw_text(self.window, f"SCORE: {self.player.score}", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
-        draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
+        draw_text(self.window, f"SCORE: {self.player.score}", self.font_name, TITLE_SIZE, WHITE, WIDTH_CENTER, HEIGHT_CENTER, "center")
+        draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH_CENTER, HEIGHT - 50, "center")
 
         pygame.display.flip()
         self.wait_for_key()

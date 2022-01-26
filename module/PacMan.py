@@ -14,11 +14,8 @@ class PacMan(pygame.sprite.Sprite):
         super().__init__(self.groups)
         self.game = game
         self.present_player = 0
-        self.image = game.player_images["right"][int(self.present_player)]
-        self.right_img = self.game.player_images["right"]
-        self.up_img = self.game.player_images["up"]
-        self.down_img = self.game.player_images["down"]
-        self.left_img = self.game.player_images["left"]
+        self.image = game.player_images[int(self.present_player)]
+        self.right_image = game.player_images
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -40,7 +37,7 @@ class PacMan(pygame.sprite.Sprite):
 
     def update(self):
         self.present_player += self.img_change_control
-        if self.present_player >= len(self.game.player_images["right"]):
+        if self.present_player >= len(self.game.player_images):
             self.present_player = 0
         self.get_keys()
         self.rect = self.image.get_rect()
@@ -85,19 +82,19 @@ class PacMan(pygame.sprite.Sprite):
     def get_keys(self):
         self.vel = pygame.math.Vector2(0, 0)
         if self.up_move:
-            self.image = self.up_img[int(self.present_player)]
+            self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 90)
             self.vel.y = -self.speed
             self.front_node_pos.y = self.node_pos.y + -4
         if self.down_move:
-            self.image = self.down_img[int(self.present_player)]
+            self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 270)
             self.vel.y = self.speed
             self.front_node_pos.y = self.node_pos.y + 4
         if self.left_move:
-            self.image = self.left_img[int(self.present_player)]
+            self.image = pygame.transform.flip(self.right_image[int(self.present_player)], True, False)
             self.vel.x = -self.speed
             self.front_node_pos.x = self.node_pos.x + -4
         if self.right_move:
-            self.image = self.right_img[int(self.present_player)]
+            self.image = self.right_image[int(self.present_player)]
             self.vel.x = self.speed
             self.front_node_pos.x = self.node_pos.x + 4
         # to slow the speed when move to corner

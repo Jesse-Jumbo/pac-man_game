@@ -16,26 +16,6 @@ class OrangeGhost(Ghost):
         self.left_image = game.ghosts_images[ORANGE_IMG][LEFT_IMG]
         self.go_out_limit = len(game.dots) + ORANGE_GO
 
-    def update(self, *args, **kwargs) -> None:
-        super().update()
-        if self.is_out():
-            if not self.is_blue:
-                self.orange_module()
-            elif self.is_blue:
-                self.frightened_module()
-
-    def orange_module(self):
-        super().orange_module()
-        try:
-            if self.path[vec2int(self.start)].x == 1:
-                self.move_right()
-            elif self.path[vec2int(self.start)].y == -1:
-                self.move_up()
-            elif self.path[vec2int(self.start)].x == -1:
-                self.move_left()
-            elif self.path[vec2int(self.start)].y == 1:
-                self.move_down()
-        except KeyError:
-            pass
-        self.rect = self.image.get_rect()
-        self.rect.center = self.pos
+    def chase_module(self):
+        super().chase_module()
+        self.orange_module()

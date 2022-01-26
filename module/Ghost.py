@@ -53,7 +53,14 @@ class Ghost(pygame.sprite.Sprite):
         self.start = vec(self.node_pos)
         self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
+
     def update(self, *args, **kwargs) -> None:
+        if self.is_out():
+            if not self.is_blue:
+                self.chase_module()
+            elif self.is_blue:
+                self.frightened_module()
+
         self.rect.center = self.hit_rect.center
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
@@ -99,24 +106,28 @@ class Ghost(pygame.sprite.Sprite):
             self.rect = self.image.get_rect()
             self.rect.center = self.pos
 
-    def chase_module(self, dir:str):
-        if dir == RED_MODULE:
-            self.red_module()
-        if dir == PINK_MODULE:
-            self.pink_module()
-        if dir == GREEN_MODULE:
-            self.green__module()
-        if dir == ORANGE_MODULE:
-            self.orange_module()
+    def chase_module(self):
+        try:
+            if self.path[vec2int(self.start)].x == 1:
+                self.move_right()
+            elif self.path[vec2int(self.start)].y == -1:
+                self.move_up()
+            elif self.path[vec2int(self.start)].x == -1:
+                self.move_left()
+            elif self.path[vec2int(self.start)].y == 1:
+                self.move_down()
+        except KeyError:
+            pass
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
+
 
     def orange_module(self):
         # orange ghost search a random pos
-        self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
         if self.goal == self.start:
             node = vec(random.choice(list(self.game.node_pos.values())))
             self.goal = vec(node / TILE_SIZE)
-        self.start = vec(self.node_pos)
-        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
+        self.search()
 
     def green__module(self):
         # green ghost search random choice other module
@@ -124,15 +135,15 @@ class Ghost(pygame.sprite.Sprite):
 
     def pink_module(self):
         # pink ghost search player four front pos
-        self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
         self.goal = vec(self.game.player.front_node_pos)
-        self.start = vec(self.node_pos)
-        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
+        self.search()
 
     def red_module(self):
         # red ghost search player
-        self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
         self.goal = vec(self.game.player.node_pos)
+        self.search()
+
+    def search(self):
         self.start = vec(self.node_pos)
         self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
@@ -140,44 +151,40 @@ class Ghost(pygame.sprite.Sprite):
         if not self.is_blue:
             self.image = self.left_image
             self.vel.x = -self.speed
-            self.pos.x += self.vel.x * self.game.dt
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][LEFT_IMG]
             self.vel.x = -(self.speed + self.speed_slow)
-            self.pos.x += self.vel.x * self.game.dt
+        self.pos.x += self.vel.x * self.game.dt
 
 
     def move_down(self):
         if not self.is_blue:
             self.image = self.origin_img
             self.vel.y = self.speed
-            self.pos.y += self.vel.y * self.game.dt
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][DOWN_IMG]
             self.vel.y = self.speed + self.speed_slow
-            self.pos.y += self.vel.y * self.game.dt
+        self.pos.y += self.vel.y * self.game.dt
 
 
     def move_right(self):
         if not self.is_blue:
             self.image = self.right_img
             self.vel.x = self.speed
-            self.pos.x += self.vel.x * self.game.dt
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][RIGHT_IMG]
             self.vel.x = self.speed + self.speed_slow
-            self.pos.x += self.vel.x * self.game.dt
+        self.pos.x += self.vel.x * self.game.dt
 
 
     def move_up(self):
         if not self.is_blue:
             self.image = self.up_img
             self.vel.y = -self.speed
-            self.pos.y += self.vel.y * self.game.dt
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][UP_IMG]
             self.vel.y = -(self.speed + self.speed_slow)
-            self.pos.y += self.vel.y * self.game.dt
+        self.pos.y += self.vel.y * self.game.dt
 
     def scatter_model(self, x, y):
         pass

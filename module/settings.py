@@ -43,6 +43,11 @@ BG_COLOR = DARKGREY
 TILE_SIZE = 20
 GRID_WIDTH = WIDTH/TILE_SIZE
 GRID_HEIGHT = HEIGHT/TILE_SIZE
+TITLE_SIZE = 100
+
+'''window pos'''
+WIDTH_CENTER = WIDTH / 2
+HEIGHT_CENTER = HEIGHT / 2
 
 """map setting"""
 WALL_LAYER_NAME = 'walls'
@@ -71,10 +76,6 @@ PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 GHOST_SPEED = 90.0
 SPEED_SLOW = -30
-RED_MODULE = 'red'
-PINK_MODULE = 'pink'
-GREEN_MODULE = 'green'
-ORANGE_MODULE = 'orange'
 BLUE_IMG = 'blue_ghost_img'
 RED_IMG = 'red_ghost_img'
 PINK_IMG = 'pink_ghost_img'
