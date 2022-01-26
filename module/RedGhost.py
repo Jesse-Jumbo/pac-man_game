@@ -20,11 +20,11 @@ class RedGhost(Ghost):
 
     def update(self, *args, **kwargs) -> None:
         super().update()
-        if self.is_out() and not self.is_blue:
-            self.chase_module(RED_MODULE)
-        elif self.is_out() and self.is_blue:
-            self.blue_time()
-
+        if self.is_out():
+            if not self.is_blue:
+                self.chase_module(RED_MODULE)
+            elif self.is_blue:
+                self.frightened_module()
 
     def red_module(self):
         super().red_module()

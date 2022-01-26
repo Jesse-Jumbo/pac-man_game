@@ -58,6 +58,10 @@ HOME_LAYER_NAME = 'home'
 """collide setting"""
 WITH_GHOST = 'ghost'
 WITH_PLAYER = 'player'
+DOT_SCORE = 10
+POINT_SCORE = 50
+BLUE_GHOST_SCORE = 200
+CHERRY_SCORE = 500
 
 '''player setting'''
 PLAYER_SPEED = 200.0
@@ -66,7 +70,7 @@ PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 '''ghost setting'''
 GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 GHOST_SPEED = 90.0
-SPEED_SLOW = -10
+SPEED_SLOW = -30
 RED_MODULE = 'red'
 PINK_MODULE = 'pink'
 GREEN_MODULE = 'green'
@@ -76,6 +80,7 @@ RED_IMG = 'red_ghost_img'
 PINK_IMG = 'pink_ghost_img'
 GREEN_IMG = 'green_ghost_img'
 ORANGE_IMG = 'orange_ghost_img'
+BLUE_LIMIT = 10000
 
 """all setting"""
 DOWN_IMG = 'down'
@@ -83,7 +88,7 @@ RIGHT_IMG = 'right'
 UP_IMG = 'up'
 LEFT_IMG = 'left'
 '''red'''
-RED_GO = 0
+RED_GO = -1
 '''pink'''
 PINK_GO = -15
 '''green'''

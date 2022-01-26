@@ -31,8 +31,6 @@ class Ghost(pygame.sprite.Sprite):
         self.hit_rect.center = self.rect.center
         self.pos = pygame.math.Vector2(0, 0)
         self.pos.xy = self.rect.center
-        self.last_move = pygame.time.get_ticks()
-        self.move_delay = 100
         self.origin_img = game.ghosts_images[BLUE_IMG][DOWN_IMG]
         self.up_img = game.ghosts_images[BLUE_IMG][UP_IMG]
         self.right_img = game.ghosts_images[BLUE_IMG][RIGHT_IMG]
@@ -40,8 +38,7 @@ class Ghost(pygame.sprite.Sprite):
         self.rot = 0
         self.vel = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
-        self.target_pos = pygame.math.Vector2(0, 0)
-        self.blue_limit = 10000
+        self.blue_limit = BLUE_LIMIT
         self.speed_slow = SPEED_SLOW
         self.go_out_limit = len(game.dots) + RED_GO
         self.is_blue = False
@@ -64,6 +61,12 @@ class Ghost(pygame.sprite.Sprite):
         collide_with_walls(self, self.game.walls, 'y')
         collide_with_nodes(self, self.game.nodes, 'node')
 
+    def speed_up(self):
+        if len(self.game.dots) == len(self.game.dots) / 2:
+            self.speed = self.speed * 1.1
+        if len(self.game.dots) == len(self.game.dots) / 3:
+            self.speed = self.speed * 1.2
+
     def is_out(self):
         if len(self.game.dots) <= self.go_out_limit:
             return True
@@ -79,7 +82,6 @@ class Ghost(pygame.sprite.Sprite):
     def frightened_module(self):
         if self.is_blue and self.is_out():
             now = pygame.time.get_ticks()
-            collide_player_with_ghosts(self.game.player, self.game.ghosts, WITH_PLAYER)
             if now - self.get_blue_time > self.blue_limit:
                 self.is_blue = False
             self.rot = (self.game.player.pos - self.pos).angle_to(pygame.math.Vector2(1, 0))
@@ -165,12 +167,13 @@ class Ghost(pygame.sprite.Sprite):
         pass
 
     def draw_path(self):
-        # check the background is drawn correctly with the tile size
-        current = self.start  # + self.path[vec2int(self.start)]
-        while current != self.goal:
-            current += self.path[vec2int(current)]
-            img = self.origin_img
-            r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
-            self.game.window.blit(img, r)
-        print(self.goal +(- self.path[vec2int(self.goal)]))
+        if self.is_out():
+            # check the background is drawn correctly with the tile size
+            current = self.start  # + self.path[vec2int(self.start)]
+            while current != self.goal:  # - self.path[vec2int(vec(list(self.path.keys())[1]))]:
+                current += self.path[vec2int(current)]
+                img = self.origin_img
+                r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
+                self.game.window.blit(img, r)
+
 
