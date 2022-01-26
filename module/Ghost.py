@@ -51,7 +51,7 @@ class Ghost(pygame.sprite.Sprite):
 
         self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
         self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
-        self.goal = vec(self.game.player.node_pos)
+        self.goal = vec(self.node_pos)
         self.start = vec(self.node_pos)
         self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
@@ -114,9 +114,9 @@ class Ghost(pygame.sprite.Sprite):
     def orange_module(self):
         # orange ghost search a random pos
         self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
-        node = random.sample(self.game.node_pos.keys(), 2)
-        print(node)
-        self.goal = vec(self.game.player.node_pos)
+        if self.goal == self.start:
+            node = vec(random.choice(list(self.game.node_pos.values())))
+            self.goal = vec(node / TILE_SIZE)
         self.start = vec(self.node_pos)
         self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
