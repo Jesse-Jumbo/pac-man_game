@@ -60,7 +60,7 @@ class Game:
         self.green_ghost = self.map.make_map(self, GREEN_GHOST_LAYER_NAME)
         self.orange_ghost = self.map.make_map(self, ORANGE_GHOST_LAYER_NAME)
         # create nodes
-        node_pos = {}
+        self.node_pos = {}
         pos_x = []
         pos_y = []
         name = 0
@@ -70,9 +70,9 @@ class Game:
             pos_y.append(y)
         for x in pos_x:
             for y in pos_y:
-                node_pos[name] = [x, y]
+                self.node_pos[name] = [x, y]
                 name += 1
-        for i in node_pos.values():
+        for i in self.node_pos.values():
             Node(self, i[0], i[1])
 
     def load_data(self):

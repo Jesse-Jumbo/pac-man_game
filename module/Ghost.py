@@ -1,3 +1,5 @@
+import random
+
 import pygame.transform
 
 from .collide_player_with_ghosts import collide_player_with_ghosts
@@ -46,7 +48,6 @@ class Ghost(pygame.sprite.Sprite):
         self.get_blue_time = pygame.time.get_ticks()
         self.ghost_origin_pos = pygame.math.Vector2(0, 0)
         self.ghost_origin_pos.xy = self.rect.center
-
 
         self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
         self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
@@ -111,7 +112,14 @@ class Ghost(pygame.sprite.Sprite):
             self.orange_module()
 
     def orange_module(self):
-        pass
+        # orange ghost search a random pos
+        self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
+        node = random.sample(self.game.node_pos.keys(), 2)
+        print(node)
+        self.goal = vec(self.game.player.node_pos)
+        self.start = vec(self.node_pos)
+        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
+
 
     def green__module(self):
         pass

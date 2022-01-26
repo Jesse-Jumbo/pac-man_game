@@ -1,7 +1,7 @@
 import random
 
 from games.pac_man.module.Game import Game
-from games.pac_man.module.settings import DOT_COUNT
+# from games.pac_man.module.settings import DOT_COUNT
 
 
 def blue_ghost_movement(x_move, y_move):
@@ -44,6 +44,12 @@ def test_create_dots():
     assert len(game.dots) == DOT_COUNT
 
 
-def test_ghost_pos():
+def get_node_pos(node_pos, all_node_pos):
+    if node_pos in list(all_node_pos.values()):
+        return node_pos
+
+def test_node_pos():
     game = Game()
-    game
+    all_node_pos = game.node_pos
+    node_pos = random.choice(list(all_node_pos.values()))
+    assert node_pos == get_node_pos(node_pos, all_node_pos)
