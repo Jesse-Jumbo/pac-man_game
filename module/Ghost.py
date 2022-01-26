@@ -1,6 +1,8 @@
 import pygame.transform
 
 from .collide_player_with_ghosts import collide_player_with_ghosts
+from .collide_sprite_with_nodes import collide_with_nodes
+from .collide_sprite_with_walls import collide_with_walls
 from .settings import *
 from .SquareGrid import *
 
@@ -51,6 +53,14 @@ class Ghost(pygame.sprite.Sprite):
         self.goal = vec(self.game.player.node_pos)
         self.start = vec(self.node_pos)
         self.path, self.cost = a_star_search(self.g, self.goal, self.start)
+
+    def update(self, *args, **kwargs) -> None:
+        self.rect.center = self.hit_rect.center
+        self.hit_rect.centerx = self.pos.x
+        collide_with_walls(self, self.game.walls, 'x')
+        self.hit_rect.centery = self.pos.y
+        collide_with_walls(self, self.game.walls, 'y')
+        collide_with_nodes(self, self.game.nodes, 'node')
 
     def is_out(self):
         if len(self.game.dots) <= self.go_out_limit:
@@ -107,7 +117,11 @@ class Ghost(pygame.sprite.Sprite):
         pass
 
     def pink_module(self):
-        pass
+        # pink ghost search player four front pos
+        self.g = WeightedGrid(self.game, GRID_WIDTH, GRID_HEIGHT)
+        self.goal = vec(self.game.player.node_pos)
+        self.start = vec(self.node_pos)
+        self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
     def red_module(self):
         # red ghost search player

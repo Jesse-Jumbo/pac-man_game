@@ -3,8 +3,6 @@ import math
 import pygame.time
 
 from .SquareGrid import vec2int
-from .collide_sprite_with_walls import collide_with_walls
-from .collide_sprite_with_nodes import collide_with_nodes
 from .settings import *
 from .Ghost import Ghost
 
@@ -21,18 +19,12 @@ class RedGhost(Ghost):
         self.update_time = pygame.time.get_ticks()
 
     def update(self, *args, **kwargs) -> None:
+        super().update()
         if self.is_out() and not self.is_blue:
             self.chase_module(RED_MODULE)
         elif self.is_out() and self.is_blue:
             self.blue_time()
 
-        self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
-        self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
-        self.rect.center = self.hit_rect.center
-
-        collide_with_nodes(self, self.game.nodes, 'node')
 
     def red_module(self):
         super().red_module()
