@@ -118,11 +118,9 @@ class Ghost(pygame.sprite.Sprite):
         self.start = vec(self.node_pos)
         self.path, self.cost = a_star_search(self.g, self.goal, self.start)
 
-
     def green__module(self):
         # green ghost search random choice other module
         random.choice([self.red_module, self.pink_module, self.green__module, self.orange_module])()
-
 
     def pink_module(self):
         # pink ghost search player four front pos
@@ -186,13 +184,24 @@ class Ghost(pygame.sprite.Sprite):
 
     def draw_path(self):
         if self.is_out():
-            # check the background is drawn correctly with the tile size
             current = self.start  # + self.path[vec2int(self.start)]
             while current != self.goal:  # - self.path[vec2int(vec(list(self.path.keys())[1]))]:
-                if self.path[vec2int(current)] and self.path[vec2int(self.goal)]:
-                    current += self.path[vec2int(current)]
-                    img = self.origin_img
-                    r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
-                    self.game.window.blit(img, r)
-                    print(self.game.player.node_pos, self.game.player.front_node_pos)
+                try:
+                    if self.path[vec2int(current)] and self.path[vec2int(self.goal)]:
+                        current += self.path[vec2int(current)]
+                        img = self.origin_img
+                        r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
+                        self.game.window.blit(img, r)
+                        print(self.game.player.node_pos, self.game.player.front_node_pos)
+                    else:
+                        break
+                except KeyError:
+                    break
 
+    def draw_search(self):
+        if self.is_out():
+            # search area
+            for node in self.path:
+                self.x, self.y = node
+                self.draw_rect = pygame.Rect(self.x * TILE_SIZE, self.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+                pygame.draw.rect(self.game.window, CYAN_BLUE, self.draw_rect, 1)

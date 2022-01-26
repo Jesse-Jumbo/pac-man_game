@@ -174,19 +174,18 @@ class Game:
         # draw path from start to goal
         if self.red_ghost.check_path:
             self.red_ghost.draw_path()
+            self.red_ghost.draw_search()
         if self.pink_ghost.check_path:
             self.pink_ghost.draw_path()
+            self.pink_ghost.draw_search()
         if self.green_ghost.check_path:
             self.green_ghost.draw_path()
+            self.green_ghost.draw_search()
         if self.orange_ghost.check_path:
             self.orange_ghost.draw_path()
+            self.orange_ghost.draw_search()
 
         if self.draw_debug:
-            # search area
-            for node in self.red_ghost.path:
-                self.x, self.y = node
-                self.draw_rect = pygame.Rect(self.x * TILE_SIZE, self.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-                pygame.draw.rect(self.window, CYAN_BLUE, self.draw_rect, 1)
             for node in self.nodes:
                 pygame.draw.rect(self.window, RED, node.pos_rect, 1)
             for wall in self.walls:
