@@ -1,3 +1,4 @@
+from .SquareGrid import vec2int
 from .collide_sprite_with_walls import collide_with_walls
 from .settings import *
 from .Ghost import Ghost
@@ -14,16 +15,26 @@ class GreenGhost(Ghost):
         self.go_out_limit = len(game.dots) + GREEN_GO
 
     def update(self, *args, **kwargs) -> None:
+        super().update()
         if self.is_out():
             if not self.is_blue:
                 self.green__module()
             elif self.is_blue:
                 self.frightened_module()
 
-        self.rect.center = self.hit_rect.center
-        self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
-        self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
-
+    def green__module(self):
+        super().orange_module()
+        try:
+            if self.path[vec2int(self.start)].x == 1:
+                self.move_right()
+            elif self.path[vec2int(self.start)].y == -1:
+                self.move_up()
+            elif self.path[vec2int(self.start)].x == -1:
+                self.move_left()
+            elif self.path[vec2int(self.start)].y == 1:
+                self.move_down()
+        except KeyError:
+            pass
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
 

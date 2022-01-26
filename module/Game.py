@@ -157,16 +157,6 @@ class Game:
             self.show_go_screen()
             self.__init__()
 
-    def draw_path(self):
-        # check the background is drawn correctly with the tile size
-        current = self.red_ghost.start  # + self.path[vec2int(self.start)]
-        while current != self.red_ghost.goal:
-            current += self.red_ghost.path[vec2int(current)]
-            img = self.red_ghost.origin_img
-            r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
-            self.window.blit(img, r)
-        return path
-
     def draw(self):
         # cover last update
         self.window.fill(BLACK)
@@ -180,9 +170,16 @@ class Game:
             if self.draw_debug:
                 pygame.draw.rect(self.window, BG_COLOR, sprite.rect, 1)
                 pygame.draw.rect(self.window, BG_COLOR, sprite.hit_rect, 1)
-        if self.check_path:
-            # draw path from start to goal
-            self.draw_path()
+
+        # draw path from start to goal
+        if self.red_ghost.check_path:
+            self.red_ghost.draw_path()
+        if self.pink_ghost.check_path:
+            self.pink_ghost.draw_path()
+        if self.green_ghost.check_path:
+            self.green_ghost.draw_path()
+        if self.orange_ghost.check_path:
+            self.orange_ghost.draw_path()
 
         if self.draw_debug:
             # search area
@@ -213,17 +210,24 @@ class Game:
             if event.type == pygame.QUIT:
                 self.quit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_u:
+                    self.quit()
                 if event.key == pygame.K_h:
                     self.draw_debug = not self.draw_debug
                 if event.key == pygame.K_p:
                     self.paused = not self.paused
                 if event.key == pygame.K_ESCAPE:
                     self.stop_music = not self.stop_music
-                if event.key == pygame.K_b:
-                    self.check_path = not self.check_path
+                # check ghost search path
+                if event.key == pygame.K_r:
+                    self.red_ghost.check_path = not self.red_ghost.check_path
+                if event.key == pygame.K_k:
+                    self.pink_ghost.check_path = not self.pink_ghost.check_path
+                if event.key == pygame.K_o:
+                    self.orange_ghost.check_path = not self.orange_ghost.check_path
+                if event.key == pygame.K_g:
+                    self.green_ghost.check_path = not self.green_ghost.check_path
 
-                if event.key == pygame.K_u:
-                    self.quit()
                 # for player
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     self.player.up_move = True

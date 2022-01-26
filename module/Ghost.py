@@ -45,6 +45,7 @@ class Ghost(pygame.sprite.Sprite):
         self.speed_slow = SPEED_SLOW
         self.go_out_limit = len(game.dots) + RED_GO
         self.is_blue = False
+        self.check_path = False
         self.get_blue_time = pygame.time.get_ticks()
         self.ghost_origin_pos = pygame.math.Vector2(0, 0)
         self.ghost_origin_pos.xy = self.rect.center
@@ -122,7 +123,9 @@ class Ghost(pygame.sprite.Sprite):
 
 
     def green__module(self):
-        pass
+        # green ghost search random choice other module
+        random.choice([self.red_module, self.pink_module, self.green__module, self.orange_module])()
+
 
     def pink_module(self):
         # pink ghost search player four front pos
@@ -160,4 +163,14 @@ class Ghost(pygame.sprite.Sprite):
 
     def scatter_model(self, x, y):
         pass
+
+    def draw_path(self):
+        # check the background is drawn correctly with the tile size
+        current = self.start  # + self.path[vec2int(self.start)]
+        while current != self.goal:
+            current += self.path[vec2int(current)]
+            img = self.origin_img
+            r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
+            self.game.window.blit(img, r)
+        print(self.goal +(- self.path[vec2int(self.goal)]))
 
