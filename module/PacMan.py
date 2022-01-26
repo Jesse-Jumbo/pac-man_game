@@ -28,6 +28,7 @@ class PacMan(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(0, 0)
         self.pos.xy = self.rect.center
         self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
+        self.front_node_pos = self.node_pos
 
         self.speed = PLAYER_SPEED
         self.img_change_control = 0.4
@@ -54,6 +55,7 @@ class PacMan(pygame.sprite.Sprite):
 
         collide_player_with_ghosts(self, self.game.ghosts, WITH_GHOST)
         collide_with_nodes(self, self.game.nodes, 'node')
+        collide_with_nodes(self, self.game.nodes, 'front_node')
 
         hits = pygame.sprite.spritecollide(self, self.game.dots, True, collide_hit_rect)
         for hit in hits:
@@ -85,15 +87,19 @@ class PacMan(pygame.sprite.Sprite):
         if self.up_move:
             self.image = self.up_img[int(self.present_player)]
             self.vel.y = -self.speed
+            self.front_node_pos.y = self.node_pos.y + -4
         if self.down_move:
             self.image = self.down_img[int(self.present_player)]
             self.vel.y = self.speed
+            self.front_node_pos.y = self.node_pos.y + 4
         if self.left_move:
             self.image = self.left_img[int(self.present_player)]
             self.vel.x = -self.speed
+            self.front_node_pos.x = self.node_pos.x + -4
         if self.right_move:
             self.image = self.right_img[int(self.present_player)]
             self.vel.x = self.speed
+            self.front_node_pos.x = self.node_pos.x + 4
         # to slow the speed when move to corner
         if self.vel.x != 0 and self.vel.y != 0:
             self.vel *= 0.7071
