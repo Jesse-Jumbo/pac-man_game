@@ -58,7 +58,6 @@ GREEN_GHOST_LAYER_NAME = 'green_ghost'
 ORANGE_GHOST_LAYER_NAME = 'orange_ghost'
 PLAYER_LAYER_NAME = 'player'
 DOTS_LAYER_NAME = 'dots'
-HOME_LAYER_NAME = 'home'
 
 """collide setting"""
 WITH_GHOST = 'ghost'

@@ -48,13 +48,11 @@ class Game:
         self.ghosts = pygame.sprite.Group()
         self.dots = pygame.sprite.Group()
         self.points = pygame.sprite.Group()
-        self.home = pygame.sprite.Group()
         self.nodes = pygame.sprite.Group()
         # create map object
         self.map.make_map(self, WALL_LAYER_NAME)
         self.map.make_map(self, DOTS_LAYER_NAME)
         self.map.make_map(self, POINT_LAYER_NAME)
-        self.map.make_map(self, HOME_LAYER_NAME)
         self.player = self.map.make_map(self, PLAYER_LAYER_NAME)
         self.red_ghost = self.map.make_map(self, RED_GHOST_LAYER_NAME)
         self.pink_ghost = self.map.make_map(self, PINK_GHOST_LAYER_NAME)
@@ -66,15 +64,12 @@ class Game:
         wall_pos = []
         for wall in self.walls:
             wall_pos.append(vec(wall.pos))
-        for home in self.home:
-            wall_pos.append(vec(home.pos))
         for x in range(0, WIDTH, TILE_SIZE):
             for y in range(0, HEIGHT, TILE_SIZE):
                 temp_pos.append(vec(x, y))
         for node in temp_pos:
             if node not in wall_pos:
                 n = Node(node[0], node[1])
-                self.all_sprites.add(n)
                 self.nodes.add(n)
                 self.node_pos.append(node)
 
