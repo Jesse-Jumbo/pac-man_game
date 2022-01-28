@@ -64,8 +64,8 @@ class PacMan(pygame.sprite.Sprite):
             self.score += POINT_SCORE
             self.game.player.score += POINT_SCORE
             self.game.red_ghost.blue_time()
-            self.game.green_ghost.blue_time()
             self.game.pink_ghost.blue_time()
+            self.game.green_ghost.blue_time()
             self.game.orange_ghost.blue_time()
             self.game.danger = True
             self.game.music_play()

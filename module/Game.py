@@ -37,6 +37,7 @@ class Game:
         self.waiting = False
         self.danger = False
         self.stop_music = False
+        self.blue_ghost = False
         # load all img and music data from folder
         self.player_images = []
         self.ghosts_images = {BLUE_IMG: {}, RED_IMG: {}, PINK_IMG: {}, GREEN_IMG: {}, ORANGE_IMG: {}}
@@ -60,20 +61,22 @@ class Game:
         self.green_ghost = self.map.make_map(self, GREEN_GHOST_LAYER_NAME)
         self.orange_ghost = self.map.make_map(self, ORANGE_GHOST_LAYER_NAME)
         # create nodes
-        self.node_pos = {}
-        pos_x = []
-        pos_y = []
-        name = 0
+        self.node_pos = []
+        temp_pos = []
+        wall_pos = []
+        for wall in self.walls:
+            wall_pos.append(vec(wall.pos))
+        for home in self.home:
+            wall_pos.append(vec(home.pos))
         for x in range(0, WIDTH, TILE_SIZE):
-            pos_x.append(x)
-        for y in range(0, HEIGHT, TILE_SIZE):
-            pos_y.append(y)
-        for x in pos_x:
-            for y in pos_y:
-                self.node_pos[name] = [x, y]
-                name += 1
-        for i in self.node_pos.values():
-            Node(self, i[0], i[1])
+            for y in range(0, HEIGHT, TILE_SIZE):
+                temp_pos.append(vec(x, y))
+        for node in temp_pos:
+            if node not in wall_pos:
+                n = Node(node[0], node[1])
+                self.all_sprites.add(n)
+                self.nodes.add(n)
+                self.node_pos.append(node)
 
     def load_data(self):
         """folder path"""
@@ -156,20 +159,6 @@ class Game:
                 pygame.draw.rect(self.window, BG_COLOR, sprite.rect, 1)
                 pygame.draw.rect(self.window, BG_COLOR, sprite.hit_rect, 1)
 
-        # draw path from start to goal
-        if self.red_ghost.check_path:
-            self.red_ghost.draw_path()
-            self.red_ghost.draw_search()
-        if self.pink_ghost.check_path:
-            self.pink_ghost.draw_path()
-            self.pink_ghost.draw_search()
-        if self.green_ghost.check_path:
-            self.green_ghost.draw_path()
-            self.green_ghost.draw_search()
-        if self.orange_ghost.check_path:
-            self.orange_ghost.draw_path()
-            self.orange_ghost.draw_search()
-
         if self.draw_debug:
             for node in self.nodes:
                 pygame.draw.rect(self.window, RED, node.pos_rect, 1)
@@ -204,13 +193,13 @@ class Game:
                     self.stop_music = not self.stop_music
                 # check ghost search path
                 if event.key == pygame.K_r:
-                    self.red_ghost.check_path = not self.red_ghost.check_path
+                    self.red_ghost.draw_check_path = not self.red_ghost.draw_check_path
                 if event.key == pygame.K_k:
-                    self.pink_ghost.check_path = not self.pink_ghost.check_path
+                    self.pink_ghost.draw_check_path = not self.pink_ghost.draw_check_path
                 if event.key == pygame.K_o:
-                    self.orange_ghost.check_path = not self.orange_ghost.check_path
+                    self.orange_ghost.draw_check_path = not self.orange_ghost.draw_check_path
                 if event.key == pygame.K_g:
-                    self.green_ghost.check_path = not self.green_ghost.check_path
+                    self.green_ghost.draw_check_path = not self.green_ghost.draw_check_path
 
                 # for player
                 if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:

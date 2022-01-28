@@ -1,8 +1,10 @@
+import pygame.sprite
+
 from .collide_hit_rect import collide_hit_rect
 from .settings import *
 
 
-def collide_with_walls(sprite, group, dir):
+def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group, dir: str):
     if dir == 'x':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:

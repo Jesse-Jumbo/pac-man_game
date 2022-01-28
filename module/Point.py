@@ -3,11 +3,9 @@ from .settings import *
 
 
 class Point(pygame.sprite.Sprite):
-    def __init__(self, game, img, x, y):
+    def __init__(self, img, x, y):
         self._layer = POINT_LAYER
-        self.groups = game.all_sprites, game.points
-        super().__init__(self.groups)
-        self.game = game
+        super().__init__()
         self.image = img
         self.rect = self.image.get_rect()
         self.hit_rect = POINT_HIT_RECT.copy()

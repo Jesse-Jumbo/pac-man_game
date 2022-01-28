@@ -13,24 +13,28 @@ from .Point import Point
 
 
 class TiledMap:
-    def __init__(self, filename):
+    def __init__(self, filename: str):
         tm = pytmx.load_pygame(filename, pixealpha=True)
         self.width = tm.tilewidth
         self.height = tm.tileheight
         self.tmxdata = tm
 
-    def render(self, game, object_name):
+    def render(self, game, object_name: str):
         ti = self.tmxdata.get_tile_image_by_gid
         for layer in self.tmxdata.visible_layers:
             for x, y, gid, in layer:
                 if isinstance(layer, pytmx.TiledTileLayer) and layer.name == WALL_LAYER_NAME and object_name == WALL_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        Obstacle(game, game.walls, tile, x * TILE_SIZE, y * TILE_SIZE)
+                        wall = Obstacle(tile, x * TILE_SIZE, y * TILE_SIZE)
+                        game.all_sprites.add(wall)
+                        game.walls.add(wall)
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME and object_name == POINT_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        Point(game, tile, x * TILE_SIZE, y * TILE_SIZE)
+                        point = Point(tile, x * TILE_SIZE, y * TILE_SIZE)
+                        game.all_sprites.add(point)
+                        game.points.add(point)
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == RED_GHOST_LAYER_NAME and object_name == RED_GHOST_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
@@ -56,11 +60,13 @@ class TiledMap:
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == DOTS_LAYER_NAME and object_name == DOTS_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        Dot(game, tile, x * TILE_SIZE, y * TILE_SIZE)
+                        dot = Dot(tile, x * TILE_SIZE, y * TILE_SIZE)
+                        game.all_sprites.add(dot)
+                        game.dots.add(dot)
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == HOME_LAYER_NAME and object_name == HOME_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         Obstacle(game, game.home, tile, x * TILE_SIZE, y * TILE_SIZE)
 
-    def make_map(self, game, object_name):
+    def make_map(self, game, object_name: str):
         return self.render(game, object_name)

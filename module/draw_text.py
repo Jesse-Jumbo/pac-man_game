@@ -3,7 +3,7 @@ import pygame.font
 from .settings import *
 
 
-def draw_text(surface, text, font_name, size, color, x, y, align="nw"):
+def draw_text(surface: pygame.surface, text: str, font_name: str, size: int, color: tuple, x: float, y: float, align: str="nw"):
     font = pygame.font.SysFont(font_name, size, bold=True)
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect()

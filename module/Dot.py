@@ -4,12 +4,11 @@ from .collide_hit_rect import collide_hit_rect
 from .collide_sprite_with_walls import collide_with_walls
 from .settings import *
 
+
 class Dot(pygame.sprite.Sprite):
-    def __init__(self, game, img,  x, y):
+    def __init__(self, img,  x, y):
         self._layer = DOT_LAYER
-        self.groups = game.all_sprites, game.dots
-        super().__init__(self.groups)
-        self.game = game
+        super().__init__()
         self.angle = 0
         self.image = img
         self.rect = self.image.get_rect()
@@ -20,7 +19,6 @@ class Dot(pygame.sprite.Sprite):
 
     def update(self) -> None:
         pass
-        # collide_with_walls(self, self.game.walls, "wall")
     #     self.angle = (self.angle + 10) % 360
 
     @property
