@@ -3,7 +3,7 @@ from .settings import *
 
 
 class Point(pygame.sprite.Sprite):
-    def __init__(self, img, x, y):
+    def __init__(self, img, x: float, y: float):
         self._layer = POINT_LAYER
         super().__init__()
         self.image = img

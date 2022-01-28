@@ -7,7 +7,7 @@ from .Ghost import Ghost
 
 
 class OrangeGhost(Ghost):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x: float, y: float):
         super().__init__(game, x, y)
         self.image = game.ghosts_images[ORANGE_IMG][DOWN_IMG]
         self.origin_img = game.ghosts_images[ORANGE_IMG][DOWN_IMG]

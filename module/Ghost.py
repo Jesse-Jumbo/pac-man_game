@@ -18,7 +18,7 @@ def move():
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x: float, y: float):
         self._layer = GHOST_LAYER
         self.groups = game.all_sprites, game.ghosts
         super().__init__(self.groups)

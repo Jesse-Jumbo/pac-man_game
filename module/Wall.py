@@ -2,7 +2,7 @@ from .settings import *
 
 
 class Wall(pygame.sprite.Sprite):
-    def __init__(self, img, x, y):
+    def __init__(self, img, x: float, y: float):
         self._layer = WALL_LAYER
         super().__init__()
         self.image = img

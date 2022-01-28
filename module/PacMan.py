@@ -8,7 +8,7 @@ from .settings import *
 
 
 class PacMan(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x: float, y: float):
         self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         super().__init__(self.groups)
