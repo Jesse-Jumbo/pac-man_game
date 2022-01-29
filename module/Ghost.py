@@ -18,6 +18,8 @@ def move():
 
 
 class Ghost(pygame.sprite.Sprite):
+    # TODO refactor function name to (v)
+    # TODO add state pattern
     def __init__(self, game, x: float, y: float):
         self._layer = GHOST_LAYER
         self.groups = game.all_sprites, game.ghosts

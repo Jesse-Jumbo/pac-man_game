@@ -5,6 +5,7 @@ from .settings import *
 
 
 def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group, dir: str):
+    # TODO abstraction refactor if
     if dir == 'x':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
