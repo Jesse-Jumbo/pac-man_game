@@ -1,7 +1,5 @@
 import pygame.draw
 
-from .collide_hit_rect import collide_hit_rect
-from .collide_sprite_with_walls import collide_with_walls
 from .settings import *
 
 

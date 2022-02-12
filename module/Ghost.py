@@ -2,9 +2,7 @@ import random
 
 import pygame.transform
 
-from .collide_player_with_ghosts import collide_player_with_ghosts
-from .collide_sprite_with_nodes import collide_with_nodes
-from .collide_sprite_with_walls import collide_with_walls
+from .collide_hit_rect import collide_player_with_ghosts, collide_with_nodes, collide_with_walls
 from .settings import *
 from .SquareGrid import *
 
@@ -68,7 +66,7 @@ class Ghost(pygame.sprite.Sprite):
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
         collide_with_walls(self, self.game.walls, 'y')
-        collide_with_nodes(self, self.game.nodes, 'node')
+        collide_with_nodes(self, self.game.nodes)
 
     def speed_up(self):
         if len(self.game.dots) == len(self.game.dots) / 2:

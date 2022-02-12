@@ -1,5 +1,4 @@
 from .SquareGrid import vec2int
-from .collide_sprite_with_walls import collide_with_walls
 from .settings import *
 from .Ghost import Ghost
 

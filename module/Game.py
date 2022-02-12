@@ -6,8 +6,7 @@ import pygame.event
 from .Node import Node
 from .Obstacle import Obstacle
 from .TiledMap import TiledMap
-from .collide_hit_rect import collide_hit_rect
-from .collide_sprite_with_walls import collide_with_walls
+from .collide_hit_rect import collide_hit_rect, collide_with_walls
 from .draw_text import draw_text
 from .settings import *
 from .PacMan import PacMan
