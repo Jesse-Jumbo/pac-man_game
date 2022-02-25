@@ -17,4 +17,7 @@ class OrangeGhost(Ghost):
 
     def chase_module(self):
         super().chase_module()
-        self.orange_module()
+        # orange ghost search a random pos
+        node = pygame.math.Vector2(random.choice(list(self.game.node_pos)))
+        self.goal = pygame.math.Vector2(node / TILE_SIZE)
+

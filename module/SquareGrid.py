@@ -84,4 +84,3 @@ def a_star_search(graph: SquareGrid, goal: vec, start: vec):
                 path[next] = vec(current) - vec(next)
                 move_path.append(path[next])
     return list(reversed(move_path))
-    # return path

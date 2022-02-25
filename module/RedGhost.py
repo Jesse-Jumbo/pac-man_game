@@ -20,4 +20,6 @@ class RedGhost(Ghost):
 
     def chase_module(self):
         super().chase_module()
-        self.red_module()
+        # red ghost search player
+        self.goal = pygame.math.Vector2(self.game.player.node_pos)
+

@@ -15,4 +15,6 @@ class PinkGhost(Ghost):
 
     def chase_module(self):
         super().chase_module()
-        self.pink_module()
+        # pink ghost search player four front pos
+        self.goal = pygame.math.Vector2(self.game.player.front_node_pos)
+

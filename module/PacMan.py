@@ -40,7 +40,7 @@ class PacMan(pygame.sprite.Sprite):
         self.get_keys()
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        self.pos += self.vel * self.game.dt
+        self.pos += self.vel
 
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
@@ -54,7 +54,7 @@ class PacMan(pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self, self.game.dots, True, collide_hit_rect)
         for hit in hits:
             self.score += DOT_SCORE
-            self.speed += -0.1
+            self.speed += -0.001
 
         hits = pygame.sprite.spritecollide(self, self.game.points, True, collide_hit_rect)
         for hit in hits:
@@ -77,7 +77,6 @@ class PacMan(pygame.sprite.Sprite):
             self.rect.top = 0
 
     def get_keys(self):
-        self.vel = pygame.math.Vector2(0, 0)
         if self.up_move:
             self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 90)
             self.vel.y = -self.speed
@@ -94,9 +93,6 @@ class PacMan(pygame.sprite.Sprite):
             self.image = self.right_image[int(self.present_player)]
             self.vel.x = self.speed
             self.front_node_pos.x = self.node_pos.x + 4
-        # to slow the speed when move to corner
-        if self.vel.x != 0 and self.vel.y != 0:
-            self.vel *= 0.7071
 
     @property
     def player_data(self):

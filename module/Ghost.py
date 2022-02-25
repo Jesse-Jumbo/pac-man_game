@@ -49,24 +49,36 @@ class Ghost(pygame.sprite.Sprite):
 
         self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
         self.g = SquareGrid(self.game.walls, GRID_WIDTH, GRID_HEIGHT)
-        self.goal = vec(self.node_pos)
+        self.goal = vec(self.game.player.node_pos)
         self.start = vec(self.node_pos)
         self.path = a_star_search(self.g, self.goal, self.start)
-
+        self.next_step = self.path[-1]
         self.last_search_time = pygame.time.get_ticks()
 
     def update(self, *args, **kwargs) -> None:
         if self.is_out():
+            self.start = vec(self.node_pos)
+
             self.check_path()
             self.frightened_module()
             self.chase_module()
+            if self.next_step.x == 1:
+                self.move_right()
+            elif self.next_step.y == -1:
+                self.move_up()
+            elif self.next_step.x == -1:
+                self.move_left()
+            elif self.next_step.y == 1:
+                self.move_down()
+            else:
+                pass
 
         self.rect.center = self.hit_rect.center
         self.hit_rect.centerx = self.pos.x
         collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
         collide_with_walls(self, self.game.walls, 'y')
-        collide_with_nodes(self, self.game.nodes)
+        collide_with_nodes(self, self.game.nodes, dir="ghost")
 
     def speed_up(self):
         if len(self.game.dots) == len(self.game.dots) / 2:
@@ -91,60 +103,20 @@ class Ghost(pygame.sprite.Sprite):
             now = pygame.time.get_ticks()
             if now - self.get_blue_time > self.blue_limit:
                 self.is_blue = False
-            self.red_module()
-            for path in self.path:
-                if path.x == 1:
-                    self.move_right()
-                elif path.y == -1:
-                    self.move_up()
-                elif path.x == -1:
-                    self.move_left()
-                elif path.y == 1:
-                    self.move_down()
+            self.goal = pygame.math.Vector2(self.game.player.node_pos)
+            self.search()
+
             self.rect = self.image.get_rect()
             self.rect.center = self.pos
 
     def chase_module(self):
-        for path in self.path:
-            if path.x == 1:
-                self.move_right()
-            elif path.y == -1:
-                self.move_up()
-            elif path.x == -1:
-                self.move_left()
-            elif path.y == 1:
-                self.move_down()
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
-
-    def orange_module(self):
-        # orange ghost search a random pos
-        if self.goal == self.start:
-            node = vec(random.choice(list(self.game.node_pos)))
-            self.goal = vec(node / TILE_SIZE)
-        self.search()
-
-    def green__module(self):
-        # green ghost search random choice other module
-        random.choice([self.red_module, self.pink_module, self.green__module, self.orange_module])()
-
-    def pink_module(self):
-        # pink ghost search player four front pos
-        self.goal = vec(self.game.player.front_node_pos)
-        self.search()
-
-    def red_module(self):
-        # red ghost search player
-        self.goal = vec(self.game.player.node_pos)
-        self.search()
-
     def search(self):
-        self.start = vec(self.node_pos)
-        now = pygame.time.get_ticks()
-        if now - self.last_search_time > 0:
-            self.path = a_star_search(self.g, self.goal, self.start)
-            self.last_search_time = pygame.time.get_ticks()
+        path = a_star_search(self.g, self.goal, self.start)
+        if len(path) != 0:
+            self.path, self.next_step = path, path[-1]
 
     def move_left(self):
         if not self.is_blue:
@@ -153,7 +125,7 @@ class Ghost(pygame.sprite.Sprite):
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][LEFT_IMG]
             self.vel.x = -(self.speed + self.speed_slow)
-        self.pos.x += self.vel.x * self.game.dt
+        self.pos.x += self.vel.x
 
     def move_down(self):
         if not self.is_blue:
@@ -162,7 +134,7 @@ class Ghost(pygame.sprite.Sprite):
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][DOWN_IMG]
             self.vel.y = self.speed + self.speed_slow
-        self.pos.y += self.vel.y * self.game.dt
+        self.pos.y += self.vel.y
 
     def move_right(self):
         if not self.is_blue:
@@ -171,7 +143,7 @@ class Ghost(pygame.sprite.Sprite):
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][RIGHT_IMG]
             self.vel.x = self.speed + self.speed_slow
-        self.pos.x += self.vel.x * self.game.dt
+        self.pos.x += self.vel.x
 
     def move_up(self):
         if not self.is_blue:
@@ -180,7 +152,7 @@ class Ghost(pygame.sprite.Sprite):
         else:
             self.image = self.game.ghosts_images[BLUE_IMG][UP_IMG]
             self.vel.y = -(self.speed + self.speed_slow)
-        self.pos.y += self.vel.y * self.game.dt
+        self.pos.y += self.vel.y
 
     def scatter_model(self, x, y):
         pass

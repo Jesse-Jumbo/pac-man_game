@@ -13,7 +13,9 @@ class GreenGhost(Ghost):
         self.left_image = game.ghosts_images[GREEN_IMG][LEFT_IMG]
         self.go_out_limit = len(game.dots) + GREEN_GO
 
-    def chase_module(self):
-        super().chase_module()
-        self.green__module()
+    # def chase_module(self):
+    #     super().chase_module()
+    #     # green ghost search random choice other module
+    #     random.choice([self.red_module, self.pink_module, self.green__module, self.orange_module])()
+
 

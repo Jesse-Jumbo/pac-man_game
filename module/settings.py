@@ -68,13 +68,13 @@ BLUE_GHOST_SCORE = 200
 CHERRY_SCORE = 500
 
 '''player setting'''
-PLAYER_SPEED = 200.0
+PLAYER_SPEED = 2.0
 PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 
 '''ghost setting'''
 GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
-GHOST_SPEED = 90.0
-SPEED_SLOW = -30
+GHOST_SPEED = 1.0
+SPEED_SLOW = - 0.2
 BLUE_IMG = 'blue_ghost_img'
 RED_IMG = 'red_ghost_img'
 PINK_IMG = 'pink_ghost_img'

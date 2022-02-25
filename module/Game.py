@@ -4,20 +4,9 @@ import sys
 import pygame.event
 
 from .Node import Node
-from .Obstacle import Obstacle
 from .TiledMap import TiledMap
-from .collide_hit_rect import collide_hit_rect, collide_with_walls
 from .draw_text import draw_text
 from .settings import *
-from .PacMan import PacMan
-from .Dot import Dot
-from .Point import Point
-from .RedGhost import RedGhost
-from .GreenGhost import GreenGhost
-from .PinkGhost import PinkGhost
-from .OrangeGhost import OrangeGhost
-from .Wall import Wall
-from .Map import Map
 from .SquareGrid import *
 
 
@@ -222,7 +211,6 @@ class Game:
                     self.player.up_move = False
                     self.player.down_move = False
                     self.player.left_move = False
-
 
     def show_go_screen(self):
         self.window.blit(self.dim_window, (0, 0))

@@ -20,12 +20,14 @@ def collide_player_with_ghosts(sprite: pygame.sprite, group: pygame.sprite.Group
 
 
 # collide sprite with nodes
-def collide_with_nodes(sprite: pygame.sprite, group: pygame.sprite.Group):
+def collide_with_nodes(sprite: pygame.sprite, group: pygame.sprite.Group, dir=""):
     for node in group:
-        if node.pos.x - 1 <= sprite.pos.x <= node.pos.x + 1:
+        if node.pos.x - 2 <= sprite.pos.x <= node.pos.x + 2:
             sprite.node_pos.x = node.pos.x / TILE_SIZE
-        if node.pos.y - 1 <= sprite.pos.y <= node.pos.y + 1:
+        if node.pos.y - 2 <= sprite.pos.y <= node.pos.y + 2:
             sprite.node_pos.y = node.pos.y / TILE_SIZE
+    if dir == "ghost":
+        sprite.search()
 
 
 # collide sprite with walls
