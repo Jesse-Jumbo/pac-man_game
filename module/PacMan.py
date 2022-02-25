@@ -37,7 +37,7 @@ class PacMan(pygame.sprite.Sprite):
         self.present_player += self.img_change_control
         if self.present_player >= len(self.game.player_images):
             self.present_player = 0
-        self.get_keys()
+        self.move()
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
         self.pos += self.vel
@@ -76,7 +76,7 @@ class PacMan(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.rect.top = 0
 
-    def get_keys(self):
+    def move(self):
         if self.up_move:
             self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 90)
             self.vel.y = -self.speed

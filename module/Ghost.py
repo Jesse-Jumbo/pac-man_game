@@ -54,24 +54,34 @@ class Ghost(pygame.sprite.Sprite):
         self.path = a_star_search(self.g, self.goal, self.start)
         self.next_step = self.path[-1]
         self.last_search_time = pygame.time.get_ticks()
+        self.movemove = pygame.time.get_ticks()
+        self.move_ = 2
+
 
     def update(self, *args, **kwargs) -> None:
         if self.is_out():
             self.start = vec(self.node_pos)
 
-            self.check_path()
-            self.frightened_module()
-            self.chase_module()
-            if self.next_step.x == 1:
+            # self.check_path()
+            # self.frightened_module()
+            # self.chase_module()
+            now = pygame.time.get_ticks()
+            if now - self.movemove > 3000:
+                self.move_ = random.choice([1, 2, 3, 4])
+                self.movemove = pygame.time.get_ticks()
+            if self.move_ == 1:
                 self.move_right()
-            elif self.next_step.y == -1:
+            elif self.move_ == 2:
                 self.move_up()
-            elif self.next_step.x == -1:
+            elif self.move_ == 3:
                 self.move_left()
-            elif self.next_step.y == 1:
+            elif self.move_ == 4:
                 self.move_down()
             else:
                 pass
+
+        self.rect = self.image.get_rect()
+        self.rect.center = self.pos
 
         self.rect.center = self.hit_rect.center
         self.hit_rect.centerx = self.pos.x

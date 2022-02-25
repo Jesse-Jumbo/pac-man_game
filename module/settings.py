@@ -73,7 +73,7 @@ PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 
 '''ghost setting'''
 GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
-GHOST_SPEED = 1.0
+GHOST_SPEED = 2.0
 SPEED_SLOW = - 0.2
 BLUE_IMG = 'blue_ghost_img'
 RED_IMG = 'red_ghost_img'
