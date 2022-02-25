@@ -1,44 +1,30 @@
 import random
 
-from games.pac_man.module.Game import Game
-from games.pac_man.module.settings import DOT_COUNT
+from games.pac_man.module.SquareGrid import *
 
 
-def blue_ghost_movement(x_move, y_move):
-    x_move = x_move
-    y_move = y_move
-    if abs(x_move) > abs(y_move):
-        if x_move >= 0:
-            return "r"
-        else:
-            return "l"
-    else:
-        if y_move >= 0:
-            return "d"
-        else:
-            return "u"
+# Test SquareGrid
+def test_a_star_search():
+    """
+    _____________________________________________
+    |(0, 0),| (1, 0),| (2, 0),| (3, 0),| (4, 0),|
+    _____________________________________________
+    |(0, 1),|G(1, 1),| (2, 1),| (3, 1),| (4, 1),|
+    _____________^_______________________________
+    |(0, 2),|        <        <        | (4, 2),|
+    _______________________________^_____________
+    |(0, 3),| (1, 3),| (2, 3),|S(3, 3),| (4, 3),|
+    _____________________________________________
+    |(0, 4),| (1, 4),| (2, 4),| (3, 4),| (4, 4),|
+    _____________________________________________
+    """
+    walls = [(0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (0, 1), (2, 1), (3, 1), (4, 1), (0, 2), (4, 2), (0, 3), (1, 3), (2, 3), (4, 3), (0, 4), (1, 4), (2, 4), (3, 4), (4, 4),]
+    all_walls = []
+    for wall in walls:
+        all_walls.append(vec(wall))
+    graph = SquareGrid(all_walls, 5, 5)
+    all_path = a_star_search(graph, vec(1, 1), vec(3, 3))
+    assert all_path == [vec(0, -1), vec(-1, 0), vec(-1, 0), vec(0, -1)]
 
 
-def test_blue_ghost_movement():
-    assert blue_ghost_movement(0, 0) == "d"
-    assert blue_ghost_movement(0, 1) == "d"
-    assert blue_ghost_movement(1, 0) == "r"
-    assert blue_ghost_movement(1, 1) == "d"
-    assert blue_ghost_movement(0, -1) == "u"
-    assert blue_ghost_movement(-1, 0) == "l"
-    assert blue_ghost_movement(-1, -1) == "u"
-    assert blue_ghost_movement(1, 2) == "d"
-    assert blue_ghost_movement(2, 1) == "r"
-    assert blue_ghost_movement(-2, 1) == "l"
-    assert blue_ghost_movement(1, -2) == "u"
-    assert blue_ghost_movement(-1, -2) == "u"
-    assert blue_ghost_movement(-2, -1) == "l"
-    assert blue_ghost_movement(2, 2) == "d"
-    assert blue_ghost_movement(-2, -2) == "u"
-    assert blue_ghost_movement(-3, 0) == "l"
-
-
-def test_create_dots():
-    game = Game()
-    game.create_dots()
-    assert len(game.dots) == DOT_COUNT
+#

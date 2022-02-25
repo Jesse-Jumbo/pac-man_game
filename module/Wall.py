@@ -2,12 +2,10 @@ from .settings import *
 
 
 class Wall(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, img, x: float, y: float):
         self._layer = WALL_LAYER
-        self.groups = game.all_sprites, game.walls
-        super().__init__(self.groups)
-        self.game = game
-        self.image = game.wall_img
+        super().__init__()
+        self.image = img
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

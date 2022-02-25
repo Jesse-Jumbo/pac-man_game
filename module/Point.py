@@ -1,12 +1,17 @@
+from .collide_hit_rect import collide_hit_rect
 from .settings import *
 
 
 class Point(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, img, x: float, y: float):
         self._layer = POINT_LAYER
-        self.groups = game.all_sprites, game.points
-        pygame.sprite.Sprite.__init__(self, self.groups)
-        self.image = game.big_dot_img
+        super().__init__()
+        self.image = img
         self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
+        self.hit_rect = POINT_HIT_RECT.copy()
+        self.rect.x = x
+        self.rect.y = y
+        self.hit_rect.center = self.rect.center
+
+    def update(self, *args, **kwargs) -> None:
+        pass

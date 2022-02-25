@@ -1,36 +1,65 @@
+import math
 import sys
 
 import pygame.event
 
-from .Obstacle import Obstacle
+from .Node import Node
 from .TiledMap import TiledMap
-from .collide_sprite_with_group import collide_with_walls
 from .draw_text import draw_text
 from .settings import *
-from .PacMan import PacMan
-from .Dot import Dot
-from .Point import Point
-from .RedGhost import RedGhost
-from .GreenGhost import GreenGhost
-from .PinkGhost import PinkGhost
-from .OrangeGhost import OrangeGhost
-from .Wall import Wall
-from .Map import Map
-from .Node import *
+from .SquareGrid import *
 
 
 class Game:
     def __init__(self):
+        # pygame base setting
         pygame.init()
         pygame.mixer.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         self.clock = pygame.time.Clock()
-        # pygame.key.set_repeat(500, 100)
+        # initialize all variables and so all the setup for a new game
+        # control variables
+        self.draw_debug = False
+        self.check_path = False
+        self.paused = False
+        self.waiting = False
+        self.danger = False
+        self.stop_music = False
+        self.blue_ghost = False
+        # load all img and music data from folder
+        self.player_images = []
+        self.ghosts_images = {BLUE_IMG: {}, RED_IMG: {}, PINK_IMG: {}, GREEN_IMG: {}, ORANGE_IMG: {}}
         self.load_data()
+        # initialize sprites group
         self.all_sprites = pygame.sprite.LayeredUpdates()
+        self.walls = pygame.sprite.Group()
+        self.ghosts = pygame.sprite.Group()
         self.dots = pygame.sprite.Group()
-
-
+        self.points = pygame.sprite.Group()
+        self.nodes = pygame.sprite.Group()
+        # create map object
+        self.map.make_map(self, WALL_LAYER_NAME)
+        self.map.make_map(self, DOTS_LAYER_NAME)
+        self.map.make_map(self, POINT_LAYER_NAME)
+        self.player = self.map.make_map(self, PLAYER_LAYER_NAME)
+        self.red_ghost = self.map.make_map(self, RED_GHOST_LAYER_NAME)
+        self.pink_ghost = self.map.make_map(self, PINK_GHOST_LAYER_NAME)
+        self.green_ghost = self.map.make_map(self, GREEN_GHOST_LAYER_NAME)
+        self.orange_ghost = self.map.make_map(self, ORANGE_GHOST_LAYER_NAME)
+        # create nodes
+        self.node_pos = []
+        temp_pos = []
+        wall_pos = []
+        for wall in self.walls:
+            wall_pos.append(vec(wall.pos))
+        for x in range(0, WIDTH, TILE_SIZE):
+            for y in range(0, HEIGHT, TILE_SIZE):
+                temp_pos.append(vec(x, y))
+        for node in temp_pos:
+            if node not in wall_pos:
+                n = Node(node[0], node[1])
+                self.nodes.add(n)
+                self.node_pos.append(node)
 
     def load_data(self):
         """folder path"""
@@ -40,138 +69,41 @@ class Game:
         map_dir = path.join(game_dir, '../maps')
         '''font'''
         self.font_name = pygame.font.match_font('arial')
-        '''stop window'''
+        '''pause view'''
         self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
-        for i in range(2, 3):
+        for i in range(5, 6):
             self.map = TiledMap(path.join(map_dir, f'map0{i}.tmx'))
-            self.map_img = self.map.make_map()
-            self.map_rect = self.map_img.get_rect()
         """img"""
-        """wall"""
-        self.wall_img = pygame.image.load(path.join(img_dir, WALL_IMG)).convert_alpha()
-        self.wall_img = pygame.transform.scale(self.wall_img, (TILE_SIZE, TILE_SIZE))
-        """player"""
-        self.player_images = []
-        self.player_right_images = []
-        self.player_up_images = []
-        self.player_down_images = []
-        self.player_left_images = []
+        """player movement animation"""
         for i in ["cc", "c", "o", "oo"]:
-            self.player_images.append(pygame.image.load(path.join(img_dir, f"pac_man_{i}.png")).convert_alpha())
-        for player_img in self.player_images:
-            self.player_right_images.append(pygame.transform.scale(player_img, (TILE_SIZE, TILE_SIZE)))
-            self.player_up_images.append(pygame.transform.scale((pygame.transform.rotate(player_img, 90)), (TILE_SIZE, TILE_SIZE)))
-            self.player_down_images.append(pygame.transform.scale((pygame.transform.rotate(player_img, 270)), (TILE_SIZE, TILE_SIZE)))
-            self.player_left_images.append(pygame.transform.scale((pygame.transform.flip(player_img, True, False)), (TILE_SIZE, TILE_SIZE)))
-        """dot"""
-        self.small_dot_img = pygame.image.load(path.join(img_dir, DOT_IMG)).convert_alpha()
-        self.big_dot_img = pygame.image.load(path.join(img_dir, POINT_IMG)).convert_alpha()
-        self.small_dot_img = pygame.transform.scale(self.small_dot_img, (8, 8))
-        self.big_dot_img = pygame.transform.scale(self.big_dot_img, (20, 20))
+            self.player_images.append(pygame.transform.scale(pygame.image.load(path.join(img_dir, f"pac_man_{i}.png")).convert_alpha(), (TILE_SIZE, TILE_SIZE)))
         """blue ghost"""
-        self.blue_ghost_images = {}
         for key, value, in blue_ghost_image_dic.items():
-            self.blue_ghost_images[key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
-            image = self.blue_ghost_images[key]
-            self.blue_ghost_images[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
-        """green ghost"""
-        self.green_ghost_images = {}
-        for key, value, in green_ghost_image_dic.items():
-            self.green_ghost_images[key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
-            image = self.green_ghost_images[key]
-            self.green_ghost_images[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
+            self.ghosts_images[BLUE_IMG][key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
+            image = self.ghosts_images[BLUE_IMG][key]
+            self.ghosts_images[BLUE_IMG][key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
         """red ghost"""
-        self.red_ghost_images = {}
         for key, value, in red_ghost_image_dic.items():
-            self.red_ghost_images[key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
-            image = self.red_ghost_images[key]
-            self.red_ghost_images[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
+            self.ghosts_images[RED_IMG][key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
+            image = self.ghosts_images[RED_IMG][key]
+            self.ghosts_images[RED_IMG][key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
         """pink ghost"""
-        self.pink_ghost_images = {}
         for key, value, in pink_ghost_image_dic.items():
-            self.pink_ghost_images[key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
-            image = self.pink_ghost_images[key]
-            self.pink_ghost_images[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
+            self.ghosts_images[PINK_IMG][key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
+            image = self.ghosts_images[PINK_IMG][key]
+            self.ghosts_images[PINK_IMG][key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
+        """green ghost"""
+        for key, value, in green_ghost_image_dic.items():
+            self.ghosts_images[GREEN_IMG][key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
+            image = self.ghosts_images[GREEN_IMG][key]
+            self.ghosts_images[GREEN_IMG][key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
         """orange ghost"""
-        self.orange_ghost_images = {}
         for key, value, in orange_ghost_image_dic.items():
-            self.orange_ghost_images[key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
-            image = self.orange_ghost_images[key]
-            self.orange_ghost_images[key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
-
-    def new(self):
-        # initialize all variables and so all the setup for a new game
-        self.walls = pygame.sprite.Group()
-        nodes = pygame.sprite.Group()
-        self.nodes = pygame.sprite.Group()
-        self.ghosts = pygame.sprite.Group()
-        self.dots = pygame.sprite.Group()
-        self.points = pygame.sprite.Group()
-        tree = Binary_search_tree()
-        #
-        # self.all_sprites.add(self.player)
-        # #
-        # create dot
-
-        self.create_dots()
-
-        # #
-        # Point(self, 30, 30)
-        # #
-        # Point(self, WIDTH - 30, 30)
-        # #
-        # Point(self, 30, HEIGHT - 30)
-        # #
-        # Point(self, WIDTH - 30, HEIGHT - 30)
-        #
-        # Wall
-        # for row, tiles in enumerate(self.map.map_data):
-        #     for col, tile in enumerate(tiles):
-        #         if tile == '1':
-        #             wall = Wall(self, col, row)
-        #             self.walls.add(wall)
-        #         if tile == 'p':
-        #             self.player = PacMan(self, col, row)
-        for tile_object in self.map.tmxdata.objects:
-            obj_center = pygame.math.Vector2(tile_object.x + tile_object.width / 2,
-                                             tile_object.y + tile_object.height / 2)
-            if tile_object.name == 'player':
-                self.player = PacMan(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'wall':
-                Obstacle(self, self.walls, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'node':
-                tree = fill_tree(self, tree, tile_object.id, tile_object.x, tile_object.y, tile_object.width, tile_object.height)
-            if tile_object.name == 'red':
-                self.red_ghost = RedGhost(self, obj_center.x, obj_center.y)
-                self.red_origin_pos = pygame.math.Vector2(obj_center.x, obj_center.y)
-            if tile_object.name == 'green':
-                self.green_ghost = GreenGhost(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'pink':
-                self.pink_ghost = PinkGhost(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'orange':
-                self.orange_ghost = OrangeGhost(self, obj_center.x, obj_center.y)
-            if tile_object.name == 'point':
-                Point(self, obj_center.x, obj_center.y)
-
-        self.draw_debug = False
-        self.paused = False
-        self.waiting = False
-        self.danger = False
-        self.stop_music = False
-        self.blue_time = pygame.time.get_ticks()
-
-        self.score = 0
-
-        self.show_start_screen()
-
-    def create_dots(self):
-        """
-        新增dots
-        """
-        for i in range(DOT_COUNT):
-            dot = Dot(self)
+            self.ghosts_images[ORANGE_IMG][key] = pygame.image.load(path.join(img_dir, value)).convert_alpha()
+            image = self.ghosts_images[ORANGE_IMG][key]
+            self.ghosts_images[ORANGE_IMG][key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -193,47 +125,39 @@ class Game:
         # game over?
         if len(self.dots) == 0 and self.dt != 0:
             self.playing = False
-            self.show_win_screen()
-
-        hits = pygame.sprite.spritecollide(self.player, self.dots, True)
-        for hit in hits:
-            self.score += 10
-
-        hits = pygame.sprite.spritecollide(self.player, self.points, True)
-        for hit in hits:
-            self.score += 50
-            self.red_ghost.blue_time()
-            self.green_ghost.blue_time()
-            self.pink_ghost.blue_time()
-            self.orange_ghost.blue_time()
-            self.danger = True
-            self.music_play()
-
-    def draw_grid(self):
-        for x in range(0, WIDTH, TILE_SIZE):
-            pygame.draw.line(self.window, LIGHTGREY, (x, 0), (x, HEIGHT))
-        for y in range(0, HEIGHT, TILE_SIZE):
-            pygame.draw.line(self.window, LIGHTGREY, (0, y), (WIDTH, y))
+            self.show_go_screen()
+            self.__init__()
 
     def draw(self):
-        pygame.display.set_caption(TITLE+"{:.2f}".format(self.clock.get_fps()))
-        # self.window.fill(BG_COLOR)
-        self.window.blit(self.map_img, self.map_rect)
-        # self.draw_grid()
-        draw_text(self.window, str(self.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
+        # cover last update
+        self.window.fill(BLACK)
+        # check FPS is correctly
+        pygame.display.set_caption(TITLE + "{:.2f}".format(self.clock.get_fps()))
+        draw_text(self.window, str(self.player.score), self.font_name, 30, WHITE,  WIDTH / 2, 10, "n")
+        # draw all sprites according to sprite's rect
         for sprite in self.all_sprites:
             self.window.blit(sprite.image, sprite.rect)
+            # press H to check sprite rect
             if self.draw_debug:
-                pygame.draw.rect(self.window, CYAN_BLUE, sprite.rect, 1)
+                pygame.draw.rect(self.window, BG_COLOR, sprite.rect, 1)
+                pygame.draw.rect(self.window, BG_COLOR, sprite.hit_rect, 1)
+
         if self.draw_debug:
             for node in self.nodes:
-                pygame.draw.rect(self.window, RED, node.rect, 1)
-            pygame.draw.rect(self.window, CYAN_BLUE, self.player.hit_rect, 1)
-            # pygame.draw.circle(self.window, CYAN_BLUE, self.red_ghost.rect.center, AVOID_RADIUS, 1)
-
+                pygame.draw.rect(self.window, RED, node.pos_rect, 1)
+            for wall in self.walls:
+                pygame.draw.rect(self.window, BG_COLOR, wall.hit_rect, 1)
+        if self.draw_debug:
+            for dot in self.dots:
+                pygame.draw.rect(self.window, BG_COLOR, dot.hit_rect, 1)
+        if self.draw_debug:
+            for point in self.points:
+                pygame.draw.rect(self.window, BG_COLOR, point.hit_rect, 1)
+        # press P to pause game
         if self.paused:
             self.window.blit(self.dim_window, (0, 0))
-            draw_text(self.window, "PAUSED", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
+            draw_text(self.window, "PAUSED", self.font_name, TITLE_SIZE, WHITE, WIDTH_CENTER, HEIGHT_CENTER, "center")
+        # update game view
         pygame.display.flip()
 
     def events(self):
@@ -242,42 +166,60 @@ class Game:
             if event.type == pygame.QUIT:
                 self.quit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_u:
+                    self.quit()
                 if event.key == pygame.K_h:
                     self.draw_debug = not self.draw_debug
                 if event.key == pygame.K_p:
                     self.paused = not self.paused
                 if event.key == pygame.K_ESCAPE:
                     self.stop_music = not self.stop_music
+                # check ghost search path
+                if event.key == pygame.K_r:
+                    self.red_ghost.draw_check_path = not self.red_ghost.draw_check_path
+                if event.key == pygame.K_k:
+                    self.pink_ghost.draw_check_path = not self.pink_ghost.draw_check_path
+                if event.key == pygame.K_o:
+                    self.orange_ghost.draw_check_path = not self.orange_ghost.draw_check_path
+                if event.key == pygame.K_g:
+                    self.green_ghost.draw_check_path = not self.green_ghost.draw_check_path
 
-    def show_start_screen(self, status="start"):
-        self.window.fill(WHITE)
-        draw_text(self.window, "PacMan!", self.font_name, 100, DARKGREY, WIDTH / 2, HEIGHT / 2, "center")
-        if status == "again":
-            draw_text(self.window, "Press a key to start", self.font_name, 20, BLACK, WIDTH / 2, HEIGHT - 50, "center")
-        else:
-            draw_text(self.window, "Press a key twice to start", self.font_name, 20, BLACK, WIDTH / 2, HEIGHT - 50, "center")
-
-        pygame.display.flip()
-        self.wait_for_key()
-
-    def show_win_screen(self):
-        self.window.blit(self.dim_window, (0, 0))
-        draw_text(self.window, "YOU WIN", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2 - 100, "center")
-        draw_text(self.window, f"Your score:{self.score}", self.font_name, 80, WHITE, WIDTH / 2, HEIGHT / 2 , "center")
-        draw_text(self.window, "Press a key to start again", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
-
-        pygame.display.flip()
-        self.wait_for_key()
-        self.show_start_screen("again")
-
+                # for player
+                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
+                    self.player.up_move = True
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
+                    self.player.down_move = True
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
+                    self.player.left_move = True
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
+                    self.player.right_move = True
+            if event.type == pygame.KEYUP:
+                # for player
+                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
+                    self.player.down_move = False
+                    self.player.right_move = False
+                    self.player.left_move = False
+                if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
+                    self.player.up_move = False
+                    self.player.right_move = False
+                    self.player.left_move = False
+                if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
+                    self.player.up_move = False
+                    self.player.down_move = False
+                    self.player.right_move = False
+                if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
+                    self.player.up_move = False
+                    self.player.down_move = False
+                    self.player.left_move = False
 
     def show_go_screen(self):
         self.window.blit(self.dim_window, (0, 0))
-        draw_text(self.window, "GAME OVER", self.font_name, 100, WHITE, WIDTH / 2, HEIGHT / 2, "center")
-        draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH / 2, HEIGHT - 50, "center")
+        draw_text(self.window, f"SCORE: {self.player.score}", self.font_name, TITLE_SIZE, WHITE, WIDTH_CENTER, HEIGHT_CENTER, "center")
+        draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH_CENTER, HEIGHT - 50, "center")
 
         pygame.display.flip()
         self.wait_for_key()
+        self.__init__()
 
     def wait_for_key(self):
         self.music_play()
@@ -297,15 +239,15 @@ class Game:
         self.music_play()
 
     def music_play(self):
-        if self.waiting == True or self.paused == True:
+        if self.waiting or self.paused:
             pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
             pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(loops=-1)
-        elif self.danger == True:
+        elif self.danger:
             pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
             pygame.mixer.music.set_volume(0.2)
             pygame.mixer.music.play(loops=-1)
-        elif self.stop_music == True:
+        elif self.stop_music:
             pygame.mixer.music.stop()
         else:
             pygame.mixer.music.load(path.join(self.snd_dir, BGM))

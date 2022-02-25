@@ -1,51 +1,71 @@
 import pygame.math
 
-from .collide_sprite_with_group import collide_with_walls, ghost_collide, collide_with_nodes
+from .collide_hit_rect import collide_hit_rect
+from .collide_hit_rect import collide_with_walls, collide_player_with_ghosts, collide_with_nodes
 from .settings import *
 
 
 class PacMan(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x: float, y: float):
         self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         super().__init__(self.groups)
         self.game = game
         self.present_player = 0
-        self.image = game.player_right_images[self.present_player]
+        self.image = game.player_images[int(self.present_player)]
+        self.right_image = game.player_images
         self.rect = self.image.get_rect()
-        self.rect.center = (x, y)
+        self.rect.x = x
+        self.rect.y = y
         self.hit_rect = PLAYRE_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
         self.vel = pygame.math.Vector2(0, 0)
-        self.pos = pygame.math.Vector2(x, y)
-        self.right_img = game.player_right_images[int(self.present_player)]
-        self.up_img = game.player_up_images[int(self.present_player)]
-        self.down_img = game.player_down_images[int(self.present_player)]
-        self.left_img = game.player_left_images[int(self.present_player)]
-        self.front_pos = pygame.math.Vector2(self.rect.centerx, self.rect.centery)
+        self.pos = pygame.math.Vector2(0, 0)
+        self.pos.xy = self.rect.center
+        self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
+        self.front_node_pos = self.node_pos
+
+        self.speed = PLAYER_SPEED
         self.img_change_control = 0.4
-        self.node_value = 0
-        self.node_pos = pygame.math.Vector2(0, 0)
+        self.score = 0
+        self.up_move = False
+        self.down_move = False
+        self.left_move = False
+        self.right_move = False
 
     def update(self):
         self.present_player += self.img_change_control
-        if self.present_player >= len(self.game.player_right_images):
+        if self.present_player >= len(self.game.player_images):
             self.present_player = 0
-        self.get_keys()
+        self.move()
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
-        self.pos += self.vel * self.game.dt
+        self.pos += self.vel
 
         self.hit_rect.centerx = self.pos.x
-        # collide_with_walls(self, self.game.walls, 'x')
+        collide_with_walls(self, self.game.walls, 'x')
         self.hit_rect.centery = self.pos.y
-        # collide_with_walls(self, self.game.walls, 'y')
+        collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
 
-        ghost_collide(self, self.game.ghosts, 'ghost')
-        # collide_with_nodes(self, self.game.nodes, 'update_node')
+        collide_player_with_ghosts(self, self.game.ghosts)
+        collide_with_nodes(self, self.game.nodes)
 
+        hits = pygame.sprite.spritecollide(self, self.game.dots, True, collide_hit_rect)
+        for hit in hits:
+            self.score += DOT_SCORE
+            self.speed += -0.001
 
+        hits = pygame.sprite.spritecollide(self, self.game.points, True, collide_hit_rect)
+        for hit in hits:
+            self.score += POINT_SCORE
+            self.game.player.score += POINT_SCORE
+            self.game.red_ghost.blue_time()
+            self.game.pink_ghost.blue_time()
+            self.game.green_ghost.blue_time()
+            self.game.orange_ghost.blue_time()
+            self.game.danger = True
+            self.game.music_play()
 
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
@@ -56,29 +76,23 @@ class PacMan(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.rect.top = 0
 
-    def get_keys(self):
-        self.vel = pygame.math.Vector2(0, 0)
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_UP] or keystate[pygame.K_w]:
-            self.image = self.game.player_up_images[int(self.present_player)]
-            self.vel.y = -PLAYER_SPEED
-            self.front_pos = (self.rect.centerx, self.rect.top - TILE_SIZE)
-        elif keystate[pygame.K_DOWN] or keystate[pygame.K_s]:
-            self.image = self.game.player_down_images[int(self.present_player)]
-            self.vel.y = PLAYER_SPEED
-            self.front_pos = (self.rect.centerx, self.rect.bottom + TILE_SIZE)
-        elif keystate[pygame.K_LEFT] or keystate[pygame.K_a]:
-            self.image = self.game.player_left_images[int(self.present_player)]
-            self.vel.x = -PLAYER_SPEED
-            self.front_pos = (self.rect.left - TILE_SIZE, self.rect.centery)
-        elif keystate[pygame.K_RIGHT] or keystate[pygame.K_d]:
-            self.image = self.game.player_right_images[int(self.present_player)]
-            self.vel.x = PLAYER_SPEED
-            self.front_pos = (self.rect.right + TILE_SIZE, self.rect.centery)
-        # to slow the speed when move to corner
-        if self.vel.x != 0 and self.vel.y != 0:
-            self.vel *= 0.7071
-
+    def move(self):
+        if self.up_move:
+            self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 90)
+            self.vel.y = -self.speed
+            self.front_node_pos.y = self.node_pos.y + -4
+        if self.down_move:
+            self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 270)
+            self.vel.y = self.speed
+            self.front_node_pos.y = self.node_pos.y + 4
+        if self.left_move:
+            self.image = pygame.transform.flip(self.right_image[int(self.present_player)], True, False)
+            self.vel.x = -self.speed
+            self.front_node_pos.x = self.node_pos.x + -4
+        if self.right_move:
+            self.image = self.right_image[int(self.present_player)]
+            self.vel.x = self.speed
+            self.front_node_pos.x = self.node_pos.x + 4
 
     @property
     def player_data(self):
