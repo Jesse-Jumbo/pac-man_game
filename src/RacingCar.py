@@ -14,6 +14,278 @@ from .sound_controller import *
 '''need some fuction same as arkanoid which without dash in the name of fuction'''
 
 
+class PacMan(PaiaGame):
+    def __init__(self, user_num: int, game_mode, car_num, racetrack_length, game_times, sound):
+        super().__init__()
+        self.game_times_goal = game_times
+        self.game_times = 1
+        self.score = []  # 用於計算積分
+        self.is_sound = sound
+        self.cars_num = car_num
+        self.sound_controller = SoundController(self.is_sound)
+        self.game_type = game_mode
+        self.user_num = user_num
+        self.length = racetrack_length
+        self.game_mode = self.set_game_mode()
+        self.game_mode.sound_controller.play_music()
+        self.scene = Scene(WIDTH, HEIGHT, BLACK)
+        self.attachements = []
+
+    def game_to_player_data(self) -> dict:
+        scene_info = self.get_scene_info
+        to_player_data = {}
+        for user in self.game_mode.users:
+            player_data = user.get_info()
+            player_data["all_cars_pos"] = scene_info["cars_pos"]
+            player_data["frame"] = scene_info["frame"]
+            # player_data["status"] = scene_info["status"]
+            if self.game_type == "COIN":
+                player_data["coin"] = scene_info["coin"]
+            else:
+                player_data["coin"] = []
+            to_player_data[str(player_data["id"] + 1) + "P"] = player_data
+
+        if to_player_data:
+            return to_player_data
+        else:
+            return {
+                "1P": scene_info,
+                "2P": scene_info,
+                "3P": scene_info,
+                "4P": scene_info
+            }
+
+    @property
+    def get_scene_info(self):
+        """
+        Get the scene information
+        """
+        cars_pos = []
+        computer_cars_pos = []
+
+        scene_info = {
+            "frame": self.game_mode.frame,
+            "status": self.game_mode.state,
+            "background": [(self.game_mode.bg_x, 0), (self.game_mode.rel_x, 0)], }
+
+        for user in self.game_mode.cars:
+            car_info = user.get_info()
+            cars_pos.append((car_info["x"], car_info["y"]))
+            if car_info["id"] <= 4:
+                scene_info["player_" + str(car_info["id"]) + "_pos"] = (car_info["x"], car_info["y"])
+            elif car_info["id"] > 100:
+                computer_cars_pos.append((car_info["x"], car_info["y"]))
+        scene_info["computer_cars"] = computer_cars_pos
+        scene_info["cars_pos"] = cars_pos
+
+        if self.game_type == "COIN":
+            coin_pos = []
+            for coin in self.game_mode.coins:
+                coin_pos.append(coin.get_position())
+            scene_info["coin"] = coin_pos
+
+        scene_info["game_result"] = self.game_mode.winner
+        return scene_info
+
+    def update(self, commands):
+        self.frame_count += 1
+        self.game_mode.handle_event()
+        self.game_mode.detect_collision()
+        self.game_mode.update(commands)
+        self.game_result_state = self.game_mode.state
+        if not self.isRunning():
+            # collect game rank
+            game_result = self.game_mode.winner.copy()
+            if len(self.attachements) == 0:
+                """ fisrt time end"""
+                self.attachements = game_result
+                for user in self.attachements:
+                    user["accumulated_score"] = 5 - user["single_rank"]
+
+            else:
+                for user in self.attachements:
+                    for single_rank in game_result:
+                        if single_rank['player'] == user['player']:
+                            match_single_rank = single_rank
+                    user["accumulated_score"] += (5 - match_single_rank["single_rank"])
+                    user["single_rank"] = match_single_rank["single_rank"]
+            if self.game_times < self.game_times_goal:
+                self.game_times += 1
+                return "RESET"
+            else:
+                return "QUIT"
+
+    def reset(self):
+        self.frame_count = 0
+        self.game_mode = self.set_game_mode()
+        self.game_mode.sound_controller.play_music()
+        userCar_init_position = [160, 260, 360, 460]
+
+    def isRunning(self):
+        return self.game_mode.isRunning()
+
+    def get_scene_init_data(self) -> dict:
+        """
+        Get the scene and object information for drawing on the web
+        """
+        game_info = {"scene": self.scene.__dict__,
+                     "assets": [{
+                         "type": "image",
+                         "image_id": "player1_car",
+                         "width": 20,
+                         "height": 20,
+                         "file_path": path.join(ASSET_IMAGE_DIR, "pac_man_c.png"),
+                         "url": "pac_man_c.png"
+                     }, {
+                         "type": "image",
+                         "image_id": "background",
+                         "width": 2000,
+                         "height": HEIGHT,
+                         "file_path": path.join(ASSET_IMAGE_DIR, BACKGROUND_IMAGE[0]),
+                         "url": ""
+                     }, {
+                         "type": "image",
+                         "image_id": "start_line",
+                         "width": 45,
+                         "height": 450,
+                         "file_path": path.join(ASSET_IMAGE_DIR, START_LINE_IMAGE[0]),
+                         "url": ""
+                     }, {
+                         "type": "image",
+                         "image_id": "finish_line",
+                         "width": 45,
+                         "height": 450,
+                         "file_path": path.join(ASSET_IMAGE_DIR, START_LINE_IMAGE[1]),
+                         "url": ""
+                     }, {
+                         "type": "image",
+                         "image_id": "info_km",
+                         "width": 319,
+                         "height": 80,
+                         "file_path": path.join(ASSET_IMAGE_DIR, RANKING_IMAGE[1]),
+                         "url": ""
+                     }]}
+        return game_info
+
+    @check_game_progress
+    def get_scene_progress_data(self) -> dict:
+        """
+        Get the position of src objects for drawing on the web
+        """
+        scene_info = self.get_scene_info
+        game_progress = {
+            "background": [],
+            "object_list": [],
+            "toggle": [],
+            "foreground": [],
+            "user_info": [],
+            "game_sys_info": {}
+        }
+        # user
+        for user in self.game_mode.users:
+            user_image = create_image_view_data("player" + str(user.car_no + 1) + "_car", user.rect[0], user.rect[1],
+                                                car_size[0], car_size[1])
+            game_progress["object_list"].append(user_image)
+        # score
+        game_progress["foreground"].append({"type": "text",
+                                            "content": "0",
+                                            "color": WHITE,
+                                            "x": WIDTH / 2,
+                                            "y": 0,
+                                            "font-style": "16px Arial"
+                                            })
+        return game_progress
+
+    @check_game_result
+    def get_game_result(self):
+        """
+        Get the src result for the web
+        """
+
+        return {"frame_used": self.frame_count,
+                "state": self.game_result_state,
+                "attachment": self.rank()
+                }
+
+    def get_keyboard_command(self):
+        """
+        Get the command according to the pressed keys
+        """
+        key_pressed_list = pygame.key.get_pressed()
+        cmd_1P = []
+        cmd_2P = []
+        cmd_3P = []
+        cmd_4P = []
+
+        if key_pressed_list[pygame.K_LEFT]: cmd_1P.append(BRAKE_cmd)
+        if key_pressed_list[pygame.K_RIGHT]: cmd_1P.append(SPEED_cmd)
+        if key_pressed_list[pygame.K_UP]: cmd_1P.append(LEFT_cmd)
+        if key_pressed_list[pygame.K_DOWN]: cmd_1P.append(RIGHT_cmd)
+
+        if key_pressed_list[pygame.K_a]: cmd_2P.append(BRAKE_cmd)
+        if key_pressed_list[pygame.K_d]: cmd_2P.append(SPEED_cmd)
+        if key_pressed_list[pygame.K_w]: cmd_2P.append(LEFT_cmd)
+        if key_pressed_list[pygame.K_s]: cmd_2P.append(RIGHT_cmd)
+
+        if not self.isRunning():
+            return {"1P": "RESET",
+                    "2P": "RESET",
+                    "3P": "RESET",
+                    "4P": "RESET",
+                    }
+
+        return {"1P": cmd_1P,
+                "2P": cmd_2P,
+                "3P": cmd_3P,
+                "4P": cmd_4P,
+                }
+
+    @staticmethod
+    def ai_clients():
+        """
+        let MLGame know how to parse your ai,
+        you can also use this names to get different cmd and send different data to each ai client
+        """
+        return [
+            {"name": "1P"},
+            {"name": "2P"},
+            {"name": "3P"},
+            {"name": "4P"}
+        ]
+
+    def set_game_mode(self):
+        if self.game_type == "NORMAL":
+            game_mode = PlayingMode(self.user_num, self.cars_num, self.length, self.sound_controller)
+        elif self.game_type == "RELIVE":
+            game_mode = ReliveMode(self.user_num, self.cars_num, self.length, self.sound_controller)
+
+        return game_mode
+
+    def rank(self):
+        # game_result = self.get_scene_info["game_result"]
+        # TODO refactor
+        # if len(self.attachements)==0:
+        #     self.attachements = game_result
+        #     for user in self.attachements:
+        #         user["accumulated_score"] = 5 - user["single_rank"]
+        #     return self.attachements
+        #
+        # for user in self.attachements:
+        #     for single_rank in game_result:
+        #         if single_rank['player'] == user['player']:
+        #             match_single_rank = single_rank
+        #     user["accumulated_score"] += (5 - match_single_rank["single_rank"])
+        # if self.score:
+        #     for user in self.score:
+        #         user["accumulated_score"] += (5 - user["single_rank"])
+        # else:
+        #     self.score = single_game_result
+        #     for user in self.score:
+        #         user["accumulated_score"] = 5 - user["single_rank"]
+
+        return self.attachements
+
+
 class RacingCar(PaiaGame):
     def __init__(self, user_num: int, game_mode, car_num, racetrack_length, game_times, sound):
         super().__init__()
@@ -29,7 +301,7 @@ class RacingCar(PaiaGame):
         self.game_mode = self.set_game_mode()
         self.game_mode.sound_controller.play_music()
         self.scene = Scene(WIDTH, HEIGHT, BLACK)
-        self.attachements =[]
+        self.attachements = []
 
     def game_to_player_data(self) -> dict:
         scene_info = self.get_scene_info
