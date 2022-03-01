@@ -9,16 +9,16 @@
 #     if value < 1:
 #         raise ArgumentTypeError()
 #     return value
-from .src.PacMan import RacingCar
+from .src.PacMan import PacMan
 import pygame
 from os import path
 from mlgame.utils.parse_config import read_json_file, parse_config
 from argparse import ArgumentTypeError
 
 GAME_SETUP = {
-    "game": RacingCar,
+    "game": PacMan,
 
-    "ml_clients":RacingCar.ai_clients(),
+    "ml_clients":PacMan.ai_clients(),
     "dynamic_ml_clients":True
 }
 
