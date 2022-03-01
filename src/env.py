@@ -1,11 +1,11 @@
 from os import path
 
 '''width and height'''
-WIDTH = 1000
-HEIGHT = 700
+WIDTH = 640
+HEIGHT = 480
 
 '''environment data'''
-FPS = 30
+FPS = 60
 ceiling = 600
 finish_line = 15000
 

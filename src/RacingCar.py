@@ -213,32 +213,21 @@ class PacMan(PaiaGame):
         """
         key_pressed_list = pygame.key.get_pressed()
         cmd_1P = []
-        cmd_2P = []
-        cmd_3P = []
-        cmd_4P = []
 
         if key_pressed_list[pygame.K_LEFT]: cmd_1P.append(BRAKE_cmd)
         if key_pressed_list[pygame.K_RIGHT]: cmd_1P.append(SPEED_cmd)
         if key_pressed_list[pygame.K_UP]: cmd_1P.append(LEFT_cmd)
         if key_pressed_list[pygame.K_DOWN]: cmd_1P.append(RIGHT_cmd)
 
-        if key_pressed_list[pygame.K_a]: cmd_2P.append(BRAKE_cmd)
-        if key_pressed_list[pygame.K_d]: cmd_2P.append(SPEED_cmd)
-        if key_pressed_list[pygame.K_w]: cmd_2P.append(LEFT_cmd)
-        if key_pressed_list[pygame.K_s]: cmd_2P.append(RIGHT_cmd)
+        if key_pressed_list[pygame.K_a]: cmd_1P.append(BRAKE_cmd)
+        if key_pressed_list[pygame.K_d]: cmd_1P.append(SPEED_cmd)
+        if key_pressed_list[pygame.K_w]: cmd_1P.append(LEFT_cmd)
+        if key_pressed_list[pygame.K_s]: cmd_1P.append(RIGHT_cmd)
 
         if not self.isRunning():
-            return {"1P": "RESET",
-                    "2P": "RESET",
-                    "3P": "RESET",
-                    "4P": "RESET",
-                    }
+            return {"1P": "RESET"}
 
-        return {"1P": cmd_1P,
-                "2P": cmd_2P,
-                "3P": cmd_3P,
-                "4P": cmd_4P,
-                }
+        return {"1P": cmd_1P}
 
     @staticmethod
     def ai_clients():

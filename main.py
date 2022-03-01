@@ -21,7 +21,7 @@ if __name__ == '__main__':
         game_view.draw(game_progress_data)
         game_view.flip()
         if frame_count == 1:
-            print(game_progress_data["foreground"])
+            pass
         frame_count += 1
 
     pygame.quit()
