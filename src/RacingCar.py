@@ -60,8 +60,8 @@ class PacMan(PaiaGame):
         """
         Get the scene information
         """
-        cars_pos = []
-        computer_cars_pos = []
+        pacman_pos = []
+        ghosts_pos = []
 
         scene_info = {
             "frame": self.game_mode.frame,
@@ -69,20 +69,13 @@ class PacMan(PaiaGame):
             "background": [(self.game_mode.bg_x, 0), (self.game_mode.rel_x, 0)], }
 
         for user in self.game_mode.cars:
-            car_info = user.get_info()
-            cars_pos.append((car_info["x"], car_info["y"]))
-            if car_info["id"] <= 4:
-                scene_info["player_" + str(car_info["id"]) + "_pos"] = (car_info["x"], car_info["y"])
-            elif car_info["id"] > 100:
-                computer_cars_pos.append((car_info["x"], car_info["y"]))
-        scene_info["computer_cars"] = computer_cars_pos
-        scene_info["cars_pos"] = cars_pos
-
-        if self.game_type == "COIN":
-            coin_pos = []
-            for coin in self.game_mode.coins:
-                coin_pos.append(coin.get_position())
-            scene_info["coin"] = coin_pos
+            pacman_info = user.get_info()
+            pacman_pos.append((pacman_info["x"], pacman_info["y"]))
+            if pacman_info["id"] <= 4:
+                scene_info["player_" + str(pacman_info["id"]) + "_pos"] = (pacman_info["x"], pacman_info["y"])
+        # TODO add ghosts pos
+        scene_info["ghosts_pos"] = ghosts_pos
+        scene_info["pacman_pos"] = pacman_pos
 
         scene_info["game_result"] = self.game_mode.winner
         return scene_info
