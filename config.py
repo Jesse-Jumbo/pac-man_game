@@ -9,7 +9,7 @@
 #     if value < 1:
 #         raise ArgumentTypeError()
 #     return value
-from .src.RacingCar import RacingCar
+from .src.PacMan import RacingCar
 import pygame
 from os import path
 from mlgame.utils.parse_config import read_json_file, parse_config

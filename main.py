@@ -1,5 +1,5 @@
 import pygame
-from src import RacingCar
+from src import PacMan
 
 from src.env import FPS
 from mlgame.view.view import PygameView
@@ -8,7 +8,7 @@ from mlgame.gamedev.generic import quit_or_esc
 if __name__ == '__main__':
     pygame.init()
     # game = RacingCar.RacingCar(user_num=2, game_mode="NORMAL", car_num=50, racetrack_length=10000, game_times=1, sound="off")
-    game = RacingCar.PacMan(user_num=1, game_mode="RELIVE", car_num=0, racetrack_length=1000, game_times=1, sound="off")
+    game = PacMan.PacMan(user_num=1, game_mode="RELIVE", car_num=0, racetrack_length=1000, game_times=1, sound="off")
     scene_init_info_dict = game.get_scene_init_data()
     game_view = PygameView(scene_init_info_dict)
     interval = 1 / 30

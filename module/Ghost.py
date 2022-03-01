@@ -1,10 +1,8 @@
-import random
-
 import pygame.transform
 
-from .collide_hit_rect import collide_player_with_ghosts, collide_with_nodes, collide_with_walls
-from .settings import *
-from .SquareGrid import *
+from games.pac_man.src.collide_hit_rect import collide_with_nodes, collide_with_walls
+from games.pac_man.module.settings import *
+from games.pac_man.module.SquareGrid import *
 
 
 def move():

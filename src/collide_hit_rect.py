@@ -1,4 +1,4 @@
-from .settings import *
+from games.pac_man.module.settings import *
 
 
 def collide_hit_rect(one: pygame.sprite, two: pygame.sprite):
@@ -11,8 +11,7 @@ def collide_player_with_ghosts(sprite: pygame.sprite, group: pygame.sprite.Group
     hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
     if hits:
         if not hits[0].is_blue:
-            sprite.game.playing = False
-            sprite.game.show_go_screen()
+            sprite.state = False
         else:
             sprite.score += BLUE_GHOST_SCORE
             hits[0].pos.xy = hits[0].ghost_origin_pos

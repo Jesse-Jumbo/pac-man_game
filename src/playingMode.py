@@ -1,5 +1,4 @@
 from .car import *
-from .highway import *
 from .gameMode import GameMode
 from .env import *
 import pygame
@@ -8,8 +7,8 @@ from mlgame.gamedev.game_interface import GameResultState, GameStatus
 
 
 class PlayingMode(GameMode):
-    def __init__(self, user_num: int, car_num, length, sound_controller):
-        super(PlayingMode, self).__init__(user_num, car_num, length, sound_controller)
+    def __init__(self, sound_controller):
+        super(PlayingMode, self).__init__(sound_controller)
         self.is_arrive = False
 
     def update(self, command):

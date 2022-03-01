@@ -1,7 +1,6 @@
 import pygame
 
 from .playingMode import PlayingMode
-from .coinPlayMode import CoinMode
 from .reliveMode import ReliveMode
 from mlgame.view.test_decorator import check_game_progress, check_game_result
 from mlgame.view.view_model import create_text_view_data, create_asset_init_data, create_image_view_data, \
@@ -237,9 +236,9 @@ class PacMan(PaiaGame):
 
     def set_game_mode(self):
         if self.game_type == "NORMAL":
-            game_mode = PlayingMode(self.user_num, self.cars_num, self.length, self.sound_controller)
+            game_mode = PlayingMode(self.sound_controller)
         elif self.game_type == "RELIVE":
-            game_mode = ReliveMode(self.user_num, self.cars_num, self.length, self.sound_controller)
+            game_mode = ReliveMode(self.sound_controller)
 
         return game_mode
 

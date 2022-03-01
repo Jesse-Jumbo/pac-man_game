@@ -1,5 +1,4 @@
 from .car import *
-from .highway import *
 from .gameMode import GameMode
 from .env import *
 import pygame
@@ -8,11 +7,12 @@ from mlgame.gamedev.game_interface import GameResultState, GameStatus
 
 
 class ReliveMode(GameMode):
-    def __init__(self, user_num: int, car_num, length, sound_controller):
-        super(ReliveMode, self).__init__(user_num, car_num, length, sound_controller)
+    def __init__(self, sound_controller):
+        super(ReliveMode, self).__init__(sound_controller)
         self.car_arrived = 0
         self.user_frames = [] # 使用者抵達終點所使用的時間
-        self.limit_frame = length/1000 * 300
+        # TODO refactor limit frame
+        self.limit_frame = 10000
 
     def update(self, command):
         '''update the model of src,call this fuction per frame'''
@@ -130,15 +130,17 @@ class ReliveMode(GameMode):
 
 
     def _is_car_arrive_end(self, car):
-        '''
-        :param car: User
-        :return: Bool
-        '''
-        if car.distance > self.length:
-            car.distance = self.length
-            car.state = False
-            return True
-        return False
+        # TODO refactor win check
+        pass
+        # '''
+        # :param car: User
+        # :return: Bool
+        # '''
+        # if car.distance > self.length:
+        #     car.distance = self.length
+        #     car.state = False
+        #     return True
+        # return False
 
     def rank(self):
         '''
@@ -146,13 +148,14 @@ class ReliveMode(GameMode):
         排名先依據抵達終點所費之時間，若未抵達終點則以行進距離較遠者排名靠前
         '''
         self.user_distance = []
-        for user in self.users:
-            if user.distance >= self.length:
-                user.status = GameStatus.GAME_PASS
-                self.user_frames.append(user.used_frame)
-            else:
-                user.status = GameStatus.GAME_OVER
-                self.user_distance.append(user.distance)
+        # TODO refactor GAME PASS and OVER
+        # for user in self.users:
+        #     if user.distance >= self.length:
+        #         user.status = GameStatus.GAME_PASS
+        #         self.user_frames.append(user.used_frame)
+        #     else:
+        #         user.status = GameStatus.GAME_OVER
+        #         self.user_distance.append(user.distance)
         while len(self.user_frames) > 0:
             for car in self.users:
                 if self.user_frames:

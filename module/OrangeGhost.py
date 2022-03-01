@@ -1,8 +1,5 @@
-import random
-
-from .SquareGrid import vec2int
 from .settings import *
-from .Ghost import Ghost
+from games.pac_man.module.Ghost import Ghost
 
 
 class OrangeGhost(Ghost):

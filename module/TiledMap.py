@@ -1,4 +1,3 @@
-import pygame
 import pytmx
 
 from .GreenGhost import GreenGhost
@@ -6,10 +5,10 @@ from .OrangeGhost import OrangeGhost
 from .PinkGhost import PinkGhost
 from .RedGhost import RedGhost
 from .settings import *
-from .Dot import Dot
+from games.pac_man.src.Dot import Dot
 from .Obstacle import Obstacle
-from .PacMan import PacMan
-from .Point import Point
+from games.pac_man.src.Player import PacMan
+from games.pac_man.src.Point import Point
 
 
 class TiledMap:
