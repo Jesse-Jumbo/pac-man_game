@@ -2,7 +2,7 @@ import pygame.transform
 
 from games.pac_man.src.collide_hit_rect import collide_with_nodes, collide_with_walls
 from games.pac_man.module.settings import *
-from games.pac_man.module.SquareGrid import *
+from games.pac_man.src.SquareGrid import *
 
 
 def move():

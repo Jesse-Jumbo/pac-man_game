@@ -1,6 +1,4 @@
-import random
-
-from games.pac_man.module.SquareGrid import *
+from games.pac_man.src.SquareGrid import *
 
 
 # Test SquareGrid

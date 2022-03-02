@@ -1,5 +1,5 @@
-from .settings import *
-from games.pac_man.module.Ghost import Ghost
+from games.pac_man.module.settings import *
+from games.pac_man.src.Ghost import Ghost
 
 
 class GreenGhost(Ghost):

@@ -1,6 +1,6 @@
 import pygame.math
 
-from .settings import *
+from games.pac_man.module.settings import *
 
 
 class Obstacle(pygame.sprite.Sprite):

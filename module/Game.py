@@ -1,13 +1,12 @@
-import math
 import sys
 
 import pygame.event
 
-from .Node import Node
-from .TiledMap import TiledMap
+from games.pac_man.src.Node import Node
+from games.pac_man.src.TiledMap import TiledMap
 from .draw_text import draw_text
 from .settings import *
-from .SquareGrid import *
+from games.pac_man.src.SquareGrid import *
 
 
 class Game:

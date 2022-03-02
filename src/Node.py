@@ -1,6 +1,4 @@
-import pygame
-
-from .settings import *
+from games.pac_man.module.settings import *
 
 
 class Node(pygame.sprite.Sprite):

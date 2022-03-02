@@ -1,12 +1,12 @@
 import pytmx
 
-from .GreenGhost import GreenGhost
-from .OrangeGhost import OrangeGhost
-from .PinkGhost import PinkGhost
-from .RedGhost import RedGhost
-from .settings import *
+from games.pac_man.src.GreenGhost import GreenGhost
+from games.pac_man.src.OrangeGhost import OrangeGhost
+from games.pac_man.src.PinkGhost import PinkGhost
+from games.pac_man.src.RedGhost import RedGhost
+from games.pac_man.module.settings import *
 from games.pac_man.src.Dot import Dot
-from .Obstacle import Obstacle
+from games.pac_man.src.Obstacle import Obstacle
 from games.pac_man.src.Player import PacMan
 from games.pac_man.src.Point import Point
 

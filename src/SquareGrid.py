@@ -1,6 +1,5 @@
 import pygame
 
-from .Obstacle import Obstacle
 import heapq
 from collections import deque
 

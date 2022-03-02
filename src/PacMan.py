@@ -1,7 +1,5 @@
 import pygame
 
-from .playingMode import PlayingMode
-from .reliveMode import ReliveMode
 from mlgame.view.test_decorator import check_game_progress, check_game_result
 from mlgame.view.view_model import create_text_view_data, create_asset_init_data, create_image_view_data, \
     create_line_view_data, Scene, create_polygon_view_data, create_rect_view_data
