@@ -7,7 +7,8 @@ HEIGHT = 480
 
 '''environment data'''
 FPS = 60
-
+GAME_STATE = ["FAIL", "FINISH"]
+MAP_NAME = "map05.tmx"
 '''color'''
 BLACK = "#000000"
 WHITE = "#ffffff"
@@ -40,7 +41,7 @@ DOWN_cmd = "MOVE_DOWN"
 '''data path'''
 GAME_DIR = path.dirname(__file__)
 IMAGE_DIR = path.join(GAME_DIR, "../asset/image")
-SOUND_DIR = path.join(GAME_DIR, '../sound')
+SOUND_DIR = path.join(GAME_DIR, 'sound')
 MAP_DIR = path.join(GAME_DIR, '../maps')
 '''Layers'''
 WALL_LAYER = 1
@@ -96,6 +97,11 @@ PINK_IMG = 'pink_ghost_img'
 GREEN_IMG = 'green_ghost_img'
 ORANGE_IMG = 'orange_ghost_img'
 BLUE_LIMIT = 10000
+RED_GHOST_NO = "red_ghost"
+PINK_GHOST_NO = "pink_ghost"
+GREEN_GHOST_NO = "green_ghost"
+ORANGE_GHOST_NO = "orange_ghost"
+GHOST_NO_LIST = [RED_GHOST_NO, PINK_GHOST_NO, GREEN_GHOST_NO, ORANGE_GHOST_NO]
 
 """all setting"""
 DOWN_IMG = 'down'

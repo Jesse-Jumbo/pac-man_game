@@ -3,17 +3,19 @@ import pygame
 import heapq
 from collections import deque
 
+from games.pac_man.src.Obstacle import Obstacle
+
 vec = pygame.math.Vector2
 
 
 class SquareGrid:
-    def __init__(self, walls: list, width: int, height: int):
+    def __init__(self, walls: pygame.sprite.Group, width: int, height: int):
         self.width = width
         self.height = height
-        # for wall in walls:
-        #     if isinstance(wall, Obstacle):
-        #         self.walls.append(wall.node_pos)
-        self.walls = walls
+        self.walls = []
+        for wall in walls:
+            if isinstance(wall, Obstacle):
+                self.walls.append(wall.node_pos)
         self.connections = [vec(1, 0), vec(-1, 0), vec(0, 1), vec(0, -1)]
 
     def in_bounds(self, node: vec):

@@ -4,7 +4,7 @@ from games.pac_man.module.settings import *
 
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, img,  x: float=0, y: float=0, width: float=0, height: float=0):
+    def __init__(self, img,  x: float, y: float):
         super().__init__()
         self.image = img
         self.rect = self.image.get_rect()
