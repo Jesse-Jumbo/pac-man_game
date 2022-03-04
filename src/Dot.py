@@ -2,16 +2,22 @@ from .env import *
 
 
 class Dot(pygame.sprite.Sprite):
-    def __init__(self, image, x: float, y: float):
+    def __init__(self, x: float, y: float):
         self._layer = DOT_LAYER
         super().__init__()
-        self.image = image
-        self.rect = pygame.Rect(x, y, all_object_size[0], all_object_size[1])
-        self.hit_rect = pygame.Rect(x, y, object_hit_size[0], object_hit_size[1])
+        self.rect = ALL_OBJECT_SIZE.copy()
+        self.rect.x = x
+        self.rect.y = y
+        self.hit_rect = DOT_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
 
-    def update(self) -> None:
+    def update(self, *args, **kwargs) -> None:
         pass
 
-    def get_position(self):
-        return self.rect.left, self.rect.top
+    def get_position(self, xy: str):
+        if xy == "x":
+            return self.rect.x
+        elif xy == "y":
+            return self.rect.y
+        else:
+            return "please input x or y to get position"

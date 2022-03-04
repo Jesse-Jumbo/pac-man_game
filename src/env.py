@@ -7,7 +7,6 @@ HEIGHT = 480
 
 '''environment data'''
 FPS = 60
-GAME_STATE = ["FAIL", "FINISH"]
 MAP_NAME = "map05.tmx"
 '''color'''
 BLACK = "#000000"
@@ -18,6 +17,7 @@ GREEN = "#00ff00"
 GREY = "#8c8c8c"
 BLUE = "#0000ff"
 LIGHT_BLUE = "##21A1F1"
+# TODO color name might be str
 CYAN_BLUE = (0, 255, 255)
 PINK = (255, 0, 255)
 DARKGREY = (40, 40, 40)
@@ -26,11 +26,6 @@ BROWN = (100, 55, 5)
 FOREST = (34, 57, 10)
 MAGENTA = (255, 0, 255)
 MEDGRAY = (75, 75, 75)
-
-
-'''object size'''
-all_object_size = (20, 20)
-object_hit_size = (18, 18)
 
 '''command'''
 LEFT_cmd = "MOVE_LEFT"
@@ -42,7 +37,7 @@ DOWN_cmd = "MOVE_DOWN"
 GAME_DIR = path.dirname(__file__)
 IMAGE_DIR = path.join(GAME_DIR, "../asset/image")
 SOUND_DIR = path.join(GAME_DIR, 'sound')
-MAP_DIR = path.join(GAME_DIR, '../maps')
+MAP_DIR = path.join(GAME_DIR, '..', 'maps')
 '''Layers'''
 WALL_LAYER = 1
 ITEMS_LAYER = 1
@@ -56,14 +51,25 @@ NODE_LAYER = 4
 '''BG View'''
 TITLE = "Pac-Man!"
 BG_COLOR = DARKGREY
+TILE_X_SIZE = 20
+TILE_Y_SIZE = 20
 TILE_SIZE = 20
-GRID_WIDTH = WIDTH/TILE_SIZE
-GRID_HEIGHT = HEIGHT/TILE_SIZE
+GRID_WIDTH = WIDTH / TILE_X_SIZE
+GRID_HEIGHT = HEIGHT / TILE_Y_SIZE
 TITLE_SIZE = 100
 
 '''window pos'''
 WIDTH_CENTER = WIDTH / 2
 HEIGHT_CENTER = HEIGHT / 2
+
+'''object size'''
+ALL_OBJECT_SIZE = pygame.Rect(0, 0, 20, 20)
+
+"""all setting"""
+DOWN_IMG = 'down'
+RIGHT_IMG = 'right'
+UP_IMG = 'up'
+LEFT_IMG = 'left'
 
 """map setting"""
 WALL_LAYER_NAME = 'walls'
@@ -101,13 +107,9 @@ RED_GHOST_NO = "red_ghost"
 PINK_GHOST_NO = "pink_ghost"
 GREEN_GHOST_NO = "green_ghost"
 ORANGE_GHOST_NO = "orange_ghost"
+BLUE_GHOST_NO = "blue_ghost"
 GHOST_NO_LIST = [RED_GHOST_NO, PINK_GHOST_NO, GREEN_GHOST_NO, ORANGE_GHOST_NO]
 
-"""all setting"""
-DOWN_IMG = 'down'
-RIGHT_IMG = 'right'
-UP_IMG = 'up'
-LEFT_IMG = 'left'
 '''red'''
 RED_GO = -1
 '''pink'''
@@ -127,12 +129,10 @@ DOT_HIT_RECT = pygame.Rect(0, 0, 5, 5)
 POINT_HIT_RECT = pygame.Rect(0, 0, 8, 8)
 
 '''node setting'''
-node_width = 50
-node_height = 50
+NODE_HIT_RECT = pygame.Rect(0, 0, 2, 2)
 
 """img"""
 '''player'''
-# PLAYER_IMG = "pac.png"
 PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
 '''blue'''
 blue_ghost_image_dic = {DOWN_IMG: "blue_ghost_d.png", LEFT_IMG: "blue_ghost_l.png", RIGHT_IMG: "blue_ghost_r.png", UP_IMG: "blue_ghost_u.png"}

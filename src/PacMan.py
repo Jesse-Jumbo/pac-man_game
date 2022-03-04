@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 from mlgame.view.test_decorator import check_game_progress, check_game_result
@@ -16,6 +18,7 @@ from .GameMode import GameMode
 class PacMan(PaiaGame):
     def __init__(self, user_num: int, game_mode: str, game_times, sound):
         super().__init__()
+        self.scene = Scene(WIDTH, HEIGHT, BLACK)
         self.game_times_goal = game_times
         self.game_times = 1
         self.score = []  # 用於計算積分
@@ -25,13 +28,15 @@ class PacMan(PaiaGame):
         self.user_num = user_num
         self.game_mode = self.set_game_mode()
         # self.game_mode.sound_controller.play_music()
-        self.scene = Scene(WIDTH, HEIGHT, BLACK)
         self.attachements = []
-
 
     def game_to_player_data(self) -> dict:
         scene_info = self.get_scene_info
-        to_player_data = {'1P': {'id': 0, 'x': 20, 'y': 160, 'status': 'GAME_ALIVE', 'distance': 0, 'velocity': 0, 'coin_num': 0, 'all_cars_pos': [(20, 160)], 'frame': 0, 'coin': []}}
+        to_player_data = {}
+        player_data = self.game_mode.player.get_info()
+        player_data["frame"] = scene_info["frame"]
+        player_data["status"] = scene_info["status"]
+        to_player_data[f"{player_data['id']}P"] = player_data
 
         if to_player_data:
             return to_player_data
@@ -50,8 +55,10 @@ class PacMan(PaiaGame):
         """
         scene_info = {'frame': self.game_mode.frame,
                       'status': self.game_mode.state,
+                      # TODO rethink need the data which background
                       'background': [WIDTH, HEIGHT],
-                      'player_0_pos': self.game_mode.player.pos,
+                      f'player_{self.game_mode.player.player_no}_pos': self.game_mode.player.pos,
+                      'score': f"{self.game_mode.player.score}",
                       'ghosts_pos': [],
                       'game_result': self.game_mode.get_result()}
 
@@ -61,9 +68,15 @@ class PacMan(PaiaGame):
 
     def update(self, commands):
         self.frame_count += 1
-        self.game_mode.run()
-        self.game_result_state = "FAIL"
+        self.game_mode.run(commands)
+        self.game_result_state = self.game_mode.state
         if not self.is_running():
+            # collect game rank
+            game_result = self.game_mode.get_result()
+            if len(self.attachements) == 0:
+                # first time end
+                self.attachements = game_result
+
             if self.game_times < self.game_times_goal:
                 self.game_times += 1
                 return "RESET"
@@ -72,6 +85,9 @@ class PacMan(PaiaGame):
 
     def reset(self):
         self.frame_count = 0
+        self.game_mode = self.set_game_mode()
+        # TODO play music
+        # self.game_mode.sound_controller.player_music()
 
     def is_running(self):
         return self.game_mode.playing
@@ -81,13 +97,25 @@ class PacMan(PaiaGame):
         Get the scene and object information for drawing on the web
         """
         game_info = {'scene': self.scene.__dict__,
-                     'assets': [{'type': 'image', 'image_id': 'computer_car', 'width': 60, 'height': 31, 'file_path': 'asset/image/pac_man_c.png', 'url': ''},
-                                {'type': 'image', 'image_id': 'player1_car', 'width': 60, 'height': 31, 'file_path': 'asset/image/pac_man_c.png', 'url': ''},
-                                {'type': 'image', 'image_id': 'background', 'width': 2000, 'height': 700, 'file_path': 'asset/image/pac_man_c.png', 'url': ''},
-                                {'type': 'image', 'image_id': 'start_line', 'width': 45, 'height': 450, 'file_path': 'asset/image/pac_man_c.png', 'url': ''},
-                                {'type': 'image', 'image_id': 'finish_line', 'width': 45, 'height': 450, 'file_path': 'asset/image/pac_man_c.png', 'url': ''},
-                                {'type': 'image', 'image_id': 'info_km', 'width': 319, 'height': 80, 'file_path': 'asset/image/pac_man_c.png', 'url': ''}]}
+                     'assets': []}
 
+        # initialize player image
+        game_info['assets'].append(create_asset_init_data(f'player{self.game_mode.player.player_no}P',
+                                                          TILE_X_SIZE, TILE_Y_SIZE,
+                                                          path.join(IMAGE_DIR, random.choice(PLAYER_IMG_LIST)), ""))
+        # initialize ghosts image
+        for ghost in self.game_mode.ghosts:
+            game_info['assets'].append(create_asset_init_data(ghost.ghost_no, TILE_X_SIZE, TILE_Y_SIZE,
+                                                              path.join(IMAGE_DIR, ghost.img_name), ""))
+        # initialize dots image
+        for i in range(len(self.game_mode.dots)):
+            game_info["assets"].append(create_asset_init_data("dots", TILE_X_SIZE, TILE_Y_SIZE,
+                                                              path.join(IMAGE_DIR, DOT_IMG), ""))
+        # initialize points image
+        for i in range(len(self.game_mode.points)):
+            game_info["assets"].append(create_asset_init_data("point", TILE_X_SIZE, TILE_Y_SIZE,
+                                                              path.join(IMAGE_DIR, POINT_IMG), ""))
+        # TODO find where define initialize walls image
 
         return game_info
 
@@ -101,188 +129,6 @@ class PacMan(PaiaGame):
                          'object_list': [{'type': 'image', 'x': -2000, 'y': 0, 'width': 2000, 'height': 700, 'image_id': 'background', 'angle': 0},
                                          {'type': 'image', 'x': 0, 'y': 0, 'width': 2000, 'height': 700, 'image_id': 'background', 'angle': 0},
                                          {'type': 'image', 'x': 79, 'y': 100, 'width': 45, 'height': 428, 'image_id': 'start_line', 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 149, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 199, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 249, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 299, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 349, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 399, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 449, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -211, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -161, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -111, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -61, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': -11, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 39, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 89, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 139, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 189, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 239, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 289, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 339, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 389, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 439, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 489, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 539, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 589, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 639, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 689, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 739, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 789, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
                                          {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
                                          {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
                                          {'type': 'image', 'x': 79, 'y': 100, 'width': 45, 'height': 428, 'image_id': 'start_line', 'angle': 0},
@@ -294,6 +140,30 @@ class PacMan(PaiaGame):
                                         {'type': 'text', 'content': '0m', 'color': '#ffffff', 'x': 725, 'y': 45, 'font-style': '20px Arial'}],
                          'user_info': [],
                          'game_sys_info': {}}
+
+        # update player image
+        game_progress["object_list"].append(create_image_view_data(self.game_mode.player.player_no,
+                                                                   self.game_mode.player.x,
+                                                                   self.game_mode.player.y,
+                                                                   TILE_X_SIZE, TILE_Y_SIZE))
+        # update ghosts image
+        for ghost in self.game_mode.ghosts:
+            game_progress["object_list"].append(create_image_view_data(ghost.ghost_no,
+                                                                       ghost.rect.x, ghost.rect.y,
+                                                                       TILE_X_SIZE, TILE_Y_SIZE))
+        # update dots image
+        for dot in self.game_mode.dots:
+            game_progress["object_list"].append(create_image_view_data('dots',
+                                                                       dot.rect.x, dot.rect.y,
+                                                                       TILE_X_SIZE, TILE_Y_SIZE))
+        # update points image
+        for point in self.game_mode.points:
+            game_progress["object_list"].append(create_image_view_data('points',
+                                                                       point.rect.x, point.rect.y,
+                                                                       TILE_X_SIZE, TILE_Y_SIZE))
+        # update score text
+        game_progress["foreground"].append(create_text_view_data(f"Score: {self.game_mode.player.score}",
+                                                                 WHITE, WHITE / 2, HEIGHT / 2, "20px Arial"))
 
         return game_progress
 
@@ -318,15 +188,23 @@ class PacMan(PaiaGame):
         cmd_3P = []
         cmd_4P = []
 
-        if key_pressed_list[pygame.K_LEFT]: cmd_1P.append(LEFT_cmd)
-        if key_pressed_list[pygame.K_RIGHT]: cmd_1P.append(RIGHT_cmd)
-        if key_pressed_list[pygame.K_UP]: cmd_1P.append(UP_cmd)
-        if key_pressed_list[pygame.K_DOWN]: cmd_1P.append(DOWN_cmd)
+        if key_pressed_list[pygame.K_LEFT]:
+            cmd_1P.append(LEFT_cmd)
+        if key_pressed_list[pygame.K_RIGHT]:
+            cmd_1P.append(RIGHT_cmd)
+        if key_pressed_list[pygame.K_UP]:
+            cmd_1P.append(UP_cmd)
+        if key_pressed_list[pygame.K_DOWN]:
+            cmd_1P.append(DOWN_cmd)
 
-        if key_pressed_list[pygame.K_a]: cmd_1P.append(LEFT_cmd)
-        if key_pressed_list[pygame.K_d]: cmd_1P.append(RIGHT_cmd)
-        if key_pressed_list[pygame.K_w]: cmd_1P.append(UP_cmd)
-        if key_pressed_list[pygame.K_s]: cmd_1P.append(DOWN_cmd)
+        if key_pressed_list[pygame.K_a]:
+            cmd_1P.append(LEFT_cmd)
+        if key_pressed_list[pygame.K_d]:
+            cmd_1P.append(RIGHT_cmd)
+        if key_pressed_list[pygame.K_w]:
+            cmd_1P.append(UP_cmd)
+        if key_pressed_list[pygame.K_s]:
+            cmd_1P.append(DOWN_cmd)
 
         if not self.is_running():
             return {"1P": "RESET",

@@ -7,6 +7,7 @@ from games.pac_man.src.Node import Node
 from games.pac_man.src.TiledMap import TiledMap
 from games.pac_man.module.draw_text import draw_text
 from games.pac_man.src.SquareGrid import *
+from mlgame.gamedev.game_interface import GameResultState
 from .collide_hit_rect import collide_with_walls, collide_player_with_ghosts, collide_with_nodes
 from games.pac_man.src.collide_hit_rect import collide_hit_rect
 
@@ -16,6 +17,10 @@ from .env import *
 class GameMode:
     def __init__(self):
         # initialize all variables and so all the setup for a new game
+        # TODO reset where initialize
+        pygame.init()
+        pygame.mixer.init()
+        self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         # control variables
         self.playing = True
         self.draw_debug = False
@@ -65,8 +70,8 @@ class GameMode:
         wall_pos = []
         for wall in self.walls:
             wall_pos.append(vec(wall.pos))
-        for x in range(0, WIDTH, TILE_SIZE):
-            for y in range(0, HEIGHT, TILE_SIZE):
+        for x in range(0, WIDTH, TILE_X_SIZE):
+            for y in range(0, HEIGHT, TILE_X_SIZE):
                 temp_pos.append(vec(x, y))
         for node in temp_pos:
             if node not in wall_pos:
@@ -75,7 +80,8 @@ class GameMode:
                 self.node_pos.append(node)
         # game variables
         self.frame = 0
-        self.state = GAME_STATE[0]
+        '''state include GameResultState.FINISH、GameResultState.FAIL"'''
+        self.state = GameResultState.FAIL
 
     def load_data(self):
         '''font'''
@@ -102,11 +108,10 @@ class GameMode:
                 "used_frame": self.frame}]
         return res
 
-    def run(self):
+    def run(self, commands):
         # game loop - set self.playing = False to end the game
         while self.playing:
-            self.dt = self.clock.tick(FPS) / 1000
-            self.events()
+            self.events(commands)
             if not self.paused:
                 self.update()
             self.draw()
@@ -149,7 +154,7 @@ class GameMode:
                     self.orange_ghost.frightened_module(self.walls)
                 else:
                     node_pos = pygame.math.Vector2(random.choice(list(self.node_pos)))
-                    return self.orange_ghost.chase_module(self.walls, vec(node_pos / TILE_SIZE))
+                    return self.orange_ghost.chase_module(self.walls, vec(node_pos / TILE_X_SIZE))
 
     def update_ghost(self):
         self.judge_ghost_could_out()
@@ -165,9 +170,8 @@ class GameMode:
         self.all_sprites.update()
         self.update_ghost()
         # game over?
-        if len(self.dots) == 0 and self.dt != 0:
+        if len(self.dots) == 0 and self.player.score != 0:
             self.playing = False
-            self.show_go_screen()
             self.__init__()
 
     def draw(self):
@@ -201,7 +205,7 @@ class GameMode:
         # # update game view
         # pygame.display.flip()
 
-    def events(self):
+    def events(self, commands):
         # catch all events here
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -274,7 +278,7 @@ class GameMode:
             self.green_ghost.blue_time()
             self.orange_ghost.blue_time()
             self.danger = True
-            self.music_play()
+            self.play_music()
 
         # for ghost
         for ghost in self.ghosts:
@@ -284,43 +288,48 @@ class GameMode:
 
 
     def show_go_screen(self):
-        self.window.blit(self.dim_window, (0, 0))
-        draw_text(self.window, f"SCORE: {self.player.score}", self.font_name, TITLE_SIZE, WHITE, WIDTH_CENTER, HEIGHT_CENTER, "center")
-        draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH_CENTER, HEIGHT - 50, "center")
-
-        pygame.display.flip()
-        self.wait_for_key()
-        self.__init__()
+        pass
+        # TODO rethink need pause view
+        # self.window.blit(self.dim_window, (0, 0))
+        # draw_text(self.window, f"SCORE: {self.player.score}", self.font_name, TITLE_SIZE, WHITE, WIDTH_CENTER, HEIGHT_CENTER, "center")
+        # draw_text(self.window, "Press a key to start", self.font_name, 20, WHITE, WIDTH_CENTER, HEIGHT - 50, "center")
+        #
+        # pygame.display.flip()
+        # self.wait_for_key()
 
     def wait_for_key(self):
-        self.music_play()
-        pygame.event.wait()
-        self.waiting = True
-        self.music_play()
-        while self.waiting:
-            self.danger = False
-            self.clock.tick(FPS)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.waiting = False
-                    self.quit()
-                if event.type == pygame.KEYUP:
-                    pygame.mixer.music.stop()
-                    self.waiting = False
-        self.music_play()
+        pass
+        # TODO rethink need the method
+        # self.play_music()
+        # pygame.event.wait()
+        # self.waiting = True
+        # self.play_music()
+        # while self.waiting:
+        #     self.danger = False
+        #     self.clock.tick(FPS)
+        #     for event in pygame.event.get():
+        #         if event.type == pygame.QUIT:
+        #             self.waiting = False
+        #             self.quit()
+        #         if event.type == pygame.KEYUP:
+        #             pygame.mixer.music.stop()
+        #             self.waiting = False
+        # self.play_music()
 
-    def music_play(self):
-        if self.waiting or self.paused:
-            pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
-            pygame.mixer.music.set_volume(0.2)
-            pygame.mixer.music.play(loops=-1)
-        elif self.danger:
-            pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
-            pygame.mixer.music.set_volume(0.2)
-            pygame.mixer.music.play(loops=-1)
-        elif self.stop_music:
-            pygame.mixer.music.stop()
-        else:
-            pygame.mixer.music.load(path.join(self.snd_dir, BGM))
-            pygame.mixer.music.set_volume(0.8)
-            pygame.mixer.music.play(loops=-1)
+    def play_music(self):
+        pass
+        # TODO reset where play music
+        # if self.waiting or self.paused:
+        #     pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
+        #     pygame.mixer.music.set_volume(0.2)
+        #     pygame.mixer.music.play(loops=-1)
+        # elif self.danger:
+        #     pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
+        #     pygame.mixer.music.set_volume(0.2)
+        #     pygame.mixer.music.play(loops=-1)
+        # elif self.stop_music:
+        #     pygame.mixer.music.stop()
+        # else:
+        #     pygame.mixer.music.load(path.join(self.snd_dir, BGM))
+        #     pygame.mixer.music.set_volume(0.8)
+        #     pygame.mixer.music.play(loops=-1)

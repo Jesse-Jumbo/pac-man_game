@@ -10,19 +10,20 @@ class Player(pygame.sprite.Sprite):
         self.player_images = []
         self.present_player = 0
         for i in ["cc", "c", "o", "oo"]:
-            self.player_images.append(pygame.transform.scale(pygame.image.load(path.join(IMAGE_DIR, f"pac_man_{i}.png")).convert_alpha(), (TILE_SIZE, TILE_SIZE)))
-        self.image = self.player_images[self.present_player]
+            self.player_images.append(pygame.transform.scale(pygame.image.load(path.join(IMAGE_DIR, f"pac_man_{i}.png")).convert_alpha(), (TILE_X_SIZE, TILE_Y_SIZE)))
+        self.image = self.player_images[int(self.present_player)]
         self.right_image = self.player_images
-        self.rect = pygame.Rect(x, y, all_object_size[0], all_object_size[1])
+        self.rect = ALL_OBJECT_SIZE.copy()
         self.up_move = False
         self.down_move = False
         self.right_move = False
         self.left_move = False
-        self.player_no = 0
+        self.player_no = 1
         self.pacman_info = {}
         self.used_frame = 0
 
-        self.hit_rect = pygame.Rect(x, y, object_hit_size[0], object_hit_size[1])
+        self.hit_rect = PLAYRE_HIT_RECT.copy()
+        self.hit_rect.center = self.rect.center
         self.vel = pygame.math.Vector2(0, 0)
         self.pos = pygame.math.Vector2(0, 0)
         self.pos.xy = self.rect.center
@@ -34,22 +35,22 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
 
     def move_up(self):
-        self.image = pygame.transform.rotate(self.right_image[self.present_player], 90)
+        self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 90)
         self.vel.y = -self.speed
         self.front_node_pos.y = self.node_pos.y + -4
 
     def move_down(self):
-        self.image = pygame.transform.rotate(self.right_image[self.present_player], 270)
+        self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 270)
         self.vel.y = self.speed
         self.front_node_pos.y = self.node_pos.y + 4
 
     def move_left(self):
-        self.image = pygame.transform.flip(self.right_image[self.present_player], True, False)
+        self.image = pygame.transform.flip(self.right_image[int(self.present_player)], True, False)
         self.vel.x = -self.speed
         self.front_node_pos.x = self.node_pos.x + -4
 
     def move_right(self):
-        self.image = self.right_image[self.present_player]
+        self.image = self.right_image[int(self.present_player)]
         self.vel.x = self.speed
         self.front_node_pos.x = self.node_pos.x + 4
 
@@ -70,7 +71,7 @@ class Player(pygame.sprite.Sprite):
         if self.down_move:
             self.move_down()
 
-    def update(self, control_list):
+    def update(self):
         self.used_frame += 1
         self.present_player += self.img_change_control
         if self.present_player >= len(self.player_images):
@@ -104,3 +105,11 @@ class Player(pygame.sprite.Sprite):
             "width": self.rect.width,
             "height": self.rect.height,
         }
+
+    def get_position(self, xy: str):
+        if xy == "x":
+            return self.rect.x
+        elif xy == "y":
+            return self.rect.y
+        else:
+            return "please input x or y to get position"

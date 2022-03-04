@@ -24,10 +24,10 @@ class Ghost(pygame.sprite.Sprite):
         for key, value, in blue_ghost_image_dic.items():
             self.ghosts_images[BLUE_IMG][key] = pygame.image.load(path.join(IMAGE_DIR, value)).convert_alpha()
             image = self.ghosts_images[BLUE_IMG][key]
-            self.ghosts_images[BLUE_IMG][key] = pygame.transform.scale(image, (TILE_SIZE, TILE_SIZE))
+            self.ghosts_images[BLUE_IMG][key] = pygame.transform.scale(image, (TILE_X_SIZE, TILE_Y_SIZE))
 
         self.image = self.ghosts_images[BLUE_IMG][DOWN_IMG]
-        self.rect = self.image.get_rect()
+        self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x
         self.rect.y = y
         self.hit_rect = GHOST_HIT_RECT.copy()
@@ -53,7 +53,8 @@ class Ghost(pygame.sprite.Sprite):
         self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
         self.last_search_time = pygame.time.get_ticks()
 
-        self.ghost_no = "blue"
+        self.ghost_no = BLUE_GHOST_NO
+        self.img_name = blue_ghost_image_dic[DOWN_IMG]
 
     def update(self, chase_path: list) -> None:
         if self.is_out:
@@ -145,6 +146,14 @@ class Ghost(pygame.sprite.Sprite):
     def scatter_model(self, x, y):
         pass
 
+    def get_position(self, xy: str):
+        if xy == "x":
+            return self.rect.x
+        elif xy == "y":
+            return self.rect.y
+        else:
+            return "please input x or y to get position"
+
     # TODO refactor draw path and search area
     # def draw_ghost_move_path(self, ghost):
     #     current = ghost.start  # + ghost.path[vec2int(ghost.start)]
@@ -152,7 +161,7 @@ class Ghost(pygame.sprite.Sprite):
     #         while vec2int(current) != vec2int(ghost.goal):# - ghost.path[vec2int(vec(list(ghost.path.keys())[1]))]:
     #             current += ghost.path[vec2int(current)]
     #             img = ghost.origin_img
-    #             r = img.get_rect(center=(current.x * TILE_SIZE, current.y * TILE_SIZE))
+    #             r = img.get_rect(center=(current.x * TILE_X_SIZE, current.y * TILE_Y_SIZE))
     #             self.window.blit(img, r)
     #     except (KeyError, IndexError):
     #         pass
@@ -161,5 +170,5 @@ class Ghost(pygame.sprite.Sprite):
     #     # search area
     #     for node in self.path:
     #         x, y = node
-    #         draw_rect = pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+    #         draw_rect = pygame.Rect(x * TILE_X_SIZE, y * TILE_Y_SIZE, TILE_X_SIZE, TILE_Y_SIZE)
     #         pygame.draw.rect(self.game.window, CYAN_BLUE, draw_rect, 1)

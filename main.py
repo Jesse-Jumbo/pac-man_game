@@ -13,7 +13,7 @@ if __name__ == '__main__':
     game_view = PygameView(scene_init_info_dict)
     interval = 1 / 30
     frame_count = 0
-    while game.isRunning() and not quit_or_esc():
+    while game.is_running() and not quit_or_esc():
         clock = pygame.time.Clock()
         clock.tick_busy_loop(FPS)
         pygame.display.set_caption(TITLE + "{:.2f}".format(clock.get_fps()))
