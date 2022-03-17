@@ -19,6 +19,9 @@ class Obstacle(pygame.sprite.Sprite):
         # TODO unified node grid pos
         self.node_pos = pygame.math.Vector2(x / TILE_X_SIZE, y / TILE_Y_SIZE)
 
+    def update(self, *args, **kwargs) -> None:
+        pass
+
     def get_position(self, xy: str):
         if xy == "x":
             return self.rect.x

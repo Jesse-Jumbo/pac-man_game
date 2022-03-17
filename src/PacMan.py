@@ -116,10 +116,13 @@ class PacMan(PaiaGame):
             game_info["assets"].append(create_asset_init_data("point", TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, POINT_IMG), ""))
         # TODO find where define initialize walls image
+        for wall in range(len(self.game_mode.walls)):
+            game_info["assets"].append(create_asset_init_data("wall", TILE_X_SIZE, TILE_Y_SIZE,
+                                                              "C:/Users/Jesse/Documents/Program/PAIA/MLGame/games/pac_man/maps/Pac-man Topdown Pack.tsx", ""))
 
         return game_info
 
-    @check_game_progress
+    # @check_game_progress
     def get_scene_progress_data(self) -> dict:
         """
         Get the position of src objects for drawing on the web
@@ -142,9 +145,9 @@ class PacMan(PaiaGame):
                          'game_sys_info': {}}
 
         # update player image
-        game_progress["object_list"].append(create_image_view_data(self.game_mode.player.player_no,
-                                                                   self.game_mode.player.x,
-                                                                   self.game_mode.player.y,
+        game_progress["object_list"].append(create_image_view_data(f"player{self.game_mode.player.player_no}P",
+                                                                   self.game_mode.player.rect.x,
+                                                                   self.game_mode.player.rect.y,
                                                                    TILE_X_SIZE, TILE_Y_SIZE))
         # update ghosts image
         for ghost in self.game_mode.ghosts:
@@ -153,17 +156,17 @@ class PacMan(PaiaGame):
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update dots image
         for dot in self.game_mode.dots:
-            game_progress["object_list"].append(create_image_view_data('dots',
+            game_progress["object_list"].append(create_image_view_data('dot',
                                                                        dot.rect.x, dot.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update points image
         for point in self.game_mode.points:
-            game_progress["object_list"].append(create_image_view_data('points',
+            game_progress["object_list"].append(create_image_view_data('point',
                                                                        point.rect.x, point.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update score text
         game_progress["foreground"].append(create_text_view_data(f"Score: {self.game_mode.player.score}",
-                                                                 WHITE, WHITE / 2, HEIGHT / 2, "20px Arial"))
+                                                                 WHITE, WIDTH / 2, HEIGHT / 2, "20px Arial"))
 
         return game_progress
 
@@ -188,23 +191,27 @@ class PacMan(PaiaGame):
         cmd_3P = []
         cmd_4P = []
 
-        if key_pressed_list[pygame.K_LEFT]:
-            cmd_1P.append(LEFT_cmd)
-        if key_pressed_list[pygame.K_RIGHT]:
-            cmd_1P.append(RIGHT_cmd)
-        if key_pressed_list[pygame.K_UP]:
-            cmd_1P.append(UP_cmd)
-        if key_pressed_list[pygame.K_DOWN]:
-            cmd_1P.append(DOWN_cmd)
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
 
-        if key_pressed_list[pygame.K_a]:
-            cmd_1P.append(LEFT_cmd)
-        if key_pressed_list[pygame.K_d]:
-            cmd_1P.append(RIGHT_cmd)
-        if key_pressed_list[pygame.K_w]:
-            cmd_1P.append(UP_cmd)
-        if key_pressed_list[pygame.K_s]:
-            cmd_1P.append(DOWN_cmd)
+                # if key_pressed_list[pygame.K_LEFT]:
+                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
+                    cmd_1P.append(LEFT_cmd)
+                if key_pressed_list[pygame.K_RIGHT]:
+                    cmd_1P.append(RIGHT_cmd)
+                if key_pressed_list[pygame.K_UP]:
+                    cmd_1P.append(UP_cmd)
+                if key_pressed_list[pygame.K_DOWN]:
+                    cmd_1P.append(DOWN_cmd)
+
+                if key_pressed_list[pygame.K_a]:
+                    cmd_1P.append(LEFT_cmd)
+                if key_pressed_list[pygame.K_d]:
+                    cmd_1P.append(RIGHT_cmd)
+                if key_pressed_list[pygame.K_w]:
+                    cmd_1P.append(UP_cmd)
+                if key_pressed_list[pygame.K_s]:
+                    cmd_1P.append(DOWN_cmd)
 
         if not self.is_running():
             return {"1P": "RESET",

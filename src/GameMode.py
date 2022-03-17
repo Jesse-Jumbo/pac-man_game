@@ -110,11 +110,11 @@ class GameMode:
 
     def run(self, commands):
         # game loop - set self.playing = False to end the game
-        while self.playing:
-            self.events(commands)
-            if not self.paused:
-                self.update()
-            self.draw()
+        # while self.playing:
+        self.events(commands)
+        if not self.paused:
+            self.update()
+        self.draw()
 
     def quit(self):
         pygame.quit()
@@ -229,33 +229,34 @@ class GameMode:
                 if event.key == pygame.K_g:
                     self.green_ghost.draw_check_path = not self.green_ghost.draw_check_path
 
+        # print(commands)
                 # for player
-                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
-                    self.player.up_move = True
-                if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
-                    self.player.down_move = True
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
-                    self.player.left_move = True
-                if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
-                    self.player.right_move = True
-            if event.type == pygame.KEYUP:
+                # if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
+                #     self.player.up_move = True
+            #     if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
+            #         self.player.down_move = True
+            #     if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
+            #         self.player.left_move = True
+            #     if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
+            #         self.player.right_move = True
+            # if event.type == pygame.KEYUP:
                 # for player
-                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
-                    self.player.down_move = False
-                    self.player.right_move = False
-                    self.player.left_move = False
-                if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
-                    self.player.up_move = False
-                    self.player.right_move = False
-                    self.player.left_move = False
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
-                    self.player.up_move = False
-                    self.player.down_move = False
-                    self.player.right_move = False
-                if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
-                    self.player.up_move = False
-                    self.player.down_move = False
-                    self.player.left_move = False
+                # if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
+                #     self.player.down_move = False
+                #     self.player.right_move = False
+                #     self.player.left_move = False
+            #     if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
+            #         self.player.up_move = False
+            #         self.player.right_move = False
+            #         self.player.left_move = False
+            #     if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
+            #         self.player.up_move = False
+            #         self.player.down_move = False
+            #         self.player.right_move = False
+            #     if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
+            #         self.player.up_move = False
+            #         self.player.down_move = False
+            #         self.player.left_move = False
 
     def check_collisions(self):
         # for player
