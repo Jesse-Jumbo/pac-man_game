@@ -4,9 +4,9 @@ from .env import *
 
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, img,  x: float, y: float):
+    def __init__(self, img_no,  x: float, y: float):
         super().__init__()
-        self.image = img
+        self.img_path = WALLS_IMG_DIC[img_no]
         self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x
         self.rect.y = y

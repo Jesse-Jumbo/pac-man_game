@@ -113,12 +113,14 @@ class PacMan(PaiaGame):
                                                               path.join(IMAGE_DIR, DOT_IMG), ""))
         # initialize points image
         for i in range(len(self.game_mode.points)):
-            game_info["assets"].append(create_asset_init_data("point", TILE_X_SIZE, TILE_Y_SIZE,
+            game_info["assets"].append(create_asset_init_data("points", TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, POINT_IMG), ""))
         # TODO find where define initialize walls image
-        for wall in range(len(self.game_mode.walls)):
-            game_info["assets"].append(create_asset_init_data("wall", TILE_X_SIZE, TILE_Y_SIZE,
-                                                              "C:/Users/Jesse/Documents/Program/PAIA/MLGame/games/pac_man/maps/Pac-man Topdown Pack.tsx", ""))
+        for wall in self.game_mode.walls:
+            game_info["assets"].append(create_asset_init_data("walls", TILE_X_SIZE, TILE_Y_SIZE,
+                                                              path.join(IMAGE_DIR, wall.img_path), ""))
+        game_info["assets"].append(create_asset_init_data("background", WIDTH, HEIGHT,
+                                                          path.join(IMAGE_DIR, "game.gif"), ""))
 
         return game_info
 
@@ -129,18 +131,9 @@ class PacMan(PaiaGame):
         """
 
         game_progress = {'background': [],
-                         'object_list': [{'type': 'image', 'x': -2000, 'y': 0, 'width': 2000, 'height': 700, 'image_id': 'background', 'angle': 0},
-                                         {'type': 'image', 'x': 0, 'y': 0, 'width': 2000, 'height': 700, 'image_id': 'background', 'angle': 0},
-                                         {'type': 'image', 'x': 79, 'y': 100, 'width': 45, 'height': 428, 'image_id': 'start_line', 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 839, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'rect', 'name': 'lane', 'color': '#ffffff', 'x': 889, 'y': 499, 'width': 20, 'height': 3, 'angle': 0},
-                                         {'type': 'image', 'x': 79, 'y': 100, 'width': 45, 'height': 428, 'image_id': 'start_line', 'angle': 0},
-                                         {'type': 'image', 'x': 19, 'y': 160, 'width': 60, 'height': 30, 'image_id': 'player1_car', 'angle': 0}],
+                         'object_list': [],
                          'toggle': [],
-                         'foreground': [{'type': 'image', 'x': 685, 'y': 5, 'width': 319, 'height': 80, 'image_id': 'info_km', 'angle': 0},
-                                        {'type': 'rect', 'name': 'block', 'x': 0, 'y': 650, 'angle': 0, 'width': 1000, 'height': 50, 'color': '#000000'},
-                                        {'type': 'rect', 'name': 'user', 'x': 0, 'y': 666, 'angle': 0, 'width': 4, 'height': 4, 'color': '#ffffff'},
-                                        {'type': 'text', 'content': '0m', 'color': '#ffffff', 'x': 725, 'y': 45, 'font-style': '20px Arial'}],
+                         'foreground': [],
                          'user_info': [],
                          'game_sys_info': {}}
 
@@ -156,17 +149,22 @@ class PacMan(PaiaGame):
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update dots image
         for dot in self.game_mode.dots:
-            game_progress["object_list"].append(create_image_view_data('dot',
+            game_progress["object_list"].append(create_image_view_data('dots',
                                                                        dot.rect.x, dot.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update points image
         for point in self.game_mode.points:
-            game_progress["object_list"].append(create_image_view_data('point',
+            game_progress["object_list"].append(create_image_view_data('points',
                                                                        point.rect.x, point.rect.y,
+                                                                       TILE_X_SIZE, TILE_Y_SIZE))
+        # update walls image
+        for wall in self.game_mode.walls:
+            game_progress["object_list"].append(create_image_view_data('walls',
+                                                                       wall.rect.x, wall.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update score text
         game_progress["foreground"].append(create_text_view_data(f"Score: {self.game_mode.player.score}",
-                                                                 WHITE, WIDTH / 2, HEIGHT / 2, "20px Arial"))
+                                                                 WIDTH / 2 - 30, 0, WHITE, "20px Arial"))
 
         return game_progress
 

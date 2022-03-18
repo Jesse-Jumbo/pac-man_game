@@ -24,12 +24,18 @@ class TiledMap:
     def render(self, object_name: str):
         ti = self.tmxdata.get_tile_image_by_gid
         for layer in self.tmxdata.visible_layers:
+            self.wall_img_index = 0
             for x, y, gid, in layer:
                 if isinstance(layer, pytmx.TiledTileLayer) and layer.name == WALL_LAYER_NAME and object_name == WALL_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        wall = Obstacle(tile, x * TILE_X_SIZE, y * TILE_Y_SIZE)
-                        self.walls.append(wall)
+                        if self.wall_img_index > len(layer.parent.tiledgidmap) - 1:
+                            self.wall_img_index = 0
+                        self.wall_img_index += 1
+                        img_no = str(layer.parent.tiledgidmap[self.wall_img_index])
+                        if img_no in WALLS_IMG_DIC.keys():
+                            wall = Obstacle(img_no, x * TILE_X_SIZE, y * TILE_Y_SIZE)
+                            self.walls.append(wall)
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME and object_name == POINT_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
