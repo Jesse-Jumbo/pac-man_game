@@ -20,6 +20,7 @@ class TiledMap:
         self.walls = []
         self.dots = []
         self.points = []
+        self.wall_no = 0
 
     def render(self, object_name: str):
         ti = self.tmxdata.get_tile_image_by_gid
@@ -29,13 +30,15 @@ class TiledMap:
                 if isinstance(layer, pytmx.TiledTileLayer) and layer.name == WALL_LAYER_NAME and object_name == WALL_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
+                        self.wall_no += 1
                         if self.wall_img_index > len(layer.parent.tiledgidmap) - 1:
                             self.wall_img_index = 0
                         self.wall_img_index += 1
                         img_no = str(layer.parent.tiledgidmap[self.wall_img_index])
-                        if img_no in WALLS_IMG_DIC.keys():
-                            wall = Obstacle(img_no, x * TILE_X_SIZE, y * TILE_Y_SIZE)
-                            self.walls.append(wall)
+                        if img_no not in WALLS_IMG_DIC.keys():
+                            continue
+                        wall = Obstacle(self.wall_no, img_no, x * TILE_X_SIZE, y * TILE_Y_SIZE)
+                        self.walls.append(wall)
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME and object_name == POINT_LAYER_NAME:
                     tile = ti(gid)
                     if tile:

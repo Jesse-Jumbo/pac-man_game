@@ -115,10 +115,11 @@ class PacMan(PaiaGame):
         for i in range(len(self.game_mode.points)):
             game_info["assets"].append(create_asset_init_data("points", TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, POINT_IMG), ""))
-        # TODO find where define initialize walls image
+        # initialize walls image
         for wall in self.game_mode.walls:
-            game_info["assets"].append(create_asset_init_data("walls", TILE_X_SIZE, TILE_Y_SIZE,
+            game_info["assets"].append(create_asset_init_data(f"wall_{wall.obj_no}", TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, wall.img_path), ""))
+        # TODO find where define initialize background image
         game_info["assets"].append(create_asset_init_data("background", WIDTH, HEIGHT,
                                                           path.join(IMAGE_DIR, "game.gif"), ""))
 
@@ -159,7 +160,7 @@ class PacMan(PaiaGame):
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update walls image
         for wall in self.game_mode.walls:
-            game_progress["object_list"].append(create_image_view_data('walls',
+            game_progress["object_list"].append(create_image_view_data(f'wall_{wall.obj_no}',
                                                                        wall.rect.x, wall.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update score text

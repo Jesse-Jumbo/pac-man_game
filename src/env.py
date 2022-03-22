@@ -7,7 +7,7 @@ HEIGHT = 480
 
 '''environment data'''
 FPS = 60
-MAP_NAME = "map05.tmx"
+MAP_NAME = "map06.tmx"
 '''color'''
 BLACK = "#000000"
 WHITE = "#ffffff"
