@@ -131,9 +131,17 @@ POINT_HIT_RECT = pygame.Rect(0, 0, 8, 8)
 '''node setting'''
 NODE_HIT_RECT = pygame.Rect(0, 0, 2, 2)
 
+'''map dada numbers'''
+PLAYER_NO = "55"
+RED_GHOST_NO = "45"
+PINK_GHOST_NO = "24"
+GREEN_GHOST_NO = "37"
+ORANGE_GHOST_NO = "41"
+POINT_NO = "230"
+DOT_NO = "9"
 """img"""
 '''walls'''
-WALLS_IMG_DIC = {"60": "wall_60.png", "63": "wall_63.png", "64": "wall_64.png", "65": "wall_65.png", "77": "wall_77.png", "80": "wall_80.png", "81": "wall_81.png", "82": "wall_82.png", "98": "wall_98.png", "99": "wall_99.png", "111": "wall_111.png", "112": "wall_112.png", "113": "wall_113.png", "114": "wall_114.png"}
+WALLS_NO_IMG_DIC = {"60": "wall_60.png", "63": "wall_63.png", "64": "wall_64.png", "65": "wall_65.png", "77": "wall_77.png", "80": "wall_80.png", "81": "wall_81.png", "82": "wall_82.png", "98": "wall_98.png", "99": "wall_99.png", "111": "wall_111.png", "112": "wall_112.png", "113": "wall_113.png", "114": "wall_114.png"}
 '''player'''
 PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
 '''blue'''

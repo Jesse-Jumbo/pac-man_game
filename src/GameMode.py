@@ -48,6 +48,8 @@ class GameMode:
         self.pink_ghost = self.map.make_map(PINK_GHOST_LAYER_NAME)
         self.green_ghost = self.map.make_map(GREEN_GHOST_LAYER_NAME)
         self.orange_ghost = self.map.make_map(ORANGE_GHOST_LAYER_NAME)
+        # TODO refactor load tiled map mean
+        # self.map.make_map()
         # add sprite group
         for wall in self.map.walls:
             self.all_sprites.add(wall)

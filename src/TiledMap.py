@@ -11,6 +11,15 @@ from games.pac_man.src.Player import Player
 from games.pac_man.src.Point import Point
 
 
+def find_img_index(img_list: list, c: int):
+    for i in range(c, len(img_list)):
+        if img_list[i] != 0:
+            return img_list[i], i
+        elif img_list[i] == 0 and i == len(img_list) - 1:
+            return 0, 0
+
+def create_wall():
+    pass
 class TiledMap:
     def __init__(self, filename: str):
         tm = pytmx.load_pygame(filename, pixealpha=True)
@@ -21,24 +30,34 @@ class TiledMap:
         self.dots = []
         self.points = []
         self.wall_no = 0
+        self.c = 0
+        self.object_dic = {}
+
+    # TODO refactor load map mean, remember map_07.tmx
+    # def render(self):
+    #     # ti = self.tmxdata.get_tile_image_by_gid
+    #     for layer in self.tmxdata.visible_layers:
+    #         print(*layer)
+    #         for x, y, gid, in layer:
+    #             if isinstance(layer, pytmx.TiledTileLayer):
+    #                 # tile = ti(gid)
+    #                 if gid in WALLS_NO_IMG_DIC:
+    #                     self.wall_no += 1
+    #                     wall = Obstacle(self.wall_no, )
 
     def render(self, object_name: str):
         ti = self.tmxdata.get_tile_image_by_gid
         for layer in self.tmxdata.visible_layers:
-            self.wall_img_index = 0
             for x, y, gid, in layer:
                 if isinstance(layer, pytmx.TiledTileLayer) and layer.name == WALL_LAYER_NAME and object_name == WALL_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
                         self.wall_no += 1
-                        if self.wall_img_index > len(layer.parent.tiledgidmap) - 1:
-                            self.wall_img_index = 0
-                        self.wall_img_index += 1
-                        img_no = str(layer.parent.tiledgidmap[self.wall_img_index])
-                        if img_no not in WALLS_IMG_DIC.keys():
-                            continue
+                        wall_img_index = layer.data[y][x]
+                        img_no = str(layer.parent.tiledgidmap[wall_img_index])
                         wall = Obstacle(self.wall_no, img_no, x * TILE_X_SIZE, y * TILE_Y_SIZE)
                         self.walls.append(wall)
+
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME and object_name == POINT_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
@@ -72,3 +91,7 @@ class TiledMap:
 
     def make_map(self, object_name: str):
         return self.render(object_name)
+
+    # def make_map(self):
+    #     return self.render()
+#

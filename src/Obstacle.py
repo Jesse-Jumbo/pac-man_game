@@ -7,7 +7,7 @@ class Obstacle(pygame.sprite.Sprite):
     def __init__(self, obj_no, img_no,  x: float, y: float):
         super().__init__()
         self.obj_no = obj_no
-        self.img_path = WALLS_IMG_DIC[img_no]
+        self.img_path = WALLS_NO_IMG_DIC[img_no]
         self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x
         self.rect.y = y
