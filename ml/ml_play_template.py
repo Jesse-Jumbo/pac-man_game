@@ -1,7 +1,8 @@
 class MLPlay:
     def __init__(self):
-        self.other_cars_position = []
-        self.coins_pos = []
+        self.game_info = []
+        self.player_info = []
+        self.ghost_info = []
         print("Initial ml script")
 
     def update(self, scene_info: dict):

@@ -108,8 +108,13 @@ class PacMan(PaiaGame):
                                                               value, ""))
         # initialize ghosts image
         for ghost in self.game_mode.ghosts:
-            game_info['assets'].append(create_asset_init_data(ghost.ghost_no, TILE_X_SIZE, TILE_Y_SIZE,
-                                                              path.join(IMAGE_DIR, ghost.img_name), ""))
+            for key, value in ghost.ghosts_images[ghost.ghost_image_no].items():
+                game_info['assets'].append(create_asset_init_data(f"{ghost.ghost_no}_{key}", TILE_X_SIZE, TILE_Y_SIZE,
+                                                                  value, ""))
+        # initialize blue ghost image
+        for key, value in self.game_mode.red_ghost.ghosts_images[BLUE_IMG].items():
+            game_info['assets'].append(create_asset_init_data(f"{BLUE_GHOST_NO}_{key}", TILE_X_SIZE, TILE_Y_SIZE,
+                                                              value, ""))
         # initialize dots image
         for i in range(len(self.game_mode.dots)):
             game_info["assets"].append(create_asset_init_data("dots", TILE_X_SIZE, TILE_Y_SIZE,
@@ -148,7 +153,7 @@ class PacMan(PaiaGame):
                                                                    TILE_X_SIZE, TILE_Y_SIZE))
         # update ghosts image
         for ghost in self.game_mode.ghosts:
-            game_progress["object_list"].append(create_image_view_data(ghost.ghost_no,
+            game_progress["object_list"].append(create_image_view_data(ghost.image_no,
                                                                        ghost.rect.x, ghost.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update dots image

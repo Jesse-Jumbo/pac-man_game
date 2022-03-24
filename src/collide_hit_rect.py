@@ -19,6 +19,7 @@ def collide_player_with_ghosts(sprite: pygame.sprite, group: pygame.sprite.Group
         else:
             sprite.score += BLUE_GHOST_SCORE
             hits[0].pos.xy = hits[0].ghost_origin_pos
+            hits[0].ghost_no = hits[0].origin_no
             hits[0].is_blue = False
 
 

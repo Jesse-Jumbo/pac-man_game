@@ -23,11 +23,8 @@ class Ghost(pygame.sprite.Sprite):
         self.ghosts_images = {BLUE_IMG: {}, RED_IMG: {}, PINK_IMG: {}, GREEN_IMG: {}, ORANGE_IMG: {}}
         # TODO refactor img load mean
         for key, value, in blue_ghost_image_dic.items():
-            self.ghosts_images[BLUE_IMG][key] = pygame.image.load(path.join(IMAGE_DIR, value)).convert_alpha()
-            image = self.ghosts_images[BLUE_IMG][key]
-            self.ghosts_images[BLUE_IMG][key] = pygame.transform.scale(image, (TILE_X_SIZE, TILE_Y_SIZE))
+            self.ghosts_images[BLUE_IMG][key] = path.join(IMAGE_DIR, value)
 
-        self.image = self.ghosts_images[BLUE_IMG][DOWN_IMG]
         self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x
         self.rect.y = y
@@ -35,10 +32,6 @@ class Ghost(pygame.sprite.Sprite):
         self.hit_rect.center = self.rect.center
         self.pos = pygame.math.Vector2(0, 0)
         self.pos.xy = self.rect.center
-        self.origin_img = self.ghosts_images[BLUE_IMG][DOWN_IMG]
-        self.up_img = self.ghosts_images[BLUE_IMG][UP_IMG]
-        self.right_img = self.ghosts_images[BLUE_IMG][RIGHT_IMG]
-        self.left_image = self.ghosts_images[BLUE_IMG][LEFT_IMG]
         self.blue_frame = 0
         self.frame = 0
         self.vel = pygame.math.Vector2(0, 0)
@@ -55,8 +48,10 @@ class Ghost(pygame.sprite.Sprite):
         self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
         self.last_search_time = pygame.time.get_ticks()
 
+        self.origin_no = BLUE_GHOST_NO
         self.ghost_no = BLUE_GHOST_NO
-        self.img_name = blue_ghost_image_dic[DOWN_IMG]
+        self.ghost_image_no = BLUE_IMG
+        self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
         self.move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
 
     def update(self, chase_path: list) -> None:
@@ -70,6 +65,13 @@ class Ghost(pygame.sprite.Sprite):
                 self.move_up()
             if self.move_cmd == DOWN_cmd:
                 self.move_down()
+
+            print(self.frame - self.blue_frame)
+            if self.frame - self.blue_frame >= 1000:
+                self.ghost_no = self.origin_no
+                self.is_blue = False
+                self.blue_frame = 0
+
             # if chase_path[-1].x == 1:
             #     self.move_right()
             # elif chase_path[-1].x == -1:
@@ -84,7 +86,6 @@ class Ghost(pygame.sprite.Sprite):
             # else:
             #     pass
 
-        self.rect = self.image.get_rect()
         self.rect.center = self.pos
 
         self.rect.center = self.hit_rect.center
@@ -99,12 +100,9 @@ class Ghost(pygame.sprite.Sprite):
         #     self.speed = self.speed * 1.2
 
     def blue_time(self):
-        self.blue_frame += 1
-        if self.blue_frame >= 10000:
-            self.is_blue = False
-            self.blue_frame = 0
-        else:
-            self.is_blue = True
+        self.blue_frame = self.frame
+        self.ghost_no = BLUE_GHOST_NO
+        self.is_blue = True
 
     def frightened_module(self, grid):
         g = SquareGrid(grid, GRID_WIDTH, GRID_HEIGHT)
@@ -119,38 +117,34 @@ class Ghost(pygame.sprite.Sprite):
         return chase_path
 
     def move_left(self):
+        self.image_no = f"{self.ghost_no}_{LEFT_IMG}"
         if not self.is_blue:
-            self.image = self.left_image
             self.vel.x = -self.speed
         else:
-            self.image = self.ghosts_images[BLUE_IMG][LEFT_IMG]
             self.vel.x = -(self.speed + self.speed_slow)
         self.pos.x += self.vel.x
 
     def move_down(self):
+        self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
         if not self.is_blue:
-            self.image = self.origin_img
             self.vel.y = self.speed
         else:
-            self.image = self.ghosts_images[BLUE_IMG][DOWN_IMG]
             self.vel.y = self.speed + self.speed_slow
         self.pos.y += self.vel.y
 
     def move_right(self):
+        self.image_no = f"{self.ghost_no}_{RIGHT_IMG}"
         if not self.is_blue:
-            self.image = self.right_img
             self.vel.x = self.speed
         else:
-            self.image = self.ghosts_images[BLUE_IMG][RIGHT_IMG]
             self.vel.x = self.speed + self.speed_slow
         self.pos.x += self.vel.x
 
     def move_up(self):
+        self.image_no = f"{self.ghost_no}_{UP_IMG}"
         if not self.is_blue:
-            self.image = self.up_img
             self.vel.y = -self.speed
         else:
-            self.image = self.ghosts_images[BLUE_IMG][UP_IMG]
             self.vel.y = -(self.speed + self.speed_slow)
         self.pos.y += self.vel.y
 
