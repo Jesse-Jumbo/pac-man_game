@@ -169,10 +169,12 @@ class GameMode:
         self.frame += 1
         # update potion of the game loop
         self.all_sprites.update()
-        self.update_ghost()
+        # self.update_ghost()
+        self.check_collisions()
         # game over?
         if len(self.dots) == 0 and self.player.score != 0:
             self.playing = False
+            print(self.player.get_info())
             self.__init__()
 
     def draw(self):
@@ -283,10 +285,10 @@ class GameMode:
             self.play_music()
 
         # for ghost
-        for ghost in self.ghosts:
-            collide_with_walls(ghost, self.walls, 'x')
-            collide_with_walls(ghost, self.walls, 'y')
-            collide_with_nodes(ghost, self.nodes, dir="ghost")
+        # for ghost in self.ghosts:
+        #     collide_with_walls(ghost, self.walls, 'x')
+        #     collide_with_walls(ghost, self.walls, 'y')
+        #     collide_with_nodes(ghost, self.nodes, dir="ghost")
 
 
     def show_go_screen(self):

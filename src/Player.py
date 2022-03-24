@@ -56,9 +56,9 @@ class Player(pygame.sprite.Sprite):
         self.front_node_pos.x = self.node_pos.x + 4
 
     def get_info(self):
-        self.pacman_info = {"id": self.player_no,
-                            "pos": self.pos,
-                            "velocity": self.vel,
+        self.pacman_info = {"id": f"player_{self.player_no}P",
+                            "pos": f"X: {int(self.pos.x)}, Y: {int(self.pos.y)}",
+                            "velocity": f"X: {int(self.vel.x)}, Y: {int(self.vel.y)}",
                             "score": self.score}
         return self.pacman_info
 

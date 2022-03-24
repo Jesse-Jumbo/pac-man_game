@@ -69,6 +69,7 @@ class PacMan(PaiaGame):
     def update(self, commands):
         self.frame_count += 1
         self.game_mode.player.update(commands)
+        self.game_mode.run()
         self.game_result_state = self.game_mode.state
         if not self.is_running():
             # collect game rank
