@@ -68,7 +68,7 @@ class PacMan(PaiaGame):
 
     def update(self, commands):
         self.frame_count += 1
-        self.game_mode.run(commands)
+        self.game_mode.player.update(commands)
         self.game_result_state = self.game_mode.state
         if not self.is_running():
             # collect game rank
@@ -100,10 +100,12 @@ class PacMan(PaiaGame):
                      'assets': []}
 
         # initialize player image
-        game_info['assets'].append(create_asset_init_data(f'player{self.game_mode.player.player_no}P',
-                                                          TILE_X_SIZE, TILE_Y_SIZE,
-                                                          path.join(IMAGE_DIR, random.choice(PLAYER_IMG_LIST)), ""))
+        for key, value in self.game_mode.player.image_dic.items():
+            game_info['assets'].append(create_asset_init_data(f'player{self.game_mode.player.player_no}P_{key}',
+                                                              TILE_X_SIZE, TILE_Y_SIZE,
+                                                              value, ""))
         # initialize ghosts image
+        # TODO why ghost_no is string number?
         for ghost in self.game_mode.ghosts:
             game_info['assets'].append(create_asset_init_data(ghost.ghost_no, TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, ghost.img_name), ""))
@@ -139,7 +141,7 @@ class PacMan(PaiaGame):
                          'game_sys_info': {}}
 
         # update player image
-        game_progress["object_list"].append(create_image_view_data(f"player{self.game_mode.player.player_no}P",
+        game_progress["object_list"].append(create_image_view_data(self.game_mode.player.image_path,
                                                                    self.game_mode.player.rect.x,
                                                                    self.game_mode.player.rect.y,
                                                                    TILE_X_SIZE, TILE_Y_SIZE))
@@ -190,27 +192,16 @@ class PacMan(PaiaGame):
         cmd_3P = []
         cmd_4P = []
 
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
 
-                # if key_pressed_list[pygame.K_LEFT]:
-                if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
-                    cmd_1P.append(LEFT_cmd)
-                if key_pressed_list[pygame.K_RIGHT]:
-                    cmd_1P.append(RIGHT_cmd)
-                if key_pressed_list[pygame.K_UP]:
-                    cmd_1P.append(UP_cmd)
-                if key_pressed_list[pygame.K_DOWN]:
-                    cmd_1P.append(DOWN_cmd)
+        if key_pressed_list[pygame.K_UP] or key_pressed_list[pygame.K_w] or key_pressed_list[pygame.K_KP_8]:
+            cmd_1P.append(UP_cmd)
+        if key_pressed_list[pygame.K_RIGHT] or key_pressed_list[pygame.K_d]:
+            cmd_1P.append(RIGHT_cmd)
+        if key_pressed_list[pygame.K_LEFT] or key_pressed_list[pygame.K_a]:
+            cmd_1P.append(LEFT_cmd)
+        if key_pressed_list[pygame.K_DOWN] or key_pressed_list[pygame.K_s]:
+            cmd_1P.append(DOWN_cmd)
 
-                if key_pressed_list[pygame.K_a]:
-                    cmd_1P.append(LEFT_cmd)
-                if key_pressed_list[pygame.K_d]:
-                    cmd_1P.append(RIGHT_cmd)
-                if key_pressed_list[pygame.K_w]:
-                    cmd_1P.append(UP_cmd)
-                if key_pressed_list[pygame.K_s]:
-                    cmd_1P.append(DOWN_cmd)
 
         if not self.is_running():
             return {"1P": "RESET",

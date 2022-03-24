@@ -143,7 +143,8 @@ DOT_NO = "9"
 '''walls'''
 WALLS_NO_IMG_DIC = {"60": "wall_60.png", "63": "wall_63.png", "64": "wall_64.png", "65": "wall_65.png", "77": "wall_77.png", "80": "wall_80.png", "81": "wall_81.png", "82": "wall_82.png", "98": "wall_98.png", "99": "wall_99.png", "111": "wall_111.png", "112": "wall_112.png", "113": "wall_113.png", "114": "wall_114.png"}
 '''player'''
-PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
+# PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
+PLAYER_IMG_DIC = {LEFT_IMG: "pac_l.png", RIGHT_IMG: "pac_r.png", UP_IMG: "pac_u.png", DOWN_IMG: "pac_d.png"}
 '''blue'''
 blue_ghost_image_dic = {DOWN_IMG: "blue_ghost_d.png", LEFT_IMG: "blue_ghost_l.png", RIGHT_IMG: "blue_ghost_r.png", UP_IMG: "blue_ghost_u.png"}
 '''orange'''

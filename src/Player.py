@@ -7,18 +7,19 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, x: float, y: float):
         self._layer = PLAYER_LAYER
         super().__init__()
-        self.player_images = []
+        self.player_no = 1
+        self.image_dic = {}
+        for key, value in PLAYER_IMG_DIC.items():
+            self.image_dic[key] = path.join(IMAGE_DIR, value)
+        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}"
         self.present_player = 0
-        for i in ["cc", "c", "o", "oo"]:
-            self.player_images.append(pygame.transform.scale(pygame.image.load(path.join(IMAGE_DIR, f"pac_man_{i}.png")).convert_alpha(), (TILE_X_SIZE, TILE_Y_SIZE)))
-        self.image = self.player_images[int(self.present_player)]
-        self.right_image = self.player_images
         self.rect = ALL_OBJECT_SIZE.copy()
+        self.rect.x = x
+        self.rect.y = y
         self.up_move = False
         self.down_move = False
         self.right_move = False
         self.left_move = False
-        self.player_no = 1
         self.pacman_info = {}
         self.used_frame = 0
 
@@ -35,22 +36,22 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
 
     def move_up(self):
-        self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 90)
+        self.image_path = f"player{self.player_no}P_{UP_IMG}"
         self.vel.y = -self.speed
         self.front_node_pos.y = self.node_pos.y + -4
 
     def move_down(self):
-        self.image = pygame.transform.rotate(self.right_image[int(self.present_player)], 270)
+        self.image_path = f"player{self.player_no}P_{DOWN_IMG}"
         self.vel.y = self.speed
         self.front_node_pos.y = self.node_pos.y + 4
 
     def move_left(self):
-        self.image = pygame.transform.flip(self.right_image[int(self.present_player)], True, False)
+        self.image_path = f"player{self.player_no}P_{LEFT_IMG}"
         self.vel.x = -self.speed
         self.front_node_pos.x = self.node_pos.x + -4
 
     def move_right(self):
-        self.image = self.right_image[int(self.present_player)]
+        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}"
         self.vel.x = self.speed
         self.front_node_pos.x = self.node_pos.x + 4
 
@@ -61,23 +62,24 @@ class Player(pygame.sprite.Sprite):
                             "score": self.score}
         return self.pacman_info
 
-    def handle_key_event(self):
-        if self.left_move:
+    def handle_key_event(self, commands: list):
+        # if commands is None:
+        #     return True
+        if LEFT_cmd in commands[f"{self.player_no}P"]:
             self.move_left()
-        if self.right_move:
+        if RIGHT_cmd in commands[f"{self.player_no}P"]:
             self.move_right()
-        if self.up_move:
+        if UP_cmd in commands[f"{self.player_no}P"]:
             self.move_up()
-        if self.down_move:
+        if DOWN_cmd in commands[f"{self.player_no}P"]:
             self.move_down()
 
-    def update(self):
+    def update(self, commands: list):
         self.used_frame += 1
         self.present_player += self.img_change_control
-        if self.present_player >= len(self.player_images):
-            self.present_player = 0
-        self.handle_key_event()
-        self.rect = self.image.get_rect()
+        # if self.present_player >= len(self.player_images):
+        #     self.present_player = 0
+        self.handle_key_event(commands)
         self.rect.center = self.pos
         self.pos += self.vel
 

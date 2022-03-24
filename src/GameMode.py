@@ -60,7 +60,6 @@ class GameMode:
         for dot in self.map.dots:
             self.all_sprites.add(dot)
             self.dots.add(dot)
-        self.all_sprites.add(self.player)
         self.ghosts.add(self.red_ghost)
         self.ghosts.add(self.pink_ghost)
         self.ghosts.add(self.green_ghost)
@@ -110,10 +109,10 @@ class GameMode:
                 "used_frame": self.frame}]
         return res
 
-    def run(self, commands):
+    def run(self):
         # game loop - set self.playing = False to end the game
         # while self.playing:
-        self.events(commands)
+        self.events()
         if not self.paused:
             self.update()
         self.draw()
@@ -207,7 +206,7 @@ class GameMode:
         # # update game view
         # pygame.display.flip()
 
-    def events(self, commands):
+    def events(self):
         # catch all events here
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
