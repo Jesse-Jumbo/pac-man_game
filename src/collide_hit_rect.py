@@ -1,4 +1,7 @@
-from games.pac_man.module.settings import *
+import random
+
+from .env import *
+from mlgame.gamedev.game_interface import GameStatus
 
 
 def collide_hit_rect(one: pygame.sprite, two: pygame.sprite):
@@ -12,6 +15,7 @@ def collide_player_with_ghosts(sprite: pygame.sprite, group: pygame.sprite.Group
     if hits:
         if not hits[0].is_blue:
             sprite.state = False
+            sprite.status = GameStatus.GAME_OVER
         else:
             sprite.score += BLUE_GHOST_SCORE
             hits[0].pos.xy = hits[0].ghost_origin_pos
@@ -26,11 +30,12 @@ def collide_with_nodes(sprite: pygame.sprite, group: pygame.sprite.Group, dir=""
         if node.pos.y - 2 <= sprite.pos.y <= node.pos.y + 2:
             sprite.node_pos.y = node.pos.y / TILE_SIZE
     if dir == "ghost":
-        sprite.search()
+        pass
+        # sprite.search()
 
 
 # collide sprite with walls
-def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group, dir: str):
+def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group, dir: str, ghost=False):
     if dir == 'x':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
@@ -40,6 +45,9 @@ def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group, dir: s
                 sprite.pos.x = hits[0].rect.right + sprite.hit_rect.width / 2
             sprite.vel.x = 0
             sprite.hit_rect.centerx = sprite.pos.x
+
+            if ghost:
+                sprite.move_cmd = random.choice([UP_cmd, DOWN_cmd])
     if dir == 'y':
         hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
@@ -49,3 +57,7 @@ def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group, dir: s
                 sprite.pos.y = hits[0].rect.bottom + sprite.hit_rect.height / 2
             sprite.vel.y = 0
             sprite.hit_rect.centery = sprite.pos.y
+
+            if ghost:
+                sprite.move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
+

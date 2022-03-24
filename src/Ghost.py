@@ -21,6 +21,7 @@ class Ghost(pygame.sprite.Sprite):
         self._layer = GHOST_LAYER
         super().__init__()
         self.ghosts_images = {BLUE_IMG: {}, RED_IMG: {}, PINK_IMG: {}, GREEN_IMG: {}, ORANGE_IMG: {}}
+        # TODO refactor img load mean
         for key, value, in blue_ghost_image_dic.items():
             self.ghosts_images[BLUE_IMG][key] = pygame.image.load(path.join(IMAGE_DIR, value)).convert_alpha()
             image = self.ghosts_images[BLUE_IMG][key]
@@ -39,6 +40,7 @@ class Ghost(pygame.sprite.Sprite):
         self.right_img = self.ghosts_images[BLUE_IMG][RIGHT_IMG]
         self.left_image = self.ghosts_images[BLUE_IMG][LEFT_IMG]
         self.blue_frame = 0
+        self.frame = 0
         self.vel = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
         self.blue_limit = BLUE_LIMIT
@@ -55,23 +57,32 @@ class Ghost(pygame.sprite.Sprite):
 
         self.ghost_no = BLUE_GHOST_NO
         self.img_name = blue_ghost_image_dic[DOWN_IMG]
+        self.move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
 
     def update(self, chase_path: list) -> None:
+        self.frame += 1
         if self.is_out:
-
-            if chase_path[-1].x == 1:
-                self.move_right()
-            elif chase_path[-1].x == -1:
+            if self.move_cmd == LEFT_cmd:
                 self.move_left()
-            else:
-                pass
-
-            if chase_path[-1].y == -1:
+            if self.move_cmd == RIGHT_cmd:
+                self.move_right()
+            if self.move_cmd == UP_cmd:
                 self.move_up()
-            elif chase_path[-1].y == 1:
+            if self.move_cmd == DOWN_cmd:
                 self.move_down()
-            else:
-                pass
+            # if chase_path[-1].x == 1:
+            #     self.move_right()
+            # elif chase_path[-1].x == -1:
+            #     self.move_left()
+            # else:
+            #     pass
+            #
+            # if chase_path[-1].y == -1:
+            #     self.move_up()
+            # elif chase_path[-1].y == 1:
+            #     self.move_down()
+            # else:
+            #     pass
 
         self.rect = self.image.get_rect()
         self.rect.center = self.pos

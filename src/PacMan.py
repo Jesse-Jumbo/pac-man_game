@@ -101,12 +101,12 @@ class PacMan(PaiaGame):
                      'assets': []}
 
         # initialize player image
+        # TODO add player anima
         for key, value in self.game_mode.player.image_dic.items():
             game_info['assets'].append(create_asset_init_data(f'player{self.game_mode.player.player_no}P_{key}',
                                                               TILE_X_SIZE, TILE_Y_SIZE,
                                                               value, ""))
         # initialize ghosts image
-        # TODO why ghost_no is string number?
         for ghost in self.game_mode.ghosts:
             game_info['assets'].append(create_asset_init_data(ghost.ghost_no, TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, ghost.img_name), ""))

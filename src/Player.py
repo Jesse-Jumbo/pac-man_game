@@ -1,5 +1,6 @@
 import pygame.math
 
+from mlgame.gamedev.game_interface import GameStatus
 from .env import *
 
 
@@ -16,6 +17,9 @@ class Player(pygame.sprite.Sprite):
         self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x
         self.rect.y = y
+        self.state = True
+        # TODO to know what to do which self.status
+        self.status = GameStatus.GAME_ALIVE
         self.up_move = False
         self.down_move = False
         self.right_move = False
@@ -59,7 +63,8 @@ class Player(pygame.sprite.Sprite):
         self.pacman_info = {"id": f"player_{self.player_no}P",
                             "pos": f"X: {int(self.pos.x)}, Y: {int(self.pos.y)}",
                             "velocity": f"X: {int(self.vel.x)}, Y: {int(self.vel.y)}",
-                            "score": self.score}
+                            "score": self.score,
+                            "status": self.status}
         return self.pacman_info
 
     def handle_key_event(self, commands: list):
@@ -75,26 +80,27 @@ class Player(pygame.sprite.Sprite):
             self.move_down()
 
     def update(self, commands: list):
-        self.used_frame += 1
-        self.present_player += self.img_change_control
-        # if self.present_player >= len(self.player_images):
-        #     self.present_player = 0
-        self.handle_key_event(commands)
-        self.rect.center = self.pos
-        self.pos += self.vel
+        if self.state:
+            self.used_frame += 1
+            self.present_player += self.img_change_control
+            # if self.present_player >= len(self.player_images):
+            #     self.present_player = 0
+            self.handle_key_event(commands)
+            self.rect.center = self.pos
+            self.pos += self.vel
 
-        self.hit_rect.centerx = self.pos.x
-        self.hit_rect.centery = self.pos.y
-        self.rect.center = self.hit_rect.center
+            self.hit_rect.centerx = self.pos.x
+            self.hit_rect.centery = self.pos.y
+            self.rect.center = self.hit_rect.center
 
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.bottom > HEIGHT:
-            self.rect.bottom = HEIGHT
-        if self.rect.top < 0:
-            self.rect.top = 0
+            if self.rect.right > WIDTH:
+                self.rect.right = WIDTH
+            if self.rect.left < 0:
+                self.rect.left = 0
+            if self.rect.bottom > HEIGHT:
+                self.rect.bottom = HEIGHT
+            if self.rect.top < 0:
+                self.rect.top = 0
 
     @property
     def player_data(self):

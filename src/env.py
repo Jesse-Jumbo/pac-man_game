@@ -7,7 +7,7 @@ HEIGHT = 480
 
 '''environment data'''
 FPS = 60
-MAP_NAME = "map06.tmx"
+MAP_NAME = "map05.tmx"
 '''color'''
 BLACK = "#000000"
 WHITE = "#ffffff"
@@ -95,7 +95,7 @@ PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
 
 '''ghost setting'''
 GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
-GHOST_SPEED = 2.0
+GHOST_SPEED = 1.0
 SPEED_SLOW = - 0.2
 BLUE_IMG = 'blue_ghost_img'
 RED_IMG = 'red_ghost_img'
@@ -133,10 +133,10 @@ NODE_HIT_RECT = pygame.Rect(0, 0, 2, 2)
 
 '''map dada numbers'''
 PLAYER_NO = "55"
-RED_GHOST_NO = "45"
-PINK_GHOST_NO = "24"
-GREEN_GHOST_NO = "37"
-ORANGE_GHOST_NO = "41"
+RED_GHOST_IMG_NO = "45"
+PINK_GHOST_IMG_NO = "24"
+GREEN_GHOST_IMG_NO = "37"
+ORANGE_GHOST_IMG_NO = "41"
 POINT_NO = "230"
 DOT_NO = "9"
 """img"""

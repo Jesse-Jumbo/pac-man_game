@@ -7,7 +7,7 @@ from games.pac_man.src.Node import Node
 from games.pac_man.src.TiledMap import TiledMap
 from games.pac_man.module.draw_text import draw_text
 from games.pac_man.src.SquareGrid import *
-from mlgame.gamedev.game_interface import GameResultState
+from mlgame.gamedev.game_interface import GameResultState, GameStatus
 from .collide_hit_rect import collide_with_walls, collide_player_with_ghosts, collide_with_nodes
 from games.pac_man.src.collide_hit_rect import collide_hit_rect
 
@@ -83,6 +83,7 @@ class GameMode:
         self.frame = 0
         '''state include GameResultState.FINISH、GameResultState.FAIL"'''
         self.state = GameResultState.FAIL
+        self.ghost_go_out_limit = len(self.dots)
 
     def load_data(self):
         '''font'''
@@ -94,13 +95,13 @@ class GameMode:
         self.map = TiledMap(path.join(MAP_DIR, MAP_NAME))
 
     def judge_ghost_could_out(self):
-        if len(self.dots) < len(self.dots) + RED_GO:
+        if len(self.dots) < self.ghost_go_out_limit + RED_GO:
             self.red_ghost.is_out = True
-        if len(self.dots) < len(self.dots) + PINK_GO:
+        if len(self.dots) < self.ghost_go_out_limit + PINK_GO:
             self.pink_ghost.is_out = True
-        if len(self.dots) < len(self.dots) + GREEN_GO:
+        if len(self.dots) < self.ghost_go_out_limit + GREEN_GO:
             self.green_ghost.is_out = True
-        if len(self.dots) < len(self.dots) + ORANGE_GO:
+        if len(self.dots) < self.ghost_go_out_limit + ORANGE_GO:
             self.orange_ghost.is_out = True
 
     def get_result(self) -> list:
@@ -159,21 +160,24 @@ class GameMode:
 
     def update_ghost(self):
         self.judge_ghost_could_out()
-
-        self.red_ghost.update(self.get_move_path(RED_GHOST_NO))
-        self.pink_ghost.update(self.get_move_path(PINK_GHOST_NO))
-        self.green_ghost.update(self.get_move_path(GREEN_GHOST_NO))
-        self.orange_ghost.update(self.get_move_path(ORANGE_GHOST_NO))
+        self.ghosts.update([])
+        # self.red_ghost.update(self.get_move_path(RED_GHOST_NO))
+        # self.pink_ghost.update(self.get_move_path(PINK_GHOST_NO))
+        # self.green_ghost.update(self.get_move_path(GREEN_GHOST_NO))
+        # self.orange_ghost.update(self.get_move_path(ORANGE_GHOST_NO))
 
     def update(self):
         self.frame += 1
         # update potion of the game loop
         self.all_sprites.update()
-        # self.update_ghost()
+        self.update_ghost()
         self.check_collisions()
         # game over?
         if len(self.dots) == 0 and self.player.score != 0:
             self.playing = False
+            self.player.status = GameStatus.GAME_PASS
+            # TODO print game info, not only player info
+        if self.player.status != GameStatus.GAME_ALIVE:
             print(self.player.get_info())
             self.__init__()
 
@@ -276,7 +280,6 @@ class GameMode:
         hits = pygame.sprite.spritecollide(self.player, self.points, True, collide_hit_rect)
         for hit in hits:
             self.player.score += POINT_SCORE
-            self.player.score += POINT_SCORE
             self.red_ghost.blue_time()
             self.pink_ghost.blue_time()
             self.green_ghost.blue_time()
@@ -285,10 +288,10 @@ class GameMode:
             self.play_music()
 
         # for ghost
-        # for ghost in self.ghosts:
-        #     collide_with_walls(ghost, self.walls, 'x')
-        #     collide_with_walls(ghost, self.walls, 'y')
-        #     collide_with_nodes(ghost, self.nodes, dir="ghost")
+        for ghost in self.ghosts:
+            collide_with_walls(ghost, self.walls, 'x', ghost=True)
+            collide_with_walls(ghost, self.walls, 'y', ghost=True)
+            collide_with_nodes(ghost, self.nodes, dir="ghost")
 
 
     def show_go_screen(self):
