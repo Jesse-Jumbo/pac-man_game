@@ -59,14 +59,13 @@ class Ghost(pygame.sprite.Sprite):
         if self.is_out:
             if self.move_cmd == LEFT_cmd:
                 self.move_left()
-            if self.move_cmd == RIGHT_cmd:
+            elif self.move_cmd == RIGHT_cmd:
                 self.move_right()
-            if self.move_cmd == UP_cmd:
+            elif self.move_cmd == UP_cmd:
                 self.move_up()
-            if self.move_cmd == DOWN_cmd:
+            elif self.move_cmd == DOWN_cmd:
                 self.move_down()
 
-            print(self.frame - self.blue_frame)
             if self.frame - self.blue_frame >= 1000:
                 self.ghost_no = self.origin_no
                 self.is_blue = False

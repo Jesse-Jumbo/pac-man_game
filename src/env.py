@@ -63,7 +63,7 @@ WIDTH_CENTER = WIDTH / 2
 HEIGHT_CENTER = HEIGHT / 2
 
 '''object size'''
-ALL_OBJECT_SIZE = pygame.Rect(0, 0, 20, 20)
+ALL_OBJECT_SIZE = pygame.Rect(0, 0, 18, 18)
 
 """all setting"""
 DOWN_IMG = 'down'

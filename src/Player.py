@@ -41,45 +41,46 @@ class Player(pygame.sprite.Sprite):
 
     def move_up(self):
         self.image_path = f"player{self.player_no}P_{UP_IMG}"
-        self.vel.y = -self.speed
+        self.pos.y += -self.speed
         self.front_node_pos.y = self.node_pos.y + -4
 
     def move_down(self):
         self.image_path = f"player{self.player_no}P_{DOWN_IMG}"
-        self.vel.y = self.speed
+        self.pos.y += self.speed
         self.front_node_pos.y = self.node_pos.y + 4
 
     def move_left(self):
         self.image_path = f"player{self.player_no}P_{LEFT_IMG}"
-        self.vel.x = -self.speed
+        self.pos.x += -self.speed
         self.front_node_pos.x = self.node_pos.x + -4
 
     def move_right(self):
         self.image_path = f"player{self.player_no}P_{RIGHT_IMG}"
-        self.vel.x = self.speed
+        self.pos.x += self.speed
         self.front_node_pos.x = self.node_pos.x + 4
 
     def get_info(self):
         self.pacman_info = {"id": f"player_{self.player_no}P",
                             "pos": f"X: {int(self.pos.x)}, Y: {int(self.pos.y)}",
-                            "velocity": f"X: {int(self.vel.x)}, Y: {int(self.vel.y)}",
+                            "velocity": "{:.2f}".format(self.speed),
                             "score": self.score,
                             "status": self.status}
         return self.pacman_info
 
-    def handle_key_event(self, commands: list):
-        # if commands is None:
-        #     return True
-        if LEFT_cmd in commands[f"{self.player_no}P"]:
-            self.move_left()
-        if RIGHT_cmd in commands[f"{self.player_no}P"]:
-            self.move_right()
-        if UP_cmd in commands[f"{self.player_no}P"]:
-            self.move_up()
-        if DOWN_cmd in commands[f"{self.player_no}P"]:
-            self.move_down()
+    def handle_key_event(self, commands: dict):
+        if not commands[f"{self.player_no}P"]:
+            return True
+        else:
+            if commands[f"{self.player_no}P"][0] == LEFT_cmd:
+                self.move_left()
+            elif commands[f"{self.player_no}P"][0] == RIGHT_cmd:
+                self.move_right()
+            elif commands[f"{self.player_no}P"][0] == UP_cmd:
+                self.move_up()
+            elif commands[f"{self.player_no}P"][0] == DOWN_cmd:
+                self.move_down()
 
-    def update(self, commands: list):
+    def update(self, commands: dict):
         if self.state:
             self.used_frame += 1
             self.present_player += self.img_change_control
@@ -87,7 +88,6 @@ class Player(pygame.sprite.Sprite):
             #     self.present_player = 0
             self.handle_key_event(commands)
             self.rect.center = self.pos
-            self.pos += self.vel
 
             self.hit_rect.centerx = self.pos.x
             self.hit_rect.centery = self.pos.y

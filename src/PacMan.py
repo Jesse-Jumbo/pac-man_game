@@ -66,7 +66,7 @@ class PacMan(PaiaGame):
             scene_info["ghost_pos"].append({ghost.ghost_no: ghost.pos})
         return scene_info
 
-    def update(self, commands):
+    def update(self, commands: dict):
         self.frame_count += 1
         self.game_mode.player.update(commands)
         self.game_mode.run()
@@ -201,11 +201,11 @@ class PacMan(PaiaGame):
 
         if key_pressed_list[pygame.K_UP] or key_pressed_list[pygame.K_w] or key_pressed_list[pygame.K_KP_8]:
             cmd_1P.append(UP_cmd)
-        if key_pressed_list[pygame.K_RIGHT] or key_pressed_list[pygame.K_d]:
+        elif key_pressed_list[pygame.K_RIGHT] or key_pressed_list[pygame.K_d]:
             cmd_1P.append(RIGHT_cmd)
-        if key_pressed_list[pygame.K_LEFT] or key_pressed_list[pygame.K_a]:
+        elif key_pressed_list[pygame.K_LEFT] or key_pressed_list[pygame.K_a]:
             cmd_1P.append(LEFT_cmd)
-        if key_pressed_list[pygame.K_DOWN] or key_pressed_list[pygame.K_s]:
+        elif key_pressed_list[pygame.K_DOWN] or key_pressed_list[pygame.K_s]:
             cmd_1P.append(DOWN_cmd)
 
 
