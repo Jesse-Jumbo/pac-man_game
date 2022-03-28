@@ -39,6 +39,15 @@
       "help": "set times for restarting game."
     },
     {
+      "name": "map_name",
+      "verbose": "地圖名稱",
+      "type": "int",
+      "max": 6,
+      "min": 5,
+      "default": 6,
+      "help": "set map number for load game scene"
+    },
+    {
       "name": "sound",
       "verbose": "遊戲音效",
       "type": "str",

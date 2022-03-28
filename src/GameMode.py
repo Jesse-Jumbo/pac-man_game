@@ -15,7 +15,7 @@ from .env import *
 
 
 class GameMode:
-    def __init__(self):
+    def __init__(self, map_name):
         # initialize all variables and so all the setup for a new game
         # TODO reset where initialize
         pygame.init()
@@ -31,7 +31,7 @@ class GameMode:
         self.stop_music = False
         self.blue_ghost = False
         # load all img and music data from folder
-        self.load_data()
+        self.load_data(map_name)
         # initialize sprites group
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
@@ -86,14 +86,14 @@ class GameMode:
         self.state = GameResultState.FAIL
         self.ghost_go_out_limit = len(self.dots)
 
-    def load_data(self):
+    def load_data(self, map_name):
         '''font'''
         # self.font_name = pygame.font.match_font('arial')
         '''pause view'''
         # self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         # self.dim_window.fill((0, 0, 0, 100))
         '''load map'''
-        self.map = TiledMap(path.join(MAP_DIR, MAP_NAME))
+        self.map = TiledMap(path.join(MAP_DIR, map_name))
 
     def judge_ghost_could_out(self):
         if len(self.dots) < self.ghost_go_out_limit + RED_GO:
