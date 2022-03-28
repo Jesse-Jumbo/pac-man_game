@@ -3,13 +3,13 @@ import sys
 
 import pygame.event
 
-from games.pac_man.src.Node import Node
-from games.pac_man.src.TiledMap import TiledMap
-from games.pac_man.module.draw_text import draw_text
-from games.pac_man.src.SquareGrid import *
+from games.PacMan.src.Node import Node
+from games.PacMan.src.TiledMap import TiledMap
+from games.PacMan.module.draw_text import draw_text
+from games.PacMan.src.SquareGrid import *
 from mlgame.gamedev.game_interface import GameResultState, GameStatus
 from .collide_hit_rect import collide_with_walls, collide_player_with_ghosts, collide_with_nodes
-from games.pac_man.src.collide_hit_rect import collide_hit_rect
+from games.PacMan.src.collide_hit_rect import collide_hit_rect
 
 from .env import *
 
@@ -82,6 +82,7 @@ class GameMode:
         # game variables
         self.frame = 0
         '''state include GameResultState.FINISH、GameResultState.FAIL"'''
+        # TODO 1
         self.state = GameResultState.FAIL
         self.ghost_go_out_limit = len(self.dots)
 
@@ -110,12 +111,12 @@ class GameMode:
                 "used_frame": self.frame}]
         return res
 
-    def run(self):
+    def run(self, command):
         # game loop - set self.playing = False to end the game
         # while self.playing:
         self.events()
         if not self.paused:
-            self.update()
+            self.update(command)
         self.draw()
 
     def quit(self):
@@ -166,10 +167,12 @@ class GameMode:
         # self.green_ghost.update(self.get_move_path(GREEN_GHOST_NO))
         # self.orange_ghost.update(self.get_move_path(ORANGE_GHOST_NO))
 
-    def update(self):
+    def update(self, command):
+        self.state = GameStatus.GAME_ALIVE
         self.frame += 1
         # update potion of the game loop
         self.all_sprites.update()
+        self.player.update(command)
         self.update_ghost()
         self.check_collisions()
         # game over?
@@ -267,8 +270,7 @@ class GameMode:
 
     def check_collisions(self):
         # for player
-        collide_with_walls(self.player, self.walls, 'x')
-        collide_with_walls(self.player, self.walls, 'y')
+        collide_with_walls(self.player, self.walls)
         collide_player_with_ghosts(self.player, self.ghosts)
         collide_with_nodes(self.player, self.nodes)
 
@@ -289,8 +291,7 @@ class GameMode:
 
         # for ghost
         for ghost in self.ghosts:
-            collide_with_walls(ghost, self.walls, 'x', ghost=True)
-            collide_with_walls(ghost, self.walls, 'y', ghost=True)
+            collide_with_walls(ghost, self.walls)
             collide_with_nodes(ghost, self.nodes, dir="ghost")
 
 

@@ -1,16 +1,9 @@
-import random
-
-import pygame
-
-from mlgame.view.test_decorator import check_game_progress, check_game_result
+from mlgame.gamedev.game_interface import PaiaGame
+from mlgame.view.test_decorator import check_game_result
 from mlgame.view.view_model import create_text_view_data, create_asset_init_data, create_image_view_data, \
-    create_line_view_data, Scene, create_polygon_view_data, create_rect_view_data
-from mlgame.gamedev.game_interface import PaiaGame, GameResultState
-
-from .env import *
-from .sound_controller import *
-
+    Scene
 from .GameMode import GameMode
+from .sound_controller import *
 
 '''need some fuction same as arkanoid which without dash in the name of fuction'''
 
@@ -36,7 +29,7 @@ class PacMan(PaiaGame):
         player_data = self.game_mode.player.get_info()
         player_data["frame"] = scene_info["frame"]
         player_data["status"] = scene_info["status"]
-        to_player_data[f"{player_data['id']}P"] = player_data
+        to_player_data[player_data['id']] = player_data
 
         if to_player_data:
             return to_player_data
@@ -63,13 +56,12 @@ class PacMan(PaiaGame):
                       'game_result': self.game_mode.get_result()}
 
         for ghost in self.game_mode.ghosts:
-            scene_info["ghost_pos"].append({ghost.ghost_no: ghost.pos})
+            scene_info["ghosts_pos"].append({ghost.ghost_no: ghost.pos})
         return scene_info
 
     def update(self, commands: dict):
         self.frame_count += 1
-        self.game_mode.player.update(commands)
-        self.game_mode.run()
+        self.game_mode.run(commands)
         self.game_result_state = self.game_mode.state
         if not self.is_running():
             # collect game rank
@@ -193,21 +185,20 @@ class PacMan(PaiaGame):
         Get the command according to the pressed keys
         """
         key_pressed_list = pygame.key.get_pressed()
-        cmd_1P = []
-        cmd_2P = []
-        cmd_3P = []
-        cmd_4P = []
-
+        # TODO 此處回傳的資料 要與 ml_play.py 一致
+        cmd_1P = ""
+        cmd_2P = ""
+        cmd_3P = ""
+        cmd_4P = ""
 
         if key_pressed_list[pygame.K_UP] or key_pressed_list[pygame.K_w] or key_pressed_list[pygame.K_KP_8]:
-            cmd_1P.append(UP_cmd)
+            cmd_1P = UP_cmd
         elif key_pressed_list[pygame.K_RIGHT] or key_pressed_list[pygame.K_d]:
-            cmd_1P.append(RIGHT_cmd)
+            cmd_1P = RIGHT_cmd
         elif key_pressed_list[pygame.K_LEFT] or key_pressed_list[pygame.K_a]:
-            cmd_1P.append(LEFT_cmd)
+            cmd_1P = LEFT_cmd
         elif key_pressed_list[pygame.K_DOWN] or key_pressed_list[pygame.K_s]:
-            cmd_1P.append(DOWN_cmd)
-
+            cmd_1P = DOWN_cmd
 
         if not self.is_running():
             return {"1P": "RESET",

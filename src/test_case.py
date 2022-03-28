@@ -1,4 +1,4 @@
-from games.pac_man.src.SquareGrid import *
+from games.PacMan.src.SquareGrid import *
 
 
 # Test SquareGrid

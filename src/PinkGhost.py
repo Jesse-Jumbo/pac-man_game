@@ -1,5 +1,5 @@
 from .env import *
-from games.pac_man.src.Ghost import Ghost
+from games.PacMan.src.Ghost import Ghost
 
 
 class PinkGhost(Ghost):

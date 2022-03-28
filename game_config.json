@@ -1,7 +1,7 @@
 {
-  "game_name": "racing_car",
-  "version": "3.2.5",
-  "url": "https://github.com/yen900611/RacingCar",
+  "game_name": "PacMan",
+  "version": "1.0.0",
+  "url": "https://github.com/Jesse-Jumbo/pac-man_game",
   "game_params": [
     {
       "name": "user_num",
@@ -13,17 +13,13 @@
       "help": "set the number of user."
     },
     {
-      "name": "game_type",
+      "name": "game_mode",
       "verbose": "遊戲模式",
       "type": "str",
       "choices": [
         {
           "verbose": "NORMAL",
           "value": "NORMAL"
-        },
-        {
-          "verbose": "COIN",
-          "value": "COIN"
         },
         {
           "verbose": "RELIVE",
@@ -34,25 +30,7 @@
       "default": "NORMAL"
     },
     {
-      "name": "car_num",
-      "verbose": "車子總數量",
-      "type": "int",
-      "max": 40,
-      "min": 1,
-      "default": 20,
-      "help": "set the number of car, include user and computer cars."
-    },
-    {
-      "name": "racetrack_length",
-      "verbose": "終點距離",
-      "type": "int",
-      "max": 30000,
-      "min": 1000,
-      "default": 15000,
-      "help": "set the number of car, include user and computer cars."
-    },
-    {
-      "name": "rounds",
+      "name": "game_times",
       "verbose": "遊戲局數",
       "type": "int",
       "max": 30,

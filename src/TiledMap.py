@@ -1,14 +1,14 @@
 import pytmx
 
-from games.pac_man.src.GreenGhost import GreenGhost
-from games.pac_man.src.OrangeGhost import OrangeGhost
-from games.pac_man.src.PinkGhost import PinkGhost
-from games.pac_man.src.RedGhost import RedGhost
+from games.PacMan.src.GreenGhost import GreenGhost
+from games.PacMan.src.OrangeGhost import OrangeGhost
+from games.PacMan.src.PinkGhost import PinkGhost
+from games.PacMan.src.RedGhost import RedGhost
 from .env import *
-from games.pac_man.src.Dot import Dot
-from games.pac_man.src.Obstacle import Obstacle
-from games.pac_man.src.Player import Player
-from games.pac_man.src.Point import Point
+from games.PacMan.src.Dot import Dot
+from games.PacMan.src.Obstacle import Obstacle
+from games.PacMan.src.Player import Player
+from games.PacMan.src.Point import Point
 
 
 def find_img_index(img_list: list, c: int):

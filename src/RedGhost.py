@@ -1,6 +1,6 @@
 import pygame.time
 
-from games.pac_man.src.Ghost import Ghost
+from games.PacMan.src.Ghost import Ghost
 from .env import *
 
 

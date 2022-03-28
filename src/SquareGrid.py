@@ -3,7 +3,7 @@ import pygame
 import heapq
 from collections import deque
 
-from games.pac_man.src.Obstacle import Obstacle
+from games.PacMan.src.Obstacle import Obstacle
 
 vec = pygame.math.Vector2
 

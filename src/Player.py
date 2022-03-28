@@ -39,47 +39,6 @@ class Player(pygame.sprite.Sprite):
         self.img_change_control = 0.4
         self.score = 0
 
-    def move_up(self):
-        self.image_path = f"player{self.player_no}P_{UP_IMG}"
-        self.pos.y += -self.speed
-        self.front_node_pos.y = self.node_pos.y + -4
-
-    def move_down(self):
-        self.image_path = f"player{self.player_no}P_{DOWN_IMG}"
-        self.pos.y += self.speed
-        self.front_node_pos.y = self.node_pos.y + 4
-
-    def move_left(self):
-        self.image_path = f"player{self.player_no}P_{LEFT_IMG}"
-        self.pos.x += -self.speed
-        self.front_node_pos.x = self.node_pos.x + -4
-
-    def move_right(self):
-        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}"
-        self.pos.x += self.speed
-        self.front_node_pos.x = self.node_pos.x + 4
-
-    def get_info(self):
-        self.pacman_info = {"id": f"player_{self.player_no}P",
-                            "pos": f"X: {int(self.pos.x)}, Y: {int(self.pos.y)}",
-                            "velocity": "{:.2f}".format(self.speed),
-                            "score": self.score,
-                            "status": self.status}
-        return self.pacman_info
-
-    def handle_key_event(self, commands: dict):
-        if not commands[f"{self.player_no}P"]:
-            return True
-        else:
-            if commands[f"{self.player_no}P"][0] == LEFT_cmd:
-                self.move_left()
-            elif commands[f"{self.player_no}P"][0] == RIGHT_cmd:
-                self.move_right()
-            elif commands[f"{self.player_no}P"][0] == UP_cmd:
-                self.move_up()
-            elif commands[f"{self.player_no}P"][0] == DOWN_cmd:
-                self.move_down()
-
     def update(self, commands: dict):
         if self.state:
             self.used_frame += 1
@@ -101,6 +60,57 @@ class Player(pygame.sprite.Sprite):
                 self.rect.bottom = HEIGHT
             if self.rect.top < 0:
                 self.rect.top = 0
+
+    def handle_key_event(self, commands: dict):
+        if not commands[f"{self.player_no}P"]:
+            return True
+        else:
+            if commands[f"{self.player_no}P"] == LEFT_cmd:
+                self.move_left()
+            elif commands[f"{self.player_no}P"] == RIGHT_cmd:
+                self.move_right()
+            elif commands[f"{self.player_no}P"] == UP_cmd:
+                self.move_up()
+            elif commands[f"{self.player_no}P"] == DOWN_cmd:
+                self.move_down()
+
+    def move_up(self):
+        self.image_path = f"player{self.player_no}P_{UP_IMG}"
+        self.vel.y = -self.speed
+        self.front_node_pos.y = self.node_pos.y + -4
+        self.pos.y += self.vel.y
+
+    def move_down(self):
+        self.image_path = f"player{self.player_no}P_{DOWN_IMG}"
+        self.vel.y = self.speed
+        self.front_node_pos.y = self.node_pos.y + 4
+        self.pos.y += self.vel.y
+
+    def move_left(self):
+        self.image_path = f"player{self.player_no}P_{LEFT_IMG}"
+        self.vel.x = -self.speed
+        self.front_node_pos.x = self.node_pos.x + -4
+        self.pos.x += self.vel.x
+
+    def move_right(self):
+        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}"
+        self.vel.x = self.speed
+        self.front_node_pos.x = self.node_pos.x + 4
+        self.pos.x += self.vel.x
+
+    def get_info(self):
+        self.pacman_info = {"id": f"{self.player_no}P",
+                            "pos": f"X: {int(self.pos.x)}, Y: {int(self.pos.y)}",
+                            "velocity": "{:.2f}".format(self.speed),
+                            "score": self.score,
+                            "status": self.status}
+        return self.pacman_info
+
+    def collide(self):
+        self.vel *= -1
+        self.pos += self.vel
+        self.hit_rect.center = self.pos
+        self.rect.center = self.pos
 
     @property
     def player_data(self):

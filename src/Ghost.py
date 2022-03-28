@@ -1,8 +1,8 @@
 import random
 import pygame.transform
 
-from games.pac_man.src.collide_hit_rect import collide_with_nodes, collide_with_walls
-from games.pac_man.src.SquareGrid import *
+from games.PacMan.src.collide_hit_rect import collide_with_nodes, collide_with_walls
+from games.PacMan.src.SquareGrid import *
 
 from .env import *
 
@@ -52,18 +52,18 @@ class Ghost(pygame.sprite.Sprite):
         self.ghost_no = BLUE_GHOST_NO
         self.ghost_image_no = BLUE_IMG
         self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
-        self.move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
+        self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
 
     def update(self, chase_path: list) -> None:
         self.frame += 1
         if self.is_out:
-            if self.move_cmd == LEFT_cmd:
+            if self._move_cmd == LEFT_cmd:
                 self.move_left()
-            elif self.move_cmd == RIGHT_cmd:
+            elif self._move_cmd == RIGHT_cmd:
                 self.move_right()
-            elif self.move_cmd == UP_cmd:
+            elif self._move_cmd == UP_cmd:
                 self.move_up()
-            elif self.move_cmd == DOWN_cmd:
+            elif self._move_cmd == DOWN_cmd:
                 self.move_down()
 
             if self.frame - self.blue_frame >= 1000:
@@ -90,6 +90,35 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.center = self.hit_rect.center
         self.hit_rect.centerx = self.pos.x
         self.hit_rect.centery = self.pos.y
+
+    def collide(self):
+        self.vel *= -1
+        self.pos += self.vel
+        self.hit_rect.center = self.pos
+        self.rect.center = self.pos
+        if abs(self.vel.x) != 0:
+            self._move_cmd = random.choice([UP_cmd, DOWN_cmd])
+        elif abs(self.vel.y) != 0:
+            self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
+
+        # if dir == "y":
+        #     if hit_obj.rect.centery > self.hit_rect.centery:
+        #         self.pos.y = hit_obj.rect.top - self.hit_rect.height / 2
+        #     elif hit_obj.rect.centery < self.hit_rect.centery:
+        #         self.pos.y = hit_obj.rect.bottom + self.hit_rect.height / 2
+        #     self.vel.y = 0
+        #     self.hit_rect.centery = self.pos.y
+        #     self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
+        #
+        # if dir == "x":
+        #     if hit_obj.rect.centerx > self.hit_rect.centerx:
+        #         self.pos.x = hit_obj.rect.left - self.hit_rect.width / 2
+        #     elif hit_obj.rect.centerx < self.hit_rect.centerx:
+        #         self.pos.x = hit_obj.rect.right + self.hit_rect.width / 2
+        #     self.vel.x = 0
+        #     self.hit_rect.centerx = self.pos.x
+        #     self._move_cmd = random.choice([UP_cmd, DOWN_cmd])
+
 
     def speed_up(self):
         pass
