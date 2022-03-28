@@ -21,7 +21,7 @@ class PacMan(PaiaGame):
         self.map = f"map0{map_name}.tmx"
         self.game_mode = self.set_game_mode(self.map)
         # self.game_mode.sound_controller.play_music()
-        self.attachements = [{'player': '1P', 'distance': '6611m', 'used_frames': '559 frames', 'single_rank': 1, 'accumulated_score': 4}]
+        self.attachements = []
 
     # TODO refactor AI need data
     # dots pos
