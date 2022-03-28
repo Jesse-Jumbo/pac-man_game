@@ -30,15 +30,6 @@
       "default": "NORMAL"
     },
     {
-      "name": "game_times",
-      "verbose": "遊戲局數",
-      "type": "int",
-      "max": 30,
-      "min": 1,
-      "default": 1,
-      "help": "set times for restarting game."
-    },
-    {
       "name": "map_name",
       "verbose": "地圖名稱",
       "type": "int",

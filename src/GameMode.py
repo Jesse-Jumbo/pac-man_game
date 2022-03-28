@@ -31,7 +31,8 @@ class GameMode:
         self.stop_music = False
         self.blue_ghost = False
         # load all img and music data from folder
-        self.load_data(map_name)
+        self.map_name = map_name
+        self.load_data(self.map_name)
         # initialize sprites group
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
@@ -82,7 +83,6 @@ class GameMode:
         # game variables
         self.frame = 0
         '''state include GameResultState.FINISH、GameResultState.FAIL"'''
-        # TODO 1
         self.state = GameResultState.FAIL
         self.ghost_go_out_limit = len(self.dots)
 
@@ -96,19 +96,17 @@ class GameMode:
         self.map = TiledMap(path.join(MAP_DIR, map_name))
 
     def judge_ghost_could_out(self):
-        if len(self.dots) < self.ghost_go_out_limit + RED_GO:
+        if self.frame >= RED_GO_FRAME:
             self.red_ghost.is_out = True
-        if len(self.dots) < self.ghost_go_out_limit + PINK_GO:
+        if self.frame >= PINK_GO_FRAME:
             self.pink_ghost.is_out = True
-        if len(self.dots) < self.ghost_go_out_limit + GREEN_GO:
+        if self.frame >= GREEN_GO_FRAME:
             self.green_ghost.is_out = True
-        if len(self.dots) < self.ghost_go_out_limit + ORANGE_GO:
+        if self.frame >= ORANGE_GO_FRAME:
             self.orange_ghost.is_out = True
 
     def get_result(self) -> list:
-        res = [{"player": f"{self.player.player_no}P",
-                "score": self.player.score,
-                "used_frame": self.frame}]
+        res = [self.player.get_info()]
         return res
 
     def run(self, command):
@@ -178,11 +176,12 @@ class GameMode:
         # game over?
         if len(self.dots) == 0 and self.player.score != 0:
             self.playing = False
+            self.state = GameResultState.FINISH
             self.player.status = GameStatus.GAME_PASS
-            # TODO print game info, not only player info
+            # TODO reset game but not though game mode
         if self.player.status != GameStatus.GAME_ALIVE:
-            print(self.player.get_info())
-            self.__init__()
+            self.state = GameResultState.FAIL
+            self.playing = False
 
     def draw(self):
         pass
@@ -221,8 +220,8 @@ class GameMode:
             if event.type == pygame.QUIT:
                 self.quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_u:
-                    self.quit()
+                # if event.key == pygame.K_u:
+                #     self.quit()
                 if event.key == pygame.K_h:
                     self.draw_debug = not self.draw_debug
                 if event.key == pygame.K_p:

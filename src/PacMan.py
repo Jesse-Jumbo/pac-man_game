@@ -9,10 +9,9 @@ from .sound_controller import *
 
 
 class PacMan(PaiaGame):
-    def __init__(self, user_num: int, game_mode: str, game_times: int, map_name: int, sound: str):
+    def __init__(self, user_num: int, game_mode: str, map_name: int, sound: str):
         super().__init__()
         self.scene = Scene(WIDTH, HEIGHT, BLACK)
-        self.game_times_goal = game_times
         self.game_times = 1
         self.score = []  # 用於計算積分
         self.is_sound = sound
@@ -22,15 +21,20 @@ class PacMan(PaiaGame):
         self.map = f"map0{map_name}.tmx"
         self.game_mode = self.set_game_mode(self.map)
         # self.game_mode.sound_controller.play_music()
-        self.attachements = []
+        self.attachements = [{'player': '1P', 'distance': '6611m', 'used_frames': '559 frames', 'single_rank': 1, 'accumulated_score': 4}]
 
+    # TODO refactor AI need data
+    # dots pos
+    # ghosts pos
+    # points pos
     def game_to_player_data(self) -> dict:
         scene_info = self.get_scene_info
         to_player_data = {}
         player_data = self.game_mode.player.get_info()
         player_data["frame"] = scene_info["frame"]
         player_data["status"] = scene_info["status"]
-        to_player_data[player_data['id']] = player_data
+        to_player_data[player_data['player_id']] = player_data
+        # to_player_data[player_data['player_id']] = player_data
 
         if to_player_data:
             return to_player_data
@@ -52,7 +56,6 @@ class PacMan(PaiaGame):
                       # TODO rethink need the data which background
                       'background': [WIDTH, HEIGHT],
                       f'player_{self.game_mode.player.player_no}_pos': self.game_mode.player.pos,
-                      'score': f"{self.game_mode.player.score}",
                       'ghosts_pos': [],
                       'game_result': self.game_mode.get_result()}
 
@@ -64,22 +67,15 @@ class PacMan(PaiaGame):
         self.frame_count += 1
         self.game_mode.run(commands)
         self.game_result_state = self.game_mode.state
+        game_result = self.game_mode.get_result()
+        self.attachements = game_result
         if not self.is_running():
-            # collect game rank
-            game_result = self.game_mode.get_result()
-            if len(self.attachements) == 0:
-                # first time end
-                self.attachements = game_result
-
-            if self.game_times < self.game_times_goal:
-                self.game_times += 1
-                return "RESET"
-            else:
-                return "QUIT"
+            return "RESET"
 
     def reset(self):
+
         self.frame_count = 0
-        self.game_mode = self.set_game_mode()
+        self.game_mode = self.set_game_mode(self.map)
         # TODO play music
         # self.game_mode.sound_controller.player_music()
 
@@ -120,9 +116,6 @@ class PacMan(PaiaGame):
         for wall in self.game_mode.walls:
             game_info["assets"].append(create_asset_init_data(f"wall_{wall.obj_no}", TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, wall.img_path), ""))
-        # TODO find where define initialize background image
-        game_info["assets"].append(create_asset_init_data("background", WIDTH, HEIGHT,
-                                                          path.join(IMAGE_DIR, "game.gif"), ""))
 
         return game_info
 

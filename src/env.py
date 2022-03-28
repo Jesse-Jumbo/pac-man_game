@@ -111,13 +111,13 @@ BLUE_GHOST_NO = "blue_ghost"
 GHOST_NO_LIST = [RED_GHOST_NO, PINK_GHOST_NO, GREEN_GHOST_NO, ORANGE_GHOST_NO]
 
 '''red'''
-RED_GO = -1
+RED_GO_FRAME = 60
 '''pink'''
-PINK_GO = -15
+PINK_GO_FRAME = 480
 '''green'''
-GREEN_GO = -30
+GREEN_GO_FRAME = 900
 '''orange'''
-ORANGE_GO = -45
+ORANGE_GO_FRAME = 1200
 
 '''wall setting'''
 WALL_IMG = "wall.png"

@@ -99,11 +99,14 @@ class Player(pygame.sprite.Sprite):
         self.pos.x += self.vel.x
 
     def get_info(self):
-        self.pacman_info = {"id": f"{self.player_no}P",
-                            "pos": f"X: {int(self.pos.x)}, Y: {int(self.pos.y)}",
+        self.pacman_info = {"player_id": f"{self.player_no}P",
+                            "pos_x": int(self.pos.x),
+                            "pos_y": int(self.pos.y),
                             "velocity": "{:.2f}".format(self.speed),
                             "score": self.score,
-                            "status": self.status}
+                            "state": self.status,
+                            "used_frame": self.used_frame,
+                            }
         return self.pacman_info
 
     def collide(self):
