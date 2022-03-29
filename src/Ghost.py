@@ -169,6 +169,13 @@ class Ghost(pygame.sprite.Sprite):
         else:
             return "please input x or y to get position"
 
+    def get_info(self):
+        return {
+            "ghost_id": self.ghost_no,
+            "pos_x": self.pos.x,
+            "pos_y": self.pos.y,
+        }
+
     # TODO refactor draw path and search area
     # def draw_ghost_move_path(self, ghost):
     #     current = ghost.start  # + ghost.path[vec2int(ghost.start)]

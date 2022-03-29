@@ -106,6 +106,8 @@ class Player(pygame.sprite.Sprite):
                             "score": self.score,
                             "state": self.status,
                             "used_frame": self.used_frame,
+                            "dots_pos": [],
+                            "points_pos": []
                             }
         return self.pacman_info
 

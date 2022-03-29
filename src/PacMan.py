@@ -29,13 +29,21 @@ class PacMan(PaiaGame):
     # points pos
     def game_to_player_data(self) -> dict:
         scene_info = self.get_scene_info
-        to_player_data = {}
+        to_player_data = {"dots_pos": [],
+                          "points_pos": []
+                          }
         player_data = self.game_mode.player.get_info()
         player_data["frame"] = scene_info["frame"]
         player_data["status"] = scene_info["status"]
-        to_player_data[player_data['player_id']] = player_data
-        # to_player_data[player_data['player_id']] = player_data
 
+        for ghost in self.game_mode.ghosts:
+            player_data[ghost.ghost_no] = ghost.pos
+        for dot in self.game_mode.dots:
+            player_data["dots_pos"].append(dot.rect.center)
+        for point in self.game_mode.points:
+            player_data["points_pos"].append(point.rect.center)
+
+        to_player_data[player_data['player_id']] = player_data
         if to_player_data:
             return to_player_data
         else:
