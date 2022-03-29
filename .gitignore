@@ -1,2 +1,4 @@
 .idea/
 img/spr_all5_4A2_separate images/
+src/__pycache__/
+__pycache__/
