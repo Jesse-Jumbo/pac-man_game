@@ -23,13 +23,15 @@ class PacMan(PaiaGame):
         # self.game_mode.sound_controller.play_music()
         self.attachements = []
 
-    # TODO refactor AI need data
+    # TODO refactor AI need data (what is player data)
     def game_to_player_data(self) -> dict:
         scene_info = self.get_scene_info
         to_player_data = {}
         player_data = self.game_mode.player.get_info()
         player_data["frame"] = scene_info["frame"]
         player_data["status"] = scene_info["status"]
+        player_data["dots_pos"] = []
+        player_data["power_pellets_pos"] = []
 
         for ghost in self.game_mode.ghosts:
             player_data[ghost.ghost_no] = ghost.pos
