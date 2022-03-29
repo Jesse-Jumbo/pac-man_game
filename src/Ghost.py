@@ -96,11 +96,14 @@ class Ghost(pygame.sprite.Sprite):
         self.pos += self.vel
         self.hit_rect.center = self.pos
         self.rect.center = self.pos
+        self._move_cmd = random.choice([UP_cmd, DOWN_cmd, LEFT_cmd, RIGHT_cmd])
         # if abs(self.vel.x) != 0:
         #     self._move_cmd = random.choice([UP_cmd, DOWN_cmd])
         # elif abs(self.vel.y) != 0:
         #     self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
-        self._move_cmd = random.choice([UP_cmd, DOWN_cmd, LEFT_cmd, RIGHT_cmd])
+        self.pos += self.vel
+        self.hit_rect.center = self.pos
+        self.rect.center = self.pos
 
     def speed_up(self):
         pass
