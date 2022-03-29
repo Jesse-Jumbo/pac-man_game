@@ -7,7 +7,7 @@ from mlgame.gamedev.generic import quit_or_esc
 
 if __name__ == '__main__':
     pygame.init()
-    game = PacMan.PacMan(user_num=1, game_mode="NORMAL", map_name=6, sound="off")
+    game = PacMan.PacMan(user_num=1, game_mode="NORMAL", map_no=1, sound="off")
     scene_init_info_dict = game.get_scene_init_data()
     game_view = PygameView(scene_init_info_dict)
     interval = 1 / 30

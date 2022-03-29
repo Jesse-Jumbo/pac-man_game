@@ -9,7 +9,7 @@ from .sound_controller import *
 
 
 class PacMan(PaiaGame):
-    def __init__(self, user_num: int, game_mode: str, map_name: int, sound: str):
+    def __init__(self, user_num: int, game_mode: str, map_no: int, sound: str):
         super().__init__()
         self.scene = Scene(WIDTH, HEIGHT, BLACK)
         self.game_times = 1
@@ -18,7 +18,7 @@ class PacMan(PaiaGame):
         # self.sound_controller = SoundController(self.is_sound)
         self.game_type = game_mode
         self.user_num = user_num
-        self.map = f"map0{map_name}.tmx"
+        self.map = f"map0{map_no}.tmx"
         self.game_mode = self.set_game_mode(self.map)
         # self.game_mode.sound_controller.play_music()
         self.attachements = []
@@ -225,9 +225,9 @@ class PacMan(PaiaGame):
             {"name": "4P"}
         ]
 
-    def set_game_mode(self, map_name):
+    def set_game_mode(self, map_no):
         if self.game_type == "NORMAL":
-            game_mode = GameMode(map_name)
+            game_mode = GameMode(map_no)
             return game_mode
         elif self.game_type == "RELIVE":
             pass

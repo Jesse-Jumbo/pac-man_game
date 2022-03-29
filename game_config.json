@@ -30,12 +30,12 @@
       "default": "NORMAL"
     },
     {
-      "name": "map_name",
-      "verbose": "地圖名稱",
+      "name": "map_no",
+      "verbose": "地圖編號",
       "type": "int",
-      "max": 6,
-      "min": 5,
-      "default": 6,
+      "max": 2,
+      "min": 1,
+      "default": 1,
       "help": "set map number for load game scene"
     },
     {
