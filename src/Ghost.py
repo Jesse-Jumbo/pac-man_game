@@ -114,14 +114,14 @@ class Ghost(pygame.sprite.Sprite):
         self.ghost_no = BLUE_GHOST_NO
         self.is_blue = True
 
-    def frightened_module(self, grid):
+    def frightened_mode(self, grid):
         g = SquareGrid(grid, GRID_WIDTH, GRID_HEIGHT)
         # TODO define corner pos
         # escape_path = a_star_search(g, self.corner_pos, self.node_pos)
         escape_path = a_star_search(g, self.node_pos, self.node_pos)
         return escape_path
 
-    def chase_module(self, grid: pygame.sprite.Group, goal: vec):
+    def chase_mode(self, grid: pygame.sprite.Group, goal: vec):
         g = SquareGrid(grid, GRID_WIDTH, GRID_HEIGHT)
         chase_path = a_star_search(g, goal, self.node_pos)
         return chase_path
@@ -158,7 +158,7 @@ class Ghost(pygame.sprite.Sprite):
             self.vel.y = -(self.speed + self.speed_slow)
         self.pos.y += self.vel.y
 
-    def scatter_model(self, x, y):
+    def scatter_mode(self, x, y):
         pass
 
     def get_position(self, xy: str):
