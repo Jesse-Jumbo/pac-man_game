@@ -7,8 +7,7 @@ from mlgame.gamedev.generic import quit_or_esc
 
 if __name__ == '__main__':
     pygame.init()
-    # game = RacingCar.RacingCar(user_num=2, game_mode="NORMAL", car_num=50, racetrack_length=10000, game_times=1, sound="off")
-    game = PacMan.PacMan(user_num=1, game_mode="NORMAL", game_times=100, map_name=6, sound="off")
+    game = PacMan.PacMan(user_num=1, game_mode="NORMAL", map_name=6, sound="off")
     scene_init_info_dict = game.get_scene_init_data()
     game_view = PygameView(scene_init_info_dict)
     interval = 1 / 30
