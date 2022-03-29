@@ -1,5 +1,6 @@
-import pygame
 from os import path
+
+import pygame
 
 '''width and height'''
 WIDTH = 640
@@ -132,29 +133,37 @@ POWER_PELLET_HIT_RECT = pygame.Rect(0, 0, 8, 8)
 NODE_HIT_RECT = pygame.Rect(0, 0, 2, 2)
 
 '''map dada numbers'''
-PLAYER_NO = "55"
-RED_GHOST_IMG_NO = "45"
-PINK_GHOST_IMG_NO = "24"
-GREEN_GHOST_IMG_NO = "37"
-ORANGE_GHOST_IMG_NO = "41"
-POWER_PELLET_NO = "230"
-DOT_NO = "9"
+PLAYER_IMG_NO_LIST = [55, 93]
+RED_GHOST_IMG_NO = 45
+PINK_GHOST_IMG_NO = 24
+GREEN_GHOST_IMG_NO = 37
+ORANGE_GHOST_IMG_NO = 41
+POWER_PELLET_IMG_NO = 230
+DOT_IMG_NO = 9
 """img"""
 '''walls'''
-WALLS_NO_IMG_DIC = {"60": "wall_60.png", "63": "wall_63.png", "64": "wall_64.png", "65": "wall_65.png", "77": "wall_77.png", "80": "wall_80.png", "81": "wall_81.png", "82": "wall_82.png", "98": "wall_98.png", "99": "wall_99.png", "111": "wall_111.png", "112": "wall_112.png", "113": "wall_113.png", "114": "wall_114.png"}
+WALLS_NO_IMG_DIC = {60: "wall_60.png", 63: "wall_63.png", 64: "wall_64.png", 65: "wall_65.png",
+                    77: "wall_77.png", 80: "wall_80.png", 81: "wall_81.png", 82: "wall_82.png",
+                    98: "wall_98.png", 99: "wall_99.png", 111: "wall_111.png", 112: "wall_112.png",
+                    113: "wall_113.png", 114: "wall_114.png"}
 '''player'''
 # PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
 PLAYER_IMG_DIC = {LEFT_IMG: "pac_l.png", RIGHT_IMG: "pac_r.png", UP_IMG: "pac_u.png", DOWN_IMG: "pac_d.png"}
 '''blue'''
-blue_ghost_image_dic = {DOWN_IMG: "blue_ghost_d.png", LEFT_IMG: "blue_ghost_l.png", RIGHT_IMG: "blue_ghost_r.png", UP_IMG: "blue_ghost_u.png"}
+blue_ghost_image_dic = {DOWN_IMG: "blue_ghost_d.png", LEFT_IMG: "blue_ghost_l.png", RIGHT_IMG: "blue_ghost_r.png",
+                        UP_IMG: "blue_ghost_u.png"}
 '''orange'''
-orange_ghost_image_dic = {DOWN_IMG: "orange_ghost_d.png", LEFT_IMG: "orange_ghost_l.png", RIGHT_IMG: "orange_ghost_r.png", UP_IMG: "orange_ghost_u.png"}
+orange_ghost_image_dic = {DOWN_IMG: "orange_ghost_d.png", LEFT_IMG: "orange_ghost_l.png",
+                          RIGHT_IMG: "orange_ghost_r.png", UP_IMG: "orange_ghost_u.png"}
 '''pink'''
-pink_ghost_image_dic = {DOWN_IMG: "pink_ghost_d.png", LEFT_IMG: "pink_ghost_l.png", RIGHT_IMG: "pink_ghost_r.png", UP_IMG: "pink_ghost_u.png"}
+pink_ghost_image_dic = {DOWN_IMG: "pink_ghost_d.png", LEFT_IMG: "pink_ghost_l.png", RIGHT_IMG: "pink_ghost_r.png",
+                        UP_IMG: "pink_ghost_u.png"}
 '''red'''
-red_ghost_image_dic = {DOWN_IMG: "red_ghost_d.png", LEFT_IMG: "red_ghost_l.png", RIGHT_IMG: "red_ghost_r.png", UP_IMG: "red_ghost_u.png"}
+red_ghost_image_dic = {DOWN_IMG: "red_ghost_d.png", LEFT_IMG: "red_ghost_l.png", RIGHT_IMG: "red_ghost_r.png",
+                       UP_IMG: "red_ghost_u.png"}
 '''green'''
-green_ghost_image_dic = {DOWN_IMG: "green_ghost_d.png", LEFT_IMG: "green_ghost_l.png", RIGHT_IMG: "green_ghost_r.png", UP_IMG: "green_ghost_u.png"}
+green_ghost_image_dic = {DOWN_IMG: "green_ghost_d.png", LEFT_IMG: "green_ghost_l.png", RIGHT_IMG: "green_ghost_r.png",
+                         UP_IMG: "green_ghost_u.png"}
 '''dot'''
 DOT_IMG = "dots.png"
 POWER_PELLET_IMG = "power_pellet.png"
@@ -176,4 +185,3 @@ ALL_GHOST_GO_OUT = 'Destractor.mp3'
 # FINISH_URL = "https://github.com/yen900611/RacingCar/blob/master/asset/image/finish.png?raw=true"
 # START_URL = "https://github.com/yen900611/RacingCar/blob/master/asset/image/start.png?raw=true"
 # COIN_URL = "https://github.com/yen900611/RacingCar/blob/master/asset/image/logo.png?raw=true"
-

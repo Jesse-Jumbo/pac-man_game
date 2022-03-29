@@ -15,7 +15,7 @@ from .env import *
 
 
 class GameMode:
-    def __init__(self, map_name):
+    def __init__(self, map_no):
         # initialize all variables and so all the setup for a new game
         # TODO reset where initialize
         pygame.init()
@@ -31,8 +31,8 @@ class GameMode:
         self.stop_music = False
         self.blue_ghost = False
         # load all img and music data from folder
-        self.map_name = map_name
-        self.load_data(self.map_name)
+        self.map_no = map_no
+        self.load_data()
         # initialize sprites group
         self.all_sprites = pygame.sprite.LayeredUpdates()
         self.walls = pygame.sprite.Group()
@@ -40,17 +40,15 @@ class GameMode:
         self.dots = pygame.sprite.Group()
         self.power_pellets = pygame.sprite.Group()
         self.nodes = pygame.sprite.Group()
+        '''load map'''
+        self.map = TiledMap(path.join(MAP_DIR, self.map_no))
+        self.map.make_map()
         # create map object
-        self.map.make_map(WALL_LAYER_NAME)
-        self.map.make_map(DOTS_LAYER_NAME)
-        self.map.make_map(POWER_PELLET_LAYER_NAME)
-        self.player = self.map.make_map(PLAYER_LAYER_NAME)
-        self.red_ghost = self.map.make_map(RED_GHOST_LAYER_NAME)
-        self.pink_ghost = self.map.make_map(PINK_GHOST_LAYER_NAME)
-        self.green_ghost = self.map.make_map(GREEN_GHOST_LAYER_NAME)
-        self.orange_ghost = self.map.make_map(ORANGE_GHOST_LAYER_NAME)
-        # TODO refactor load tiled map mean
-        # self.map.make_map()
+        self.player = self.map.player
+        self.red_ghost = self.map.red_ghost
+        self.pink_ghost = self.map.pink_ghost
+        self.green_ghost = self.map.green_ghost
+        self.orange_ghost = self.map.orange_ghost
         # add sprite group
         for wall in self.map.walls:
             self.all_sprites.add(wall)
@@ -61,6 +59,7 @@ class GameMode:
         for dot in self.map.dots:
             self.all_sprites.add(dot)
             self.dots.add(dot)
+
         self.ghosts.add(self.red_ghost)
         self.ghosts.add(self.pink_ghost)
         self.ghosts.add(self.green_ghost)
@@ -86,14 +85,13 @@ class GameMode:
         self.state = GameResultState.FAIL
         self.ghost_go_out_limit = len(self.dots)
 
-    def load_data(self, map_name):
+    def load_data(self):
         '''font'''
         # self.font_name = pygame.font.match_font('arial')
         '''pause view'''
         # self.dim_window = pygame.Surface(self.window.get_size()).convert_alpha()
         # self.dim_window.fill((0, 0, 0, 100))
-        '''load map'''
-        self.map = TiledMap(path.join(MAP_DIR, map_name))
+        pass
 
     def judge_ghost_could_out(self):
         if self.frame >= RED_GO_FRAME:
@@ -239,33 +237,33 @@ class GameMode:
                     self.green_ghost.draw_check_path = not self.green_ghost.draw_check_path
 
         # print(commands)
-                # for player
-                # if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
-                #     self.player.up_move = True
-            #     if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
-            #         self.player.down_move = True
-            #     if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
-            #         self.player.left_move = True
-            #     if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
-            #         self.player.right_move = True
-            # if event.type == pygame.KEYUP:
-                # for player
-                # if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
-                #     self.player.down_move = False
-                #     self.player.right_move = False
-                #     self.player.left_move = False
-            #     if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
-            #         self.player.up_move = False
-            #         self.player.right_move = False
-            #         self.player.left_move = False
-            #     if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
-            #         self.player.up_move = False
-            #         self.player.down_move = False
-            #         self.player.right_move = False
-            #     if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
-            #         self.player.up_move = False
-            #         self.player.down_move = False
-            #         self.player.left_move = False
+        # for player
+        # if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
+        #     self.player.up_move = True
+        #     if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
+        #         self.player.down_move = True
+        #     if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
+        #         self.player.left_move = True
+        #     if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
+        #         self.player.right_move = True
+        # if event.type == pygame.KEYUP:
+        # for player
+        # if event.key == pygame.K_UP or event.key == pygame.K_w or event.key == pygame.K_KP_8:
+        #     self.player.down_move = False
+        #     self.player.right_move = False
+        #     self.player.left_move = False
+        #     if event.key == pygame.K_DOWN or event.key == pygame.K_s or event.key == pygame.K_KP_2:
+        #         self.player.up_move = False
+        #         self.player.right_move = False
+        #         self.player.left_move = False
+        #     if event.key == pygame.K_LEFT or event.key == pygame.K_a or event.key == pygame.K_KP_4:
+        #         self.player.up_move = False
+        #         self.player.down_move = False
+        #         self.player.right_move = False
+        #     if event.key == pygame.K_RIGHT or event.key == pygame.K_d or event.key == pygame.K_KP_6:
+        #         self.player.up_move = False
+        #         self.player.down_move = False
+        #         self.player.left_move = False
 
     def check_collisions(self):
         # for player
