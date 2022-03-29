@@ -25,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.right_move = False
         self.left_move = False
         self.pacman_info = {}
+        self.result_info = {}
         self.used_frame = 0
 
         self.hit_rect = PLAYRE_HIT_RECT.copy()
@@ -38,6 +39,12 @@ class Player(pygame.sprite.Sprite):
         self.speed = PLAYER_SPEED
         self.img_change_control = 0.4
         self.score = 0
+        self.dots_score = 0
+        self.power_pellets_score = 0
+        self.blue_ghosts_score = 0
+        self.ate_dots_times = 0
+        self.ate_power_pellets_times = 0
+        self.ate_blue_ghosts_times = 0
 
     def update(self, commands: dict):
         if self.state:
@@ -104,10 +111,21 @@ class Player(pygame.sprite.Sprite):
                             "pos_y": int(self.pos.y),
                             "velocity": "{:.2f}".format(self.speed),
                             "score": self.score,
-                            "state": self.status,
-                            "used_frame": self.used_frame,
                             }
         return self.pacman_info
+
+    def get_result(self):
+        self.result_info = {"player_id": f"{self.player_no}P",
+                            "pos_x": int(self.pos.x),
+                            "pos_y": int(self.pos.y),
+                            "velocity": "{:.2f}".format(self.speed),
+                            "score": self.score,
+                            "used_frame": self.used_frame,
+                            "dots_score": f"{self.dots_score}/{self.ate_dots_times} times",
+                            "power_pellets_score": f"{self.power_pellets_score}/{self.ate_power_pellets_times} times",
+                            "blue_ghosts_score": f"{self.blue_ghosts_score}/{self.ate_blue_ghosts_times} times",
+                            }
+        return self.result_info
 
     def collide(self):
         self.vel *= -1

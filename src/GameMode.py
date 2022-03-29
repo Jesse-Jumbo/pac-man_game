@@ -83,6 +83,7 @@ class GameMode:
         self.frame = 0
         '''state include GameResultState.FINISH、GameResultState.FAIL"'''
         self.state = GameResultState.FAIL
+        self.status = GameStatus.GAME_ALIVE
         self.ghost_go_out_limit = len(self.dots)
 
     def load_data(self):
@@ -104,7 +105,7 @@ class GameMode:
             self.orange_ghost.is_out = True
 
     def get_result(self) -> list:
-        res = [self.player.get_info()]
+        res = [self.player.get_result()]
         return res
 
     def run(self, command):
@@ -164,21 +165,20 @@ class GameMode:
         # self.orange_ghost.update(self.get_move_path(ORANGE_GHOST_NO))
 
     def update(self, command):
-        self.state = GameStatus.GAME_ALIVE
+        self.status = GameStatus.GAME_ALIVE
         self.frame += 1
         # update potion of the game loop
         self.all_sprites.update()
         self.player.update(command)
         self.update_ghost()
         self.check_collisions()
-        # game over?
         if len(self.dots) == 0 and self.player.score != 0:
             self.playing = False
             self.state = GameResultState.FINISH
-            self.player.status = GameStatus.GAME_PASS
-            # TODO reset game but not though game mode
-        if self.player.status != GameStatus.GAME_ALIVE:
+            self.status = GameStatus.GAME_PASS
+        if not self.player.state:
             self.state = GameResultState.FAIL
+            self.status = GameStatus.GAME_OVER
             self.playing = False
 
     def draw(self):
@@ -274,11 +274,15 @@ class GameMode:
         hits = pygame.sprite.spritecollide(self.player, self.dots, True, collide_hit_rect)
         for hit in hits:
             self.player.score += DOT_SCORE
+            self.player.ate_dots_times += 1
+            self.player.dots_score += DOT_SCORE
             self.player.speed += -0.001
 
         hits = pygame.sprite.spritecollide(self.player, self.power_pellets, True, collide_hit_rect)
         for hit in hits:
             self.player.score += POWER_PELLET_SCORE
+            self.player.power_pellets_score += POWER_PELLET_SCORE
+            self.player.ate_power_pellets_times += 1
             self.red_ghost.blue_time()
             self.pink_ghost.blue_time()
             self.green_ghost.blue_time()

@@ -9,7 +9,7 @@ class MLPlay:
         """
         Generate the command according to the received scene information
         """
-        print(scene_info)
+        # print(scene_info)
         if scene_info["status"] != "GAME_ALIVE":
             return "RESET"
 

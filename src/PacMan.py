@@ -1,4 +1,4 @@
-from mlgame.gamedev.game_interface import PaiaGame
+from mlgame.gamedev.game_interface import PaiaGame, GameStatus
 from mlgame.view.test_decorator import check_game_result
 from mlgame.view.view_model import create_text_view_data, create_asset_init_data, create_image_view_data, \
     Scene
@@ -32,6 +32,7 @@ class PacMan(PaiaGame):
         player_data["status"] = scene_info["status"]
         player_data["dots_pos"] = []
         player_data["power_pellets_pos"] = []
+        player_data["walls_pos"] = []
 
         for ghost in self.game_mode.ghosts:
             player_data[ghost.ghost_no] = ghost.pos
@@ -39,6 +40,8 @@ class PacMan(PaiaGame):
             player_data["dots_pos"].append(dot.rect.center)
         for power_pellet in self.game_mode.power_pellets:
             player_data["power_pellets_pos"].append(power_pellet.rect.center)
+        for wall in self.game_mode.walls:
+            player_data["walls_pos"].append(wall.pos)
 
         to_player_data[player_data['player_id']] = player_data
         if to_player_data:
@@ -57,12 +60,13 @@ class PacMan(PaiaGame):
         Get the scene information
         """
         scene_info = {'frame': self.game_mode.frame,
-                      'status': self.game_mode.state,
+                      'status': self.game_mode.status,
                       # TODO rethink need the data which background
                       'background': [WIDTH, HEIGHT],
                       f'player_{self.game_mode.player.player_no}_pos': self.game_mode.player.pos,
                       'ghosts_pos': [],
-                      'game_result': self.game_mode.get_result()}
+                      'game_result': self.game_mode.get_result(),
+                      'state': self.game_mode.state}
 
         for ghost in self.game_mode.ghosts:
             scene_info["ghosts_pos"].append({ghost.ghost_no: ghost.pos})
@@ -78,14 +82,16 @@ class PacMan(PaiaGame):
             return "RESET"
 
     def reset(self):
-
         self.frame_count = 0
         self.game_mode = self.set_game_mode(self.map)
         # TODO play music
         # self.game_mode.sound_controller.player_music()
 
     def is_running(self):
-        return self.game_mode.playing
+        if self.game_mode.status == GameStatus.GAME_ALIVE:
+            return True
+        else:
+            return False
 
     def get_scene_init_data(self) -> dict:
         """
