@@ -24,14 +24,9 @@ class PacMan(PaiaGame):
         self.attachements = []
 
     # TODO refactor AI need data
-    # dots pos
-    # ghosts pos
-    # points pos
     def game_to_player_data(self) -> dict:
         scene_info = self.get_scene_info
-        to_player_data = {"dots_pos": [],
-                          "points_pos": []
-                          }
+        to_player_data = {}
         player_data = self.game_mode.player.get_info()
         player_data["frame"] = scene_info["frame"]
         player_data["status"] = scene_info["status"]
@@ -40,8 +35,8 @@ class PacMan(PaiaGame):
             player_data[ghost.ghost_no] = ghost.pos
         for dot in self.game_mode.dots:
             player_data["dots_pos"].append(dot.rect.center)
-        for point in self.game_mode.points:
-            player_data["points_pos"].append(point.rect.center)
+        for power_pellet in self.game_mode.power_pellets:
+            player_data["power_pellets_pos"].append(power_pellet.rect.center)
 
         to_player_data[player_data['player_id']] = player_data
         if to_player_data:
@@ -116,10 +111,10 @@ class PacMan(PaiaGame):
         for i in range(len(self.game_mode.dots)):
             game_info["assets"].append(create_asset_init_data("dots", TILE_X_SIZE, TILE_Y_SIZE,
                                                               path.join(IMAGE_DIR, DOT_IMG), ""))
-        # initialize points image
-        for i in range(len(self.game_mode.points)):
-            game_info["assets"].append(create_asset_init_data("points", TILE_X_SIZE, TILE_Y_SIZE,
-                                                              path.join(IMAGE_DIR, POINT_IMG), ""))
+        # initialize power_pellets image
+        for i in range(len(self.game_mode.power_pellets)):
+            game_info["assets"].append(create_asset_init_data("power_pellets", TILE_X_SIZE, TILE_Y_SIZE,
+                                                              path.join(IMAGE_DIR, POWER_PELLET_IMG), ""))
         # initialize walls image
         for wall in self.game_mode.walls:
             game_info["assets"].append(create_asset_init_data(f"wall_{wall.obj_no}", TILE_X_SIZE, TILE_Y_SIZE,
@@ -155,10 +150,10 @@ class PacMan(PaiaGame):
             game_progress["object_list"].append(create_image_view_data('dots',
                                                                        dot.rect.x, dot.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
-        # update points image
-        for point in self.game_mode.points:
-            game_progress["object_list"].append(create_image_view_data('points',
-                                                                       point.rect.x, point.rect.y,
+        # update power_pellets image
+        for power_pellet in self.game_mode.power_pellets:
+            game_progress["object_list"].append(create_image_view_data('power_pellets',
+                                                                       power_pellet.rect.x, power_pellet.rect.y,
                                                                        TILE_X_SIZE, TILE_Y_SIZE))
         # update walls image
         for wall in self.game_mode.walls:

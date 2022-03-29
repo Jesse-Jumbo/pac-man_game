@@ -51,7 +51,7 @@ HEIGHT_CENTER = HEIGHT / 2
 
 """map setting"""
 WALL_LAYER_NAME = 'walls'
-POINT_LAYER_NAME = 'points'
+POINT_LAYER_NAME = 'power_pellets'
 RED_GHOST_LAYER_NAME = 'red_ghost'
 PINK_GHOST_LAYER_NAME = 'pink_ghost'
 GREEN_GHOST_LAYER_NAME = 'green_ghost'

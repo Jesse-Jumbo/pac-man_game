@@ -38,12 +38,12 @@ class GameMode:
         self.walls = pygame.sprite.Group()
         self.ghosts = pygame.sprite.Group()
         self.dots = pygame.sprite.Group()
-        self.points = pygame.sprite.Group()
+        self.power_pellets = pygame.sprite.Group()
         self.nodes = pygame.sprite.Group()
         # create map object
         self.map.make_map(WALL_LAYER_NAME)
         self.map.make_map(DOTS_LAYER_NAME)
-        self.map.make_map(POINT_LAYER_NAME)
+        self.map.make_map(POWER_PELLET_LAYER_NAME)
         self.player = self.map.make_map(PLAYER_LAYER_NAME)
         self.red_ghost = self.map.make_map(RED_GHOST_LAYER_NAME)
         self.pink_ghost = self.map.make_map(PINK_GHOST_LAYER_NAME)
@@ -55,9 +55,9 @@ class GameMode:
         for wall in self.map.walls:
             self.all_sprites.add(wall)
             self.walls.add(wall)
-        for point in self.map.points:
-            self.all_sprites.add(point)
-            self.points.add(point)
+        for power_pellet in self.map.power_pellets:
+            self.all_sprites.add(power_pellet)
+            self.power_pellets.add(power_pellet)
         for dot in self.map.dots:
             self.all_sprites.add(dot)
             self.dots.add(dot)
@@ -205,8 +205,8 @@ class GameMode:
         #     for dot in self.dots:
         #         pygame.draw.rect(self.window, BG_COLOR, dot.hit_rect, 1)
         # if self.draw_debug:
-        #     for point in self.points:
-        #         pygame.draw.rect(self.window, BG_COLOR, point.hit_rect, 1)
+        #     for power_pellet in self.power_pellets:
+        #         pygame.draw.rect(self.window, BG_COLOR, power_pellet.hit_rect, 1)
         # # press P to pause game
         # if self.paused:
         #     self.window.blit(self.dim_window, (0, 0))
@@ -278,9 +278,9 @@ class GameMode:
             self.player.score += DOT_SCORE
             self.player.speed += -0.001
 
-        hits = pygame.sprite.spritecollide(self.player, self.points, True, collide_hit_rect)
+        hits = pygame.sprite.spritecollide(self.player, self.power_pellets, True, collide_hit_rect)
         for hit in hits:
-            self.player.score += POINT_SCORE
+            self.player.score += POWER_PELLET_SCORE
             self.red_ghost.blue_time()
             self.pink_ghost.blue_time()
             self.green_ghost.blue_time()

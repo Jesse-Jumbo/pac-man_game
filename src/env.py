@@ -41,7 +41,7 @@ MAP_DIR = path.join(GAME_DIR, '..', 'maps')
 WALL_LAYER = 1
 ITEMS_LAYER = 1
 DOT_LAYER = 2
-POINT_LAYER = 2
+POWER_PELLET_LAYER = 2
 PLAYER_LAYER = 3
 GHOST_LAYER = 3
 EFFECTS_LAYER = 4
@@ -72,7 +72,8 @@ LEFT_IMG = 'left'
 
 """map setting"""
 WALL_LAYER_NAME = 'walls'
-POINT_LAYER_NAME = 'points'
+# TODO refactor
+POWER_PELLET_LAYER_NAME = 'power_pellets'
 RED_GHOST_LAYER_NAME = 'red_ghost'
 PINK_GHOST_LAYER_NAME = 'pink_ghost'
 GREEN_GHOST_LAYER_NAME = 'green_ghost'
@@ -84,7 +85,7 @@ DOTS_LAYER_NAME = 'dots'
 WITH_GHOST = 'ghost'
 WITH_PLAYER = 'player'
 DOT_SCORE = 10
-POINT_SCORE = 50
+POWER_PELLET_SCORE = 50
 BLUE_GHOST_SCORE = 200
 CHERRY_SCORE = 500
 
@@ -124,8 +125,8 @@ WALL_IMG = "wall.png"
 '''dot setting'''
 DOT_HIT_RECT = pygame.Rect(0, 0, 5, 5)
 
-'''point setting'''
-POINT_HIT_RECT = pygame.Rect(0, 0, 8, 8)
+'''Power Pellets setting'''
+POWER_PELLET_HIT_RECT = pygame.Rect(0, 0, 8, 8)
 
 '''node setting'''
 NODE_HIT_RECT = pygame.Rect(0, 0, 2, 2)
@@ -136,7 +137,7 @@ RED_GHOST_IMG_NO = "45"
 PINK_GHOST_IMG_NO = "24"
 GREEN_GHOST_IMG_NO = "37"
 ORANGE_GHOST_IMG_NO = "41"
-POINT_NO = "230"
+POWER_PELLET_NO = "230"
 DOT_NO = "9"
 """img"""
 '''walls'''
@@ -156,7 +157,7 @@ red_ghost_image_dic = {DOWN_IMG: "red_ghost_d.png", LEFT_IMG: "red_ghost_l.png",
 green_ghost_image_dic = {DOWN_IMG: "green_ghost_d.png", LEFT_IMG: "green_ghost_l.png", RIGHT_IMG: "green_ghost_r.png", UP_IMG: "green_ghost_u.png"}
 '''dot'''
 DOT_IMG = "dots.png"
-POINT_IMG = "points.png"
+POWER_PELLET_IMG = "power_pellet.png"
 
 '''music'''
 BGM = 'pacman background music.ogg'

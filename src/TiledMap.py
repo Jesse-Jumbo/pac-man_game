@@ -8,7 +8,7 @@ from .env import *
 from games.PacMan.src.Dot import Dot
 from games.PacMan.src.Obstacle import Obstacle
 from games.PacMan.src.Player import Player
-from games.PacMan.src.Point import Point
+from games.PacMan.src.PowerPellet import PowerPellet
 
 
 def find_img_index(img_list: list, c: int):
@@ -28,7 +28,7 @@ class TiledMap:
         self.tmxdata = tm
         self.walls = []
         self.dots = []
-        self.points = []
+        self.power_pellets = []
         self.wall_no = 0
         self.c = 0
         self.object_dic = {}
@@ -58,11 +58,11 @@ class TiledMap:
                         wall = Obstacle(self.wall_no, img_no, x * TILE_X_SIZE, y * TILE_Y_SIZE)
                         self.walls.append(wall)
 
-                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POINT_LAYER_NAME and object_name == POINT_LAYER_NAME:
+                elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == POWER_PELLET_LAYER_NAME and object_name == POWER_PELLET_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
-                        point = Point(x * TILE_X_SIZE, y * TILE_Y_SIZE)
-                        self.points.append(point)
+                        power_pellet = PowerPellet(x * TILE_X_SIZE, y * TILE_Y_SIZE)
+                        self.power_pellets.append(power_pellet)
                 elif isinstance(layer, pytmx.TiledTileLayer) and layer.name == RED_GHOST_LAYER_NAME and object_name == RED_GHOST_LAYER_NAME:
                     tile = ti(gid)
                     if tile:
