@@ -121,17 +121,24 @@ class Player(pygame.sprite.Sprite):
                             "velocity": "{:.2f}".format(self.speed),
                             "score": self.score,
                             "used_frame": self.used_frame,
+                            # TODO only data? but why player can be 1P?
                             "dots_score": f"{self.dots_score}/{self.ate_dots_times} times",
                             "power_pellets_score": f"{self.power_pellets_score}/{self.ate_power_pellets_times} times",
                             "blue_ghosts_score": f"{self.blue_ghosts_score}/{self.ate_blue_ghosts_times} times",
                             }
         return self.result_info
 
-    def collide(self):
+    def collide_with_walls(self):
         self.vel *= -1
         self.pos += self.vel
         self.hit_rect.center = self.pos
         self.rect.center = self.pos
+
+    def collide_with_dots(self):
+        self.score += DOT_SCORE
+        self.ate_dots_times += 1
+        self.dots_score += DOT_SCORE
+        self.speed += -0.001
 
     @property
     def player_data(self):

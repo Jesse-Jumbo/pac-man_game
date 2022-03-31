@@ -1,7 +1,6 @@
 import random
 import pygame.transform
 
-from games.PacMan.src.collide_hit_rect import collide_with_nodes, collide_with_walls
 from games.PacMan.src.SquareGrid import *
 
 from .env import *
@@ -91,7 +90,7 @@ class Ghost(pygame.sprite.Sprite):
         self.hit_rect.centerx = self.pos.x
         self.hit_rect.centery = self.pos.y
 
-    def collide(self):
+    def collide_with_walls(self):
         self.vel *= -1
         self.pos += self.vel
         self.hit_rect.center = self.pos

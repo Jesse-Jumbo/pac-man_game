@@ -8,7 +8,7 @@ from games.PacMan.src.TiledMap import TiledMap
 from games.PacMan.module.draw_text import draw_text
 from games.PacMan.src.SquareGrid import *
 from mlgame.gamedev.game_interface import GameResultState, GameStatus
-from .collide_hit_rect import collide_with_walls, collide_player_with_ghosts, collide_with_nodes
+from .collide_hit_rect import *
 from games.PacMan.src.collide_hit_rect import collide_hit_rect
 
 from .env import *
@@ -269,14 +269,9 @@ class GameMode:
         # for player
         collide_with_walls(self.player, self.walls)
         collide_player_with_ghosts(self.player, self.ghosts)
+        collide_with_dots(self.player, self.dots)
         collide_with_nodes(self.player, self.nodes)
 
-        hits = pygame.sprite.spritecollide(self.player, self.dots, True, collide_hit_rect)
-        for hit in hits:
-            self.player.score += DOT_SCORE
-            self.player.ate_dots_times += 1
-            self.player.dots_score += DOT_SCORE
-            self.player.speed += -0.001
 
         hits = pygame.sprite.spritecollide(self.player, self.power_pellets, True, collide_hit_rect)
         for hit in hits:

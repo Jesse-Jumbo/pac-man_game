@@ -1,3 +1,7 @@
+import pygame.sprite
+
+from .Dot import Dot
+from .Ghost import Ghost
 from .Player import Player
 from .env import *
 
@@ -8,10 +12,10 @@ def collide_hit_rect(one: pygame.sprite, two: pygame.sprite):
 
 # TODO refactor collide
 # collide player with ghosts
-def collide_player_with_ghosts(sprite: pygame.sprite, group: pygame.sprite.Group):
+def collide_player_with_ghosts(sprite: Player, group: pygame.sprite.Group):
     hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
     if hits:
-        if isinstance(sprite, Player):
+        if isinstance(hits[0], Ghost):
             if hits[0].is_blue:
                 sprite.blue_ghosts_score += BLUE_GHOST_SCORE
                 sprite.ate_blue_ghosts_times += 1
@@ -39,4 +43,11 @@ def collide_with_nodes(sprite: pygame.sprite, group: pygame.sprite.Group, dir=""
 def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group):
     hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
     if hits:
-        sprite.collide()
+        sprite.collide_with_walls()
+
+
+def collide_with_dots(sprite: Player, group: pygame.sprite.Group):
+    hits = pygame.sprite.spritecollide(sprite, group, True, collide_hit_rect)
+    for hit in hits:
+        sprite.collide_with_dots()
+
