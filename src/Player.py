@@ -10,10 +10,11 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.player_no = 1
         self.image_dic = {}
-        for key, value in PLAYER_IMG_DIC.items():
-            self.image_dic[key] = path.join(IMAGE_DIR, value)
-        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}"
-        self.present_player = 0
+        for key, values in PLAYER_IMG_DIC.items():
+            self.image_dic[key] = [path.join(IMAGE_DIR, value) for value in values]
+
+        self.image_index = 0
+        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}_{self.image_index}"
         self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x
         self.rect.y = y
@@ -49,9 +50,9 @@ class Player(pygame.sprite.Sprite):
     def update(self, commands: dict):
         if self.state:
             self.used_frame += 1
-            self.present_player += self.img_change_control
-            # if self.present_player >= len(self.player_images):
-            #     self.present_player = 0
+            self.image_index += self.img_change_control
+            if self.image_index >= 4:
+                self.image_index = 0
             self.handle_key_event(commands)
             self.rect.center = self.pos
 
@@ -82,25 +83,25 @@ class Player(pygame.sprite.Sprite):
                 self.move_down()
 
     def move_up(self):
-        self.image_path = f"player{self.player_no}P_{UP_IMG}"
+        self.image_path = f"player{self.player_no}P_{UP_IMG}_{int(self.image_index)}"
         self.vel.y = -self.speed
         self.front_node_pos.y = self.node_pos.y + -4
         self.pos.y += self.vel.y
 
     def move_down(self):
-        self.image_path = f"player{self.player_no}P_{DOWN_IMG}"
+        self.image_path = f"player{self.player_no}P_{DOWN_IMG}_{int(self.image_index)}"
         self.vel.y = self.speed
         self.front_node_pos.y = self.node_pos.y + 4
         self.pos.y += self.vel.y
 
     def move_left(self):
-        self.image_path = f"player{self.player_no}P_{LEFT_IMG}"
+        self.image_path = f"player{self.player_no}P_{LEFT_IMG}_{int(self.image_index)}"
         self.vel.x = -self.speed
         self.front_node_pos.x = self.node_pos.x + -4
         self.pos.x += self.vel.x
 
     def move_right(self):
-        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}"
+        self.image_path = f"player{self.player_no}P_{RIGHT_IMG}_{int(self.image_index)}"
         self.vel.x = self.speed
         self.front_node_pos.x = self.node_pos.x + 4
         self.pos.x += self.vel.x

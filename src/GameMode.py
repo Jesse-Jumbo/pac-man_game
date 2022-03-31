@@ -272,7 +272,7 @@ class GameMode:
         collide_with_dots(self.player, self.dots)
         collide_with_nodes(self.player, self.nodes)
 
-
+        # TODO Don't know how to refactor
         hits = pygame.sprite.spritecollide(self.player, self.power_pellets, True, collide_hit_rect)
         for hit in hits:
             self.player.score += POWER_PELLET_SCORE

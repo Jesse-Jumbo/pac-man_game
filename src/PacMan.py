@@ -102,15 +102,18 @@ class PacMan(PaiaGame):
 
         # initialize player image
         # TODO add player anima
-        for key, value in self.game_mode.player.image_dic.items():
-            game_info['assets'].append(create_asset_init_data(f'player{self.game_mode.player.player_no}P_{key}',
-                                                              TILE_X_SIZE, TILE_Y_SIZE,
-                                                              value, ""))
+        for key, values in self.game_mode.player.image_dic.items():
+            for i in range(4):
+                game_info['assets'].append(
+                    create_asset_init_data(
+                        f'player{self.game_mode.player.player_no}P_{key}_{i}'
+                        , TILE_X_SIZE, TILE_Y_SIZE, values[i], ""))
         # initialize ghosts image
         for ghost in self.game_mode.ghosts:
             for key, value in ghost.ghosts_images[ghost.ghost_image_no].items():
-                game_info['assets'].append(create_asset_init_data(f"{ghost.ghost_no}_{key}", TILE_X_SIZE, TILE_Y_SIZE,
-                                                                  value, ""))
+                game_info['assets'].append(
+                    create_asset_init_data(
+                        f"{ghost.ghost_no}_{key}", TILE_X_SIZE, TILE_Y_SIZE, value, ""))
         # initialize blue ghost image
         for key, value in self.game_mode.red_ghost.ghosts_images[BLUE_IMG].items():
             game_info['assets'].append(create_asset_init_data(f"{BLUE_GHOST_NO}_{key}", TILE_X_SIZE, TILE_Y_SIZE,

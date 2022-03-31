@@ -35,7 +35,7 @@ DOWN_cmd = "MOVE_DOWN"
 
 '''data path'''
 GAME_DIR = path.dirname(__file__)
-IMAGE_DIR = path.join(GAME_DIR, "../asset/image")
+IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
 SOUND_DIR = path.join(GAME_DIR, 'sound')
 MAP_DIR = path.join(GAME_DIR, '..', 'maps')
 '''Layers'''
@@ -148,7 +148,12 @@ WALLS_NO_IMG_DIC = {60: "wall_60.png", 63: "wall_63.png", 64: "wall_64.png", 65:
                     113: "wall_113.png", 114: "wall_114.png"}
 '''player'''
 # PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
-PLAYER_IMG_DIC = {LEFT_IMG: "pac_l.png", RIGHT_IMG: "pac_r.png", UP_IMG: "pac_u.png", DOWN_IMG: "pac_d.png"}
+PLAYER_IMG_DIC = {LEFT_IMG: [], RIGHT_IMG: [], UP_IMG: [], DOWN_IMG: []}
+for i in range(4):
+    PLAYER_IMG_DIC[LEFT_IMG].append(f"pac_man_left_{i}.png")
+    PLAYER_IMG_DIC[RIGHT_IMG].append(f"pac_man_right_{i}.png")
+    PLAYER_IMG_DIC[UP_IMG].append(f"pac_man_up_{i}.png")
+    PLAYER_IMG_DIC[DOWN_IMG].append(f"pac_man_down_{i}.png")
 '''blue'''
 blue_ghost_image_dic = {DOWN_IMG: "blue_ghost_d.png", LEFT_IMG: "blue_ghost_l.png", RIGHT_IMG: "blue_ghost_r.png",
                         UP_IMG: "blue_ghost_u.png"}

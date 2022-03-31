@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.7.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="20" tileheight="20" infinite="0" nextlayerid="2" nextobjectid="1">
- <tileset firstgid="1" source="../../../../../Jesse/Program/pygame/project/pac-man/pac-man_game/maps/Pac-man Topdown Pack.tsx"/>
+ <tileset firstgid="1" name="spr_all5_4A2" tilewidth="20" tileheight="20" spacing="1" margin="1" tilecount="238" columns="17">
+  <image source="../../../../../Jesse/Program/pygame/project/pac-man/pac-man_game/img/spr_all5_4A2.png" width="358" height="295"/>
+ </tileset>
  <layer id="1" name="Tile Layer 1" width="32" height="24">
   <data encoding="csv">
 113,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,114,
