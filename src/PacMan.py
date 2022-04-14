@@ -101,7 +101,6 @@ class PacMan(PaiaGame):
                      'assets': []}
 
         # initialize player image
-        # TODO add player anima
         for key, values in self.game_mode.player.image_dic.items():
             for i in range(4):
                 game_info['assets'].append(

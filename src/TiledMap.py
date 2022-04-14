@@ -11,18 +11,6 @@ from games.PacMan.src.RedGhost import RedGhost
 from .env import *
 
 
-def find_img_index(img_list: list, c: int):
-    for i in range(c, len(img_list)):
-        if img_list[i] != 0:
-            return img_list[i], i
-        elif img_list[i] == 0 and i == len(img_list) - 1:
-            return 0, 0
-
-
-def create_wall():
-    pass
-
-
 class TiledMap:
     def __init__(self, filename: str):
         tm = pytmx.load_pygame(filename, pixealpha=True)
