@@ -10,7 +10,6 @@ def collide_hit_rect(one: pygame.sprite, two: pygame.sprite):
     return one.hit_rect.colliderect(two.hit_rect)
 
 
-# TODO refactor collide
 # collide player with ghosts
 def collide_player_with_ghosts(sprite: Player, group: pygame.sprite.Group):
     hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
@@ -28,6 +27,7 @@ def collide_player_with_ghosts(sprite: Player, group: pygame.sprite.Group):
                 sprite.state = False
 
 
+# TODO refactor Node
 # collide sprite with nodes
 def collide_with_nodes(sprite: pygame.sprite, group: pygame.sprite.Group, dir=""):
     for node in group:
