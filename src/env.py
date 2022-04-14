@@ -37,13 +37,14 @@ GAME_DIR = path.dirname(__file__)
 IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
 SOUND_DIR = path.join(GAME_DIR, 'sound')
 MAP_DIR = path.join(GAME_DIR, '..', 'maps')
+# TODO figure out layers update
 '''Layers'''
 WALL_LAYER = 1
 ITEMS_LAYER = 1
 DOT_LAYER = 2
 POWER_PELLET_LAYER = 2
 PLAYER_LAYER = 3
-GHOST_LAYER = 3
+GHOST_LAYER = 1
 EFFECTS_LAYER = 4
 NODE_LAYER = 4
 
