@@ -15,14 +15,15 @@ def collide_hit_rect(one: pygame.sprite, two: pygame.sprite):
 def collide_player_with_ghosts(sprite: Player, group: pygame.sprite.Group):
     hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
     if hits:
-        if isinstance(hits[0], Ghost):
-            if hits[0].is_blue:
+        ghost = hits[0]
+        if isinstance(ghost, Ghost):
+            if ghost.is_blue:
                 sprite.blue_ghosts_score += BLUE_GHOST_SCORE
                 sprite.ate_blue_ghosts_times += 1
                 sprite.score += BLUE_GHOST_SCORE
-                hits[0].pos.xy = hits[0].ghost_origin_pos
-                hits[0].ghost_no = hits[0].origin_no
-                hits[0].is_blue = False
+                ghost.pos.xy = ghost.ghost_origin_pos
+                ghost.ghost_no = ghost.origin_no
+                ghost.is_blue = False
             else:
                 sprite.state = False
 
