@@ -21,25 +21,31 @@ class SoundController():
 
     def play_music(self):
         if self.is_sound_on:
+            self.back_ground_sound.stop()
             self.count_time_sound.stop()
             self.blue_time_sound.stop()
             self.back_ground_sound.play()
+            print("play_music")
         else:
             pass
 
     def play_count_time_sound(self):
         if self.is_sound_on:
+            self.count_time_sound.stop()
             self.blue_time_sound.stop()
             self.back_ground_sound.stop()
             self.count_time_sound.play()
+            print("play_count_time_sound")
         else:
             pass
 
     def play_blue_time_sound(self):
         if self.is_sound_on:
+            self.blue_time_sound.stop()
             self.count_time_sound.stop()
             self.back_ground_sound.stop()
             self.blue_time_sound.play()
+            print("play_blue_time_sound")
         else:
             pass
 

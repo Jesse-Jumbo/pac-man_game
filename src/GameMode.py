@@ -85,7 +85,7 @@ class GameMode:
         self.state = GameResultState.FAIL
         self.status = GameStatus.GAME_ALIVE
         self.ghost_go_out_limit = len(self.dots)
-        self.judge_music_play()
+        self.play_music()
 
     def load_data(self):
         '''font'''
@@ -96,18 +96,22 @@ class GameMode:
         pass
 
     def judge_ghost_could_out(self):
-        if self.frame >= RED_GO_FRAME:
+        if self.frame == RED_GO_FRAME:
             self.red_ghost.is_out = True
-            self.judge_music_play()
-        if self.frame >= PINK_GO_FRAME:
+            self.danger = True
+            self.play_music()
+        if self.frame == PINK_GO_FRAME:
             self.pink_ghost.is_out = True
-            self.judge_music_play()
-        if self.frame >= GREEN_GO_FRAME:
+            self.danger = True
+            self.play_music()
+        if self.frame == GREEN_GO_FRAME:
             self.green_ghost.is_out = True
-            self.judge_music_play()
-        if self.frame >= ORANGE_GO_FRAME:
+            self.danger = True
+            self.play_music()
+        if self.frame == ORANGE_GO_FRAME:
             self.orange_ghost.is_out = True
-            self.judge_music_play()
+            self.danger = True
+            self.play_music()
 
     def get_result(self) -> list:
         res = [self.player.get_result()]
@@ -185,6 +189,36 @@ class GameMode:
             self.state = GameResultState.FAIL
             self.status = GameStatus.GAME_OVER
             self.playing = False
+
+        if not self.blue_time:
+            if self.frame < PINK_GO_FRAME and self.frame == RED_GO_FRAME + 300:
+                if self.danger and self.frame <= PINK_GO_FRAME:
+                    self.danger = False
+                    self.play_music()
+                else:
+                    pass
+            if self.frame < GREEN_GO_FRAME and self.frame == PINK_GO_FRAME + 300:
+                if self.danger and self.frame <= GREEN_GO_FRAME:
+                    self.danger = False
+                    self.play_music()
+                else:
+                    pass
+            if self.frame < ORANGE_GO_FRAME and self.frame == GREEN_GO_FRAME + 300:
+                if self.danger and self.frame <= ORANGE_GO_FRAME:
+                    self.danger = False
+                    self.play_music()
+                else:
+                    pass
+            if self.frame == ORANGE_GO_FRAME + 300:
+                if self.danger:
+                    self.danger = False
+                    self.play_music()
+                else:
+                    pass
+            if self.blue_time:
+                if not self.red_ghost.is_blue and not self.green_ghost.is_blue and not self.pink_ghost.is_blue and not self.orange_ghost.is_blue:
+                    self.blue_time = False
+                    self.play_music()
 
     def draw(self):
         pass
@@ -287,7 +321,8 @@ class GameMode:
             self.pink_ghost.get_blue_state()
             self.green_ghost.get_blue_state()
             self.orange_ghost.get_blue_state()
-            self.judge_music_play()
+            self.blue_time = True
+            self.play_music()
 
         # for ghost
         for ghost in self.ghosts:
@@ -331,25 +366,3 @@ class GameMode:
             self.sound_controller.play_count_time_sound()
         elif not self.danger and not self.blue_time:
             self.sound_controller.play_music()
-
-    def judge_music_play(self):
-        if RED_GO_FRAME <= self.frame < RED_GO_FRAME + 300:
-            self.danger = True
-        elif GREEN_GO_FRAME <= self.frame < GREEN_GO_FRAME + 300:
-            self.danger = True
-        elif PINK_GO_FRAME <= self.frame < PINK_GO_FRAME + 300:
-            self.danger = True
-        elif ORANGE_GO_FRAME <= self.frame < ORANGE_GO_FRAME + 300:
-            self.danger = True
-        else:
-            self.danger = False
-
-        if self.red_ghost.is_blue or self.green_ghost.is_blue or self.pink_ghost.is_blue or self.orange_ghost.is_blue:
-            self.blue_time = True
-        else:
-            self.blue_time = False
-
-        self.play_music()
-
-        # if len(self.dots) < 10:
-        #     self.danger = True
