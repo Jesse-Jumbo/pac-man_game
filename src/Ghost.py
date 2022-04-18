@@ -51,13 +51,16 @@ class Ghost(pygame.sprite.Sprite):
         self.ghost_image_no = BLUE_IMG
         self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
         self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
+        self.move_changes = [x for x in range(60, 600, 10)]
+        self.move_change = random.choice(self.move_changes)
 
     def update(self, chase_path: list) -> None:
         self.frame += 1
         if self.is_out:
-            if self.frame % 600 == 0:
+            if self.frame % self.move_change == 0:
                 print(self.frame)
                 self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
+                self.move_change = random.choice(self.move_changes)
 
             if self._move_cmd == LEFT_cmd:
                 self.move_left()
