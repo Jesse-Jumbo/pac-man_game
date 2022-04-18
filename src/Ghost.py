@@ -5,13 +5,6 @@ from games.PacMan.src.SquareGrid import *
 
 from .env import *
 
-def move():
-    x_move = random.randrange(-3, 3)
-    y_move = random.randrange(-3, 3)
-    if x_move > y_move:
-        return x_move
-    return y_move
-
 
 class Ghost(pygame.sprite.Sprite):
     # TODO add state pattern
@@ -51,16 +44,14 @@ class Ghost(pygame.sprite.Sprite):
         self.ghost_image_no = BLUE_IMG
         self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
         self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
-        self.move_changes = [x for x in range(60, 600, 10)]
-        self.move_change = random.choice(self.move_changes)
+        self.move_change_frame = random.randrange(60, 610, 10)
 
     def update(self, chase_path: list) -> None:
-        self.frame += 1
         if self.is_out:
-            if self.frame % self.move_change == 0:
-                print(self.frame)
+            self.frame += 1
+            if self.frame % self.move_change_frame == 0:
                 self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
-                self.move_change = random.choice(self.move_changes)
+                self.move_change_frame = random.randrange(60, 610, 10)
 
             if self._move_cmd == LEFT_cmd:
                 self.move_left()
