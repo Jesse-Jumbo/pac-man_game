@@ -109,9 +109,10 @@ class Ghost(pygame.sprite.Sprite):
         #     self.speed = self.speed * 1.2
 
     def get_blue_state(self):
-        self.blue_frame = self.frame
-        self.ghost_no = BLUE_GHOST_NO
-        self.is_blue = True
+        if self.is_out:
+            self.blue_frame = self.frame
+            self.ghost_no = BLUE_GHOST_NO
+            self.is_blue = True
 
     def enter_frightened_mode(self, grid):
         g = SquareGrid(grid, GRID_WIDTH, GRID_HEIGHT)
