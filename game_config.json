@@ -35,7 +35,7 @@
       "type": "int",
       "max": 11,
       "min": 1,
-      "default": 11,
+      "default": 1,
       "help": "set map number for load game scene"
     },
     {

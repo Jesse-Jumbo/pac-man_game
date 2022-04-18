@@ -55,6 +55,10 @@ class Ghost(pygame.sprite.Sprite):
     def update(self, chase_path: list) -> None:
         self.frame += 1
         if self.is_out:
+            if self.frame % 600 == 0:
+                print(self.frame)
+                self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
+
             if self._move_cmd == LEFT_cmd:
                 self.move_left()
             elif self._move_cmd == RIGHT_cmd:
