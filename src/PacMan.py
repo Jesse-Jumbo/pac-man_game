@@ -173,6 +173,9 @@ class PacMan(PaiaGame):
         # update score text
         game_progress["foreground"].append(create_text_view_data(f"Score: {self.game_mode.player.score}",
                                                                  WIDTH / 2 - 30, 0, WHITE, "20px Arial"))
+        # update frame text
+        game_progress["foreground"].append(create_text_view_data(f"Time: {(self.game_mode.frame // 60)}",
+                                                                 WIDTH - 90, 0, WHITE, "20px Arial"))
 
         return game_progress
 
