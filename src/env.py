@@ -133,19 +133,19 @@ POWER_PELLET_HIT_RECT = pygame.Rect(0, 0, 8, 8)
 NODE_HIT_RECT = pygame.Rect(0, 0, 2, 2)
 
 '''map dada numbers'''
-PLAYER_IMG_NO_LIST = [8]
+PLAYER_IMG_NO_LIST = [6]
 RED_GHOST_IMG_NO = 5
 PINK_GHOST_IMG_NO = 4
 GREEN_GHOST_IMG_NO = 2
 ORANGE_GHOST_IMG_NO = 3
-POWER_PELLET_IMG_NO = 33
-DOT_IMG_NO = 10
+POWER_PELLET_IMG_NO = 9
+DOT_IMG_NO = 8
 """img"""
 '''walls'''
-WALLS_NO_IMG_DIC = {15: "wall_15.png", 20: "wall_20.png", 25: "wall_25.png", 26: "wall_26.png", 27: "wall_27.png",
-                    28: "wall_28.png", 29: "wall_29.png", 30: "wall_30.png", 31: "wall_31.png",
-                    32: "wall_32.png", 34: "wall_34.png", 35: "wall_35.png", 36: "wall_36.png",
-                    37: "wall_37.png"}
+WALLS_NO_IMG_DIC = {15: "wall_15.png", 20: "wall_20.png", 21: "wall_21.png", 22: "wall_22.png", 23: "wall_23.png",
+                    19: "wall_19.png", 14: "wall_14.png", 11: "wall_11.png", 13: "wall_13.png",
+                    16: "wall_16.png", 18: "wall_18.png", 10: "wall_10.png", 17: "wall_17.png",
+                    12: "wall_12.png"}
 '''player'''
 # PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
 PLAYER_IMG_DIC = {LEFT_IMG: [], RIGHT_IMG: [], UP_IMG: [], DOWN_IMG: []}
