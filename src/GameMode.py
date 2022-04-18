@@ -15,21 +15,21 @@ from .env import *
 
 
 class GameMode:
-    def __init__(self, map_no):
+    def __init__(self, map_no, sound_controller):
         # initialize all variables and so all the setup for a new game
         # TODO reset where initialize
-        pygame.init()
-        pygame.mixer.init()
+        # pygame.init()
+        # pygame.mixer.init()
+        self.sound_controller = sound_controller
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         # control variables
         self.playing = True
         self.draw_debug = False
         self.check_path = False
         self.paused = False
-        self.waiting = False
+        self.blue_time = False
         self.danger = False
         self.stop_music = False
-        self.blue_ghost = False
         # load all img and music data from folder
         self.map_no = map_no
         self.load_data()
@@ -85,6 +85,7 @@ class GameMode:
         self.state = GameResultState.FAIL
         self.status = GameStatus.GAME_ALIVE
         self.ghost_go_out_limit = len(self.dots)
+        self.judge_music_play()
 
     def load_data(self):
         '''font'''
@@ -97,12 +98,16 @@ class GameMode:
     def judge_ghost_could_out(self):
         if self.frame >= RED_GO_FRAME:
             self.red_ghost.is_out = True
+            self.judge_music_play()
         if self.frame >= PINK_GO_FRAME:
             self.pink_ghost.is_out = True
+            self.judge_music_play()
         if self.frame >= GREEN_GO_FRAME:
             self.green_ghost.is_out = True
+            self.judge_music_play()
         if self.frame >= ORANGE_GO_FRAME:
             self.orange_ghost.is_out = True
+            self.judge_music_play()
 
     def get_result(self) -> list:
         res = [self.player.get_result()]
@@ -282,8 +287,7 @@ class GameMode:
             self.pink_ghost.get_blue_state()
             self.green_ghost.get_blue_state()
             self.orange_ghost.get_blue_state()
-            self.danger = True
-            self.play_music()
+            self.judge_music_play()
 
         # for ghost
         for ghost in self.ghosts:
@@ -321,19 +325,31 @@ class GameMode:
         # self.play_music()
 
     def play_music(self):
-        pass
-        # TODO reset where play music
-        # if self.waiting or self.paused:
-        #     pygame.mixer.music.load(path.join(self.snd_dir, MENU_SND))
-        #     pygame.mixer.music.set_volume(0.2)
-        #     pygame.mixer.music.play(loops=-1)
-        # elif self.danger:
-        #     pygame.mixer.music.load(path.join(self.snd_dir, ALL_GHOST_GO_OUT))
-        #     pygame.mixer.music.set_volume(0.2)
-        #     pygame.mixer.music.play(loops=-1)
-        # elif self.stop_music:
-        #     pygame.mixer.music.stop()
-        # else:
-        #     pygame.mixer.music.load(path.join(self.snd_dir, BGM))
-        #     pygame.mixer.music.set_volume(0.8)
-        #     pygame.mixer.music.play(loops=-1)
+        if self.blue_time or self.paused:
+            self.sound_controller.play_blue_time_sound()
+        elif self.danger:
+            self.sound_controller.play_count_time_sound()
+        elif not self.danger and not self.blue_time:
+            self.sound_controller.play_music()
+
+    def judge_music_play(self):
+        if RED_GO_FRAME <= self.frame < RED_GO_FRAME + 300:
+            self.danger = True
+        elif GREEN_GO_FRAME <= self.frame < GREEN_GO_FRAME + 300:
+            self.danger = True
+        elif PINK_GO_FRAME <= self.frame < PINK_GO_FRAME + 300:
+            self.danger = True
+        elif ORANGE_GO_FRAME <= self.frame < ORANGE_GO_FRAME + 300:
+            self.danger = True
+        else:
+            self.danger = False
+
+        if self.red_ghost.is_blue or self.green_ghost.is_blue or self.pink_ghost.is_blue or self.orange_ghost.is_blue:
+            self.blue_time = True
+        else:
+            self.blue_time = False
+
+        self.play_music()
+
+        # if len(self.dots) < 10:
+        #     self.danger = True

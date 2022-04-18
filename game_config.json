@@ -47,7 +47,7 @@
         "off"
       ],
       "help": "'on' can turn on the sound.",
-      "default": "off"
+      "default": "on"
     }
   ]
 }

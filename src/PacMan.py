@@ -15,12 +15,11 @@ class PacMan(PaiaGame):
         self.game_times = 1
         self.score = []  # 用於計算積分
         self.is_sound = sound
-        # self.sound_controller = SoundController(self.is_sound)
+        self.sound_controller = SoundController(self.is_sound)
         self.game_type = game_mode
         self.user_num = user_num
         self.map = f"map0{map_no}.tmx"
         self.game_mode = self.set_game_mode(self.map)
-        # self.game_mode.sound_controller.play_music()
         self.attachements = []
 
     # TODO refactor AI need data (what is player data)
@@ -238,7 +237,7 @@ class PacMan(PaiaGame):
 
     def set_game_mode(self, map_no):
         if self.game_type == "NORMAL":
-            game_mode = GameMode(map_no)
+            game_mode = GameMode(map_no, self.sound_controller)
             return game_mode
         elif self.game_type == "RELIVE":
             pass

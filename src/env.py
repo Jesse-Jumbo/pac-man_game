@@ -35,7 +35,7 @@ DOWN_cmd = "MOVE_DOWN"
 '''data path'''
 GAME_DIR = path.dirname(__file__)
 IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
-SOUND_DIR = path.join(GAME_DIR, 'sound')
+SOUND_DIR = path.join(GAME_DIR, "..", 'snd')
 MAP_DIR = path.join(GAME_DIR, '..', 'maps')
 # TODO figure out layers update
 '''Layers'''
