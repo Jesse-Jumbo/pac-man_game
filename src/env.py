@@ -142,10 +142,9 @@ POWER_PELLET_IMG_NO = 9
 DOT_IMG_NO = 8
 """img"""
 '''walls'''
-WALLS_NO_IMG_DIC = {15: "wall_15.png", 20: "wall_20.png", 21: "wall_21.png", 22: "wall_22.png", 23: "wall_23.png",
-                    19: "wall_19.png", 14: "wall_14.png", 11: "wall_11.png", 13: "wall_13.png",
-                    16: "wall_16.png", 18: "wall_18.png", 10: "wall_10.png", 17: "wall_17.png",
-                    12: "wall_12.png"}
+WALLS_NO_IMG_DIC = {}
+for i in range(10, 24):
+    WALLS_NO_IMG_DIC[i] = f"wall_{i}.png"
 '''player'''
 # PLAYER_IMG_LIST = ["pac_man_cc.png", "pac_man_c.png", "pac_man_o.png", "pac_man_oo.png"]
 PLAYER_IMG_DIC = {LEFT_IMG: [], RIGHT_IMG: [], UP_IMG: [], DOWN_IMG: []}
