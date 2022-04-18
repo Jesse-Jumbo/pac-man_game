@@ -3,6 +3,9 @@
  <tileset firstgid="1" name="spr_all5_4A2" tilewidth="20" tileheight="20" spacing="1" margin="1" tilecount="238" columns="17">
   <image source="../../../../../Jesse/Program/pygame/project/pac-man/pac-man_game/img/spr_all5_4A2.png" width="358" height="295"/>
  </tileset>
+ <tileset firstgid="239" name="pac_man_obj" tilewidth="20" tileheight="20" tilecount="1" columns="1">
+  <image source="../asset/image/blue_ghost_d.png" width="20" height="20"/>
+ </tileset>
  <layer id="1" name="Tile Layer 1" width="32" height="24">
   <data encoding="csv">
 113,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,65,114,

@@ -14,7 +14,6 @@ def move():
 
 
 class Ghost(pygame.sprite.Sprite):
-    # TODO refactor function name to (v)
     # TODO add state pattern
     def __init__(self, x: float, y: float):
         self._layer = GHOST_LAYER
@@ -40,7 +39,7 @@ class Ghost(pygame.sprite.Sprite):
         self.is_blue = False
         self.is_out = False
         self.draw_check_path = False
-        self.get_blue_time = pygame.time.get_ticks()
+        self.blue_time = pygame.time.get_ticks()
         self.ghost_origin_pos = pygame.math.Vector2(0, 0)
         self.ghost_origin_pos.xy = self.rect.center
 
@@ -111,19 +110,19 @@ class Ghost(pygame.sprite.Sprite):
         # if len(self.game.dots) == len(self.game.dots) / 3:
         #     self.speed = self.speed * 1.2
 
-    def blue_time(self):
+    def get_blue_state(self):
         self.blue_frame = self.frame
         self.ghost_no = BLUE_GHOST_NO
         self.is_blue = True
 
-    def frightened_mode(self, grid):
+    def enter_frightened_mode(self, grid):
         g = SquareGrid(grid, GRID_WIDTH, GRID_HEIGHT)
         # TODO define corner pos
         # escape_path = a_star_search(g, self.corner_pos, self.node_pos)
         escape_path = a_star_search(g, self.node_pos, self.node_pos)
         return escape_path
 
-    def chase_mode(self, grid: pygame.sprite.Group, goal: vec):
+    def enter_chase_mode(self, grid: pygame.sprite.Group, goal: vec):
         g = SquareGrid(grid, GRID_WIDTH, GRID_HEIGHT)
         chase_path = a_star_search(g, goal, self.node_pos)
         return chase_path
@@ -160,7 +159,7 @@ class Ghost(pygame.sprite.Sprite):
             self.vel.y = -(self.speed + self.speed_slow)
         self.pos.y += self.vel.y
 
-    def scatter_mode(self, x, y):
+    def enter_scatter_mode(self, x, y):
         pass
 
     def get_position(self, xy: str):

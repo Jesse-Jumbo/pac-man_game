@@ -128,33 +128,33 @@ class GameMode:
             # red ghost goal is player
             if ghost_no == RED_GHOST_NO:
                 if self.red_ghost.is_blue:
-                    return self.red_ghost.frightened_mode(self.walls)
+                    return self.red_ghost.enter_frightened_mode(self.walls)
                 else:
-                    return self.red_ghost.chase_mode(self.walls, self.player.node_pos)
+                    return self.red_ghost.enter_chase_mode(self.walls, self.player.node_pos)
             # pink ghost goal is player front
             if ghost_no == PINK_GHOST_NO:
                 if self.pink_ghost.is_blue:
-                    return self.pink_ghost.frightened_mode(self.walls)
+                    return self.pink_ghost.enter_frightened_mode(self.walls)
                 else:
-                    return self.pink_ghost.chase_mode(self.walls, self.player.front_node_pos)
+                    return self.pink_ghost.enter_chase_mode(self.walls, self.player.front_node_pos)
             # green ghost goal random choice all object
             if ghost_no == GREEN_GHOST_NO:
                 if self.green_ghost.is_blue:
-                    return self.green_ghost.frightened_mode(self.walls)
+                    return self.green_ghost.enter_frightened_mode(self.walls)
                 else:
                     goal = []
                     for ghost in self.ghosts:
                         goal.append(ghost.node_pos)
                     goal.append(self.player.node_pos)
                     goal.append(self.player.front_node_pos)
-                    return self.green_ghost.chase_mode(self.walls, random.choice(goal))
+                    return self.green_ghost.enter_chase_mode(self.walls, random.choice(goal))
             # orange ghost goal random choice all node
             if ghost_no == ORANGE_GHOST_NO:
                 if self.orange_ghost.is_blue:
-                    self.orange_ghost.frightened_mode(self.walls)
+                    self.orange_ghost.enter_frightened_mode(self.walls)
                 else:
                     node_pos = pygame.math.Vector2(random.choice(list(self.node_pos)))
-                    return self.orange_ghost.chase_mode(self.walls, vec(node_pos / TILE_X_SIZE))
+                    return self.orange_ghost.enter_chase_mode(self.walls, vec(node_pos / TILE_X_SIZE))
 
     def update_ghost(self):
         self.judge_ghost_could_out()
@@ -278,10 +278,10 @@ class GameMode:
             self.player.score += POWER_PELLET_SCORE
             self.player.power_pellets_score += POWER_PELLET_SCORE
             self.player.ate_power_pellets_times += 1
-            self.red_ghost.blue_time()
-            self.pink_ghost.blue_time()
-            self.green_ghost.blue_time()
-            self.orange_ghost.blue_time()
+            self.red_ghost.get_blue_state()
+            self.pink_ghost.get_blue_state()
+            self.green_ghost.get_blue_state()
+            self.orange_ghost.get_blue_state()
             self.danger = True
             self.play_music()
 
