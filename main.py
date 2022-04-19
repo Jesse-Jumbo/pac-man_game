@@ -10,12 +10,13 @@ if __name__ == '__main__':
     game = PacMan.PacMan(user_num=1, game_mode="NORMAL", map_no=1, sound="off")
     scene_init_info_dict = game.get_scene_init_data()
     game_view = PygameView(scene_init_info_dict)
-    interval = 1 / 30
+    # interval = 1 / 30
     frame_count = 0
     while game.is_running() and not quit_or_esc():
         clock = pygame.time.Clock()
         clock.tick_busy_loop(FPS)
-        pygame.display.set_caption(TITLE + "{:.2f}".format(clock.get_fps()))
+        # TODO add caption
+        # pygame.display.set_caption(TITLE + "{:.2f}".format(clock.get_fps()))
         game.update(game.get_keyboard_command())
         game_progress_data = game.get_scene_progress_data()
         game_view.draw_screen()

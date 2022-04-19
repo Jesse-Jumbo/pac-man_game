@@ -26,10 +26,12 @@ class GameMode:
         self.playing = True
         self.draw_debug = False
         self.check_path = False
-        self.paused = False
-        self.blue_time = False
-        self.danger = False
+        self.is_paused = False
+        self.is_blue_ghost = False
+        self.is_danger = False
+        self.is_warn = False
         self.stop_music = False
+        self.is_music_change = False
         # load all img and music data from folder
         self.map_no = map_no
         self.load_data()
@@ -81,11 +83,12 @@ class GameMode:
                 self.node_pos.append(node)
         # game variables
         self.frame = 0
+        self.blue_frame = self.frame
         '''state include GameResultState.FINISH、GameResultState.FAIL"'''
         self.state = GameResultState.FAIL
         self.status = GameStatus.GAME_ALIVE
         self.ghost_go_out_limit = len(self.dots)
-        self.play_music()
+        self.change_music("normal")
 
     def load_data(self):
         '''font'''
@@ -98,20 +101,16 @@ class GameMode:
     def judge_ghost_could_out(self):
         if self.frame == RED_GO_FRAME:
             self.red_ghost.is_out = True
-            self.danger = True
-            self.play_music()
+            self.change_music("warn")
         if self.frame == PINK_GO_FRAME:
             self.pink_ghost.is_out = True
-            self.danger = True
-            self.play_music()
+            self.change_music("warn")
         if self.frame == GREEN_GO_FRAME:
             self.green_ghost.is_out = True
-            self.danger = True
-            self.play_music()
+            self.change_music("warn")
         if self.frame == ORANGE_GO_FRAME:
             self.orange_ghost.is_out = True
-            self.danger = True
-            self.play_music()
+            self.change_music("warn")
 
     def get_result(self) -> list:
         res = [self.player.get_result()]
@@ -121,7 +120,7 @@ class GameMode:
         # game loop - set self.playing = False to end the game
         # while self.playing:
         self.events()
-        if not self.paused:
+        if not self.is_paused:
             self.update(command)
         self.draw()
 
@@ -190,35 +189,18 @@ class GameMode:
             self.status = GameStatus.GAME_OVER
             self.playing = False
 
-        if not self.blue_time:
-            if self.frame < PINK_GO_FRAME and self.frame == RED_GO_FRAME + 300:
-                if self.danger and self.frame <= PINK_GO_FRAME:
-                    self.danger = False
-                    self.play_music()
-                else:
-                    pass
-            if self.frame < GREEN_GO_FRAME and self.frame == PINK_GO_FRAME + 300:
-                if self.danger and self.frame <= GREEN_GO_FRAME:
-                    self.danger = False
-                    self.play_music()
-                else:
-                    pass
-            if self.frame < ORANGE_GO_FRAME and self.frame == GREEN_GO_FRAME + 300:
-                if self.danger and self.frame <= ORANGE_GO_FRAME:
-                    self.danger = False
-                    self.play_music()
-                else:
-                    pass
-            if self.frame == ORANGE_GO_FRAME + 300:
-                if self.danger:
-                    self.danger = False
-                    self.play_music()
-                else:
-                    pass
-            if self.blue_time:
-                if not self.red_ghost.is_blue and not self.green_ghost.is_blue and not self.pink_ghost.is_blue and not self.orange_ghost.is_blue:
-                    self.blue_time = False
-                    self.play_music()
+        if self.is_music_change:
+            self.play_music()
+
+        if self.is_blue_ghost:
+            if not self.red_ghost.is_blue and not self.pink_ghost.is_blue and not self.green_ghost.is_blue and not self.orange_ghost.is_blue:
+                self.change_music("normal")
+            if self.frame - self.blue_frame > 600:
+                self.change_music("normal")
+
+        if len(self.dots) == 4 and not self.is_danger:
+            self.change_music("danger")
+
 
     def draw(self):
         pass
@@ -245,7 +227,7 @@ class GameMode:
         #     for power_pellet in self.power_pellets:
         #         pygame.draw.rect(self.window, BG_COLOR, power_pellet.hit_rect, 1)
         # # press P to pause game
-        # if self.paused:
+        # if self.is_paused:
         #     self.window.blit(self.dim_window, (0, 0))
         #     draw_text(self.window, "PAUSED", self.font_name, TITLE_SIZE, WHITE, WIDTH_CENTER, HEIGHT_CENTER, "center")
         # # update game view
@@ -262,7 +244,7 @@ class GameMode:
                 if event.key == pygame.K_h:
                     self.draw_debug = not self.draw_debug
                 if event.key == pygame.K_p:
-                    self.paused = not self.paused
+                    self.is_paused = not self.is_paused
                 if event.key == pygame.K_ESCAPE:
                     self.stop_music = not self.stop_music
                 # check ghost search path
@@ -321,8 +303,8 @@ class GameMode:
             self.pink_ghost.get_blue_state()
             self.green_ghost.get_blue_state()
             self.orange_ghost.get_blue_state()
-            self.blue_time = True
-            self.play_music()
+            self.blue_frame = self.frame
+            self.change_music("blue")
 
         # for ghost
         for ghost in self.ghosts:
@@ -348,7 +330,7 @@ class GameMode:
         # self.waiting = True
         # self.play_music()
         # while self.waiting:
-        #     self.danger = False
+        #     self.is_danger = False
         #     self.clock.tick(FPS)
         #     for event in pygame.event.get():
         #         if event.type == pygame.QUIT:
@@ -359,10 +341,31 @@ class GameMode:
         #             self.waiting = False
         # self.play_music()
 
+    def change_music(self, music_state="normal"):
+        if music_state == "warn":
+            self.is_warn = True
+            self.is_music_change = True
+        elif music_state == "danger":
+            self.is_blue_ghost = False
+            self.is_danger = True
+            self.is_music_change = True
+        elif music_state == "blue":
+            self.is_blue_ghost = True
+        else:
+            self.is_blue_ghost = False
+        if self.is_danger:
+            return
+        self.is_music_change = True
+
     def play_music(self):
-        if self.blue_time or self.paused:
-            self.sound_controller.play_blue_time_sound()
-        elif self.danger:
-            self.sound_controller.play_count_time_sound()
-        elif not self.danger and not self.blue_time:
-            self.sound_controller.play_music()
+        if self.is_warn:
+            self.sound_controller.play_warn_sound()
+            self.is_warn = False
+        elif self.is_blue_ghost or self.is_paused:
+            self.sound_controller.play_blue_music()
+        elif self.is_danger:
+            self.sound_controller.play_danger_music()
+        else:
+            self.sound_controller.play_normal_music()
+
+        self.is_music_change = False

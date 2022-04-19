@@ -8,47 +8,44 @@ class SoundController():
             self.is_sound_on = True
             try:
                 pygame.mixer.init()
-                self.count_time_sound = pygame.mixer.Sound(path.join(SOUND_DIR, "count_time.mp3"))
-                self.blue_time_sound = pygame.mixer.Sound(path.join(SOUND_DIR, "blue_time.wav"))
-                self.back_ground_sound = pygame.mixer.Sound(path.join(SOUND_DIR, "pacman background music.ogg"))
-                # pygame.mixer.music.load(path.join(SOUND_DIR, "pacman background music.ogg"))
-                pygame.mixer.music.set_volume(0.4)
-            except Exception:
+                self.warn_sound = pygame.mixer.Sound(path.join(SOUND_DIR, "count_time.mp3"))
+            except Exception as e:
                 self.is_sound_on = False
-
+                print(f"sound_error:{e}")
         else:
             self.is_sound_on = False
 
-    def play_music(self):
+    def play_normal_music(self):
         if self.is_sound_on:
-            self.back_ground_sound.stop()
-            self.count_time_sound.stop()
-            self.blue_time_sound.stop()
-            self.back_ground_sound.play()
-            print("play_music")
+            pygame.mixer.init()
+            pygame.mixer.music.load(path.join(SOUND_DIR, "pacman background music.ogg"))
+            pygame.mixer.music.set_volume(0.2)
+            pygame.mixer.music.play(-1)
         else:
             pass
 
-    def play_count_time_sound(self):
+    def play_danger_music(self):
         if self.is_sound_on:
-            self.count_time_sound.stop()
-            self.blue_time_sound.stop()
-            self.back_ground_sound.stop()
-            self.count_time_sound.play()
-            print("play_count_time_sound")
+            pygame.mixer.init()
+            pygame.mixer.music.load(path.join(SOUND_DIR, "count_time.mp3"))
+            pygame.mixer.music.set_volume(0.2)
+            pygame.mixer.music.play(-1)
         else:
             pass
 
-    def play_blue_time_sound(self):
+    def play_blue_music(self):
         if self.is_sound_on:
-            self.blue_time_sound.stop()
-            self.count_time_sound.stop()
-            self.back_ground_sound.stop()
-            self.blue_time_sound.play()
-            print("play_blue_time_sound")
+            pygame.mixer.init()
+            pygame.mixer.music.load(path.join(SOUND_DIR, "blue_time.wav"))
+            pygame.mixer.music.set_volume(0.2)
+            pygame.mixer.music.play(-1)
+            print("blue_music")
         else:
             pass
 
-    def stop_play_sound(self):
+    def play_warn_sound(self):
         if self.is_sound_on:
+            # pygame.mixer.music.pause()
+            self.warn_sound.play(maxtime=1800).set_volume(0.2)
+        else:
             pass

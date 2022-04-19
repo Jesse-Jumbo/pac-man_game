@@ -62,7 +62,7 @@ class Ghost(pygame.sprite.Sprite):
             elif self._move_cmd == DOWN_cmd:
                 self.move_down()
 
-            if self.frame - self.blue_frame >= 1000:
+            if self.frame - self.blue_frame >= 600:
                 self.ghost_no = self.origin_no
                 self.is_blue = False
                 self.blue_frame = 0
