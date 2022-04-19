@@ -345,17 +345,19 @@ class GameMode:
         if music_state == "warn":
             self.is_warn = True
             self.is_music_change = True
+            return
+        elif self.is_danger:
+            return
         elif music_state == "danger":
             self.is_blue_ghost = False
             self.is_danger = True
             self.is_music_change = True
-        elif music_state == "blue":
+        elif music_state == "blue" and not self.is_blue_ghost:
             self.is_blue_ghost = True
+            self.is_music_change = True
         else:
             self.is_blue_ghost = False
-        if self.is_danger:
-            return
-        self.is_music_change = True
+            self.is_music_change = True
 
     def play_music(self):
         if self.is_warn:

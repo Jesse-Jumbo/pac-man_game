@@ -38,6 +38,10 @@ IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
 SOUND_DIR = path.join(GAME_DIR, "..", "asset", "sound")
 MAP_DIR = path.join(GAME_DIR, '..', 'maps')
 # TODO figure out layers update
+'''load data'''
+BG_MUSIC = path.join(SOUND_DIR, "pacman background music.ogg")
+DANGER_MUSIC = path.join(SOUND_DIR, "count_time.mp3")
+BLUE_MUSIC = path.join(SOUND_DIR, "blue_time.wav")
 '''Layers'''
 WALL_LAYER = 1
 ITEMS_LAYER = 1

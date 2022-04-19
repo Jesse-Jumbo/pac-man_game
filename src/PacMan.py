@@ -13,7 +13,6 @@ class PacMan(PaiaGame):
         super().__init__()
         self.scene = Scene(WIDTH, HEIGHT, BLACK)
         self.game_times = 1
-        self.score = []  # 用於計算積分
         self.is_sound = sound
         self.sound_controller = SoundController(self.is_sound)
         self.game_type = game_mode
