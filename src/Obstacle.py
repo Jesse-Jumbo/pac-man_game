@@ -4,7 +4,7 @@ from .env import *
 
 
 class Obstacle(pygame.sprite.Sprite):
-    def __init__(self, obj_no, img_no: int,  x: float, y: float):
+    def __init__(self, obj_no: int, img_no: int,  x: int, y: int):
         super().__init__()
         self.obj_no = obj_no
         self.img_path = WALLS_NO_IMG_DIC[img_no]

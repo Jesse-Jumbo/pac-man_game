@@ -2,8 +2,7 @@ from .env import *
 
 
 class PowerPellet(pygame.sprite.Sprite):
-    def __init__(self, x: float, y: float):
-        self._layer = POWER_PELLET_LAYER
+    def __init__(self, x: int, y: int):
         super().__init__()
         self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x

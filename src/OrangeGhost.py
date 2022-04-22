@@ -3,7 +3,7 @@ from .env import *
 
 
 class OrangeGhost(Ghost):
-    def __init__(self, x: float, y: float):
+    def __init__(self, x: int, y: int):
         super().__init__(x, y)
         self.origin_no = ORANGE_GHOST_NO
         self.ghost_no = ORANGE_GHOST_NO

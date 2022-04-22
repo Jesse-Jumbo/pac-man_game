@@ -8,8 +8,7 @@ from .env import *
 
 class Ghost(pygame.sprite.Sprite):
     # TODO add state pattern
-    def __init__(self, x: float, y: float):
-        self._layer = GHOST_LAYER
+    def __init__(self, x: int, y: int):
         super().__init__()
         self.ghosts_images = {BLUE_IMG: {}, RED_IMG: {}, PINK_IMG: {}, GREEN_IMG: {}, ORANGE_IMG: {}}
         # TODO refactor img load mean
@@ -27,17 +26,14 @@ class Ghost(pygame.sprite.Sprite):
         self.frame = 0
         self.vel = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
-        self.blue_limit = BLUE_LIMIT
         self.speed_slow = SPEED_SLOW
         self.is_blue = False
         self.is_out = False
         self.draw_check_path = False
-        self.blue_time = pygame.time.get_ticks()
         self.ghost_origin_pos = pygame.math.Vector2(0, 0)
         self.ghost_origin_pos.xy = self.rect.center
 
         self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
-        self.last_search_time = pygame.time.get_ticks()
 
         self.origin_no = BLUE_GHOST_NO
         self.ghost_no = BLUE_GHOST_NO
@@ -114,7 +110,7 @@ class Ghost(pygame.sprite.Sprite):
             self.ghost_no = BLUE_GHOST_NO
             self.is_blue = True
 
-    def enter_frightened_mode(self, grid):
+    def enter_frightened_mode(self, grid: pygame.sprite.Group):
         g = SquareGrid(grid, GRID_WIDTH, GRID_HEIGHT)
         # TODO define corner pos
         # escape_path = a_star_search(g, self.corner_pos, self.node_pos)

@@ -3,7 +3,7 @@ from games.PacMan.src.Ghost import Ghost
 
 
 class PinkGhost(Ghost):
-    def __init__(self, x: float, y: float):
+    def __init__(self, x: int, y: int):
         super().__init__(x, y)
         self.origin_no = PINK_GHOST_NO
         self.ghost_no = PINK_GHOST_NO
@@ -16,6 +16,7 @@ class PinkGhost(Ghost):
         self.up_img = f"{self.ghost_no}_{UP_IMG}"
         self.right_img = f"{self.ghost_no}_{RIGHT_IMG}"
         self.left_image = f"{self.ghost_no}_{LEFT_IMG}"
+        # TODO refactor self.img_name
         self.img_name = pink_ghost_image_dic[DOWN_IMG]
 
 

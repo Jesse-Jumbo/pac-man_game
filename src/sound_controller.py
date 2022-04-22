@@ -1,9 +1,8 @@
-import pygame
-from os import path
 from .env import *
 
-class SoundController():
-    def __init__(self, is_sound_on):
+
+class SoundController:
+    def __init__(self, is_sound_on: str):
         if is_sound_on == "on":
             self.is_sound_on = True
             try:

@@ -21,8 +21,9 @@ class TiledMap:
         self.dots = []
         self.power_pellets = []
         self.wall_no = 0
-        self.c = 0
+        # TODO refactor to clean code
         self.object_dic = {}
+        # TODO just add ghosts
         self.red_ghost = pygame.sprite.Sprite()
         self.pink_ghost = pygame.sprite.Sprite()
         self.green_ghost = pygame.sprite.Sprite()

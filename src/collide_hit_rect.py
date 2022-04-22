@@ -1,6 +1,5 @@
 import pygame.sprite
 
-from .Dot import Dot
 from .Ghost import Ghost
 from .Player import Player
 from .env import *

@@ -15,7 +15,8 @@ from .env import *
 
 
 class GameMode:
-    def __init__(self, map_no, sound_controller):
+    # TODO class type? object? for SoundController
+    def __init__(self, map_name: str, sound_controller):
         # initialize all variables and so all the setup for a new game
         # TODO reset where initialize
         # pygame.init()
@@ -33,7 +34,7 @@ class GameMode:
         self.stop_music = False
         self.is_music_change = False
         # load all img and music data from folder
-        self.map_no = map_no
+        self.map_name = map_name
         self.load_data()
         # initialize sprites group
         self.all_sprites = pygame.sprite.LayeredUpdates()
@@ -43,7 +44,7 @@ class GameMode:
         self.power_pellets = pygame.sprite.Group()
         self.nodes = pygame.sprite.Group()
         '''load map'''
-        self.map = TiledMap(path.join(MAP_DIR, self.map_no))
+        self.map = TiledMap(path.join(MAP_DIR, self.map_name))
         self.map.make_map()
         # create map object
         self.player = self.map.player
@@ -116,7 +117,7 @@ class GameMode:
         res = [self.player.get_result()]
         return res
 
-    def run(self, command):
+    def run(self, command: dict):
         # game loop - set self.playing = False to end the game
         # while self.playing:
         self.events()
@@ -172,7 +173,7 @@ class GameMode:
         # self.green_ghost.update(self.get_move_path(GREEN_GHOST_NO))
         # self.orange_ghost.update(self.get_move_path(ORANGE_GHOST_NO))
 
-    def update(self, command):
+    def update(self, command: dict):
         self.status = GameStatus.GAME_ALIVE
         self.frame += 1
         # update potion of the game loop

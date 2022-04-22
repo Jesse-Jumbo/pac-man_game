@@ -12,9 +12,9 @@ class PacMan(PaiaGame):
     def __init__(self, user_num: int, game_mode: str, map_no: int, sound: str):
         super().__init__()
         self.scene = Scene(WIDTH, HEIGHT, BLACK)
-        self.game_times = 1
-        self.score = []  # 用於計算積分
+        # self.game_times = 1
         self.is_sound = sound
+        # TODO figure out why can't delete sound_controller
         self.sound_controller = SoundController(self.is_sound)
         self.game_type = game_mode
         self.user_num = user_num
@@ -60,7 +60,6 @@ class PacMan(PaiaGame):
         """
         scene_info = {'frame': self.game_mode.frame,
                       'status': self.game_mode.status,
-                      # TODO rethink need the data which background
                       'background': [WIDTH, HEIGHT],
                       f'player_{self.game_mode.player.player_no}_pos': self.game_mode.player.pos,
                       'ghosts_pos': [],
@@ -74,9 +73,6 @@ class PacMan(PaiaGame):
     def update(self, commands: dict):
         self.frame_count += 1
         self.game_mode.run(commands)
-        self.game_result_state = self.game_mode.state
-        game_result = self.game_mode.get_result()
-        self.attachements = game_result
         if not self.is_running():
             return "RESET"
 
@@ -235,33 +231,16 @@ class PacMan(PaiaGame):
             {"name": "4P"}
         ]
 
-    def set_game_mode(self, map_no):
+    def set_game_mode(self, map_name: str):
         if self.game_type == "NORMAL":
-            game_mode = GameMode(map_no, self.sound_controller)
+            game_mode = GameMode(map_name, self.sound_controller)
             return game_mode
         elif self.game_type == "RELIVE":
             pass
 
     def rank(self):
-        # game_result = self.get_scene_info["game_result"]
-        # TODO refactor
-        # if len(self.attachements)==0:
-        #     self.attachements = game_result
-        #     for user in self.attachements:
-        #         user["accumulated_score"] = 5 - user["single_rank"]
-        #     return self.attachements
-        #
-        # for user in self.attachements:
-        #     for single_rank in game_result:
-        #         if single_rank['player'] == user['player']:
-        #             match_single_rank = single_rank
-        #     user["accumulated_score"] += (5 - match_single_rank["single_rank"])
-        # if self.score:
-        #     for user in self.score:
-        #         user["accumulated_score"] += (5 - user["single_rank"])
-        # else:
-        #     self.score = single_game_result
-        #     for user in self.score:
-        #         user["accumulated_score"] = 5 - user["single_rank"]
+        self.game_result_state = self.game_mode.state
+        game_result = self.game_mode.get_result()
+        self.attachements = game_result
 
         return self.attachements

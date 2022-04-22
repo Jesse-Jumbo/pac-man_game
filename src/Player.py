@@ -5,8 +5,7 @@ from .env import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x: float, y: float):
-        self._layer = PLAYER_LAYER
+    def __init__(self, x: int, y: int):
         super().__init__()
         self.player_no = 1
         self.image_dic = {}
@@ -21,11 +20,12 @@ class Player(pygame.sprite.Sprite):
         self.state = True
         # TODO to know what to do which self.status
         self.status = GameStatus.GAME_ALIVE
+        # TODO figure out the control variable is need it?
         self.up_move = False
         self.down_move = False
         self.right_move = False
         self.left_move = False
-        self.pacman_info = {}
+        self.player_info = {}
         self.result_info = {}
         self.used_frame = 0
 
@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite):
         if self.state:
             self.used_frame += 1
             self.image_index += self.img_change_control
-            if self.image_index >= 4:
+            if self.image_index >= len(self.image_dic):
                 self.image_index = 0
             self.handle_key_event(commands)
             self.rect.center = self.pos
@@ -107,13 +107,13 @@ class Player(pygame.sprite.Sprite):
         self.pos.x += self.vel.x
 
     def get_info(self):
-        self.pacman_info = {"player_id": f"{self.player_no}P",
+        self.player_info = {"player_id": f"{self.player_no}P",
                             "pos_x": int(self.pos.x),
                             "pos_y": int(self.pos.y),
                             "velocity": "{:.2f}".format(self.speed),
                             "score": self.score,
                             }
-        return self.pacman_info
+        return self.player_info
 
     def get_result(self):
         self.result_info = {"player_id": f"{self.player_no}P",
@@ -145,7 +145,7 @@ class Player(pygame.sprite.Sprite):
     def player_data(self):
         return {
             "type": "rect",
-            "name": "pac-man",
+            "name": f"player_{self.player_no}",
             "x": self.rect.x,
             "y": self.rect.y,
             "angle": 0,

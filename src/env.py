@@ -37,16 +37,6 @@ GAME_DIR = path.dirname(__file__)
 IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
 SOUND_DIR = path.join(GAME_DIR, "..", "asset", "sound")
 MAP_DIR = path.join(GAME_DIR, '..', 'maps')
-# TODO figure out layers update
-'''Layers'''
-WALL_LAYER = 1
-ITEMS_LAYER = 1
-DOT_LAYER = 2
-POWER_PELLET_LAYER = 2
-PLAYER_LAYER = 3
-GHOST_LAYER = 1
-EFFECTS_LAYER = 4
-NODE_LAYER = 4
 
 '''BG View'''
 TITLE = "Pac-Man!"
@@ -70,17 +60,6 @@ DOWN_IMG = 'down'
 RIGHT_IMG = 'right'
 UP_IMG = 'up'
 LEFT_IMG = 'left'
-
-"""map setting"""
-WALL_LAYER_NAME = 'walls'
-# TODO refactor
-POWER_PELLET_LAYER_NAME = 'power_pellets'
-RED_GHOST_LAYER_NAME = 'red_ghost'
-PINK_GHOST_LAYER_NAME = 'pink_ghost'
-GREEN_GHOST_LAYER_NAME = 'green_ghost'
-ORANGE_GHOST_LAYER_NAME = 'orange_ghost'
-PLAYER_LAYER_NAME = 'player'
-DOTS_LAYER_NAME = 'dots'
 
 """collide setting"""
 WITH_GHOST = 'ghost'

@@ -1,9 +1,10 @@
+import pygame
+
 from .env import *
 
 
 class Dot(pygame.sprite.Sprite):
-    def __init__(self, x: float, y: float):
-        self._layer = DOT_LAYER
+    def __init__(self, x: int, y: int):
         super().__init__()
         self.rect = ALL_OBJECT_SIZE.copy()
         self.rect.x = x
