@@ -3,8 +3,8 @@ from os import path
 import pygame
 
 '''width and height'''
-WIDTH = 640
-HEIGHT = 480
+WIDTH = 1400
+HEIGHT = 720
 
 '''environment data'''
 FPS = 60
@@ -41,9 +41,9 @@ MAP_DIR = path.join(GAME_DIR, '..', 'maps')
 '''BG View'''
 TITLE = "Pac-Man!"
 BG_COLOR = DARKGREY
-TILE_X_SIZE = 20
-TILE_Y_SIZE = 20
-TILE_SIZE = 20
+TILE_X_SIZE = 40
+TILE_Y_SIZE = 40
+TILE_SIZE = 40
 GRID_WIDTH = WIDTH / TILE_X_SIZE
 GRID_HEIGHT = HEIGHT / TILE_Y_SIZE
 TITLE_SIZE = 100
@@ -53,7 +53,7 @@ WIDTH_CENTER = WIDTH / 2
 HEIGHT_CENTER = HEIGHT / 2
 
 '''object size'''
-ALL_OBJECT_SIZE = pygame.Rect(0, 0, 18, 18)
+ALL_OBJECT_SIZE = pygame.Rect(0, 0, TILE_X_SIZE - 2, TILE_Y_SIZE - 2)
 
 """all setting"""
 DOWN_IMG = 'down'
@@ -70,12 +70,12 @@ BLUE_GHOST_SCORE = 200
 CHERRY_SCORE = 500
 
 '''player setting'''
-PLAYER_SPEED = 2.0
-PLAYRE_HIT_RECT = pygame.Rect(0, 0, 18, 18)
+PLAYER_SPEED = 5.0
+PLAYRE_HIT_RECT = pygame.Rect(0, 0, TILE_X_SIZE - 2, TILE_Y_SIZE - 2)
 
 '''ghost setting'''
-GHOST_HIT_RECT = pygame.Rect(0, 0, 18, 18)
-GHOST_SPEED = 1.0
+GHOST_HIT_RECT = pygame.Rect(0, 0, TILE_X_SIZE - 2, TILE_Y_SIZE - 2)
+GHOST_SPEED = 3.0
 SPEED_SLOW = - 0.2
 BLUE_IMG = 'blue_ghost_img'
 RED_IMG = 'red_ghost_img'

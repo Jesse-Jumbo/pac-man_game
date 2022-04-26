@@ -16,11 +16,9 @@ from .env import *
 
 class GameMode:
     # TODO class type? object? for SoundController
-    def __init__(self, map_name: str, sound_controller):
+    def __init__(self, map_name: str, time_limit: int, sound_controller):
         # initialize all variables and so all the setup for a new game
-        # TODO reset where initialize
-        # pygame.init()
-        # pygame.mixer.init()
+        self.time_limit = time_limit
         self.sound_controller = sound_controller
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         # control variables
@@ -118,8 +116,6 @@ class GameMode:
         return res
 
     def run(self, command: dict):
-        # game loop - set self.playing = False to end the game
-        # while self.playing:
         self.events()
         if not self.is_paused:
             self.update(command)
@@ -201,6 +197,10 @@ class GameMode:
 
         if len(self.dots) == 4 and not self.is_danger:
             self.change_music("danger")
+
+        if self.frame > self.time_limit:
+            self.state = GameResultState.FAIL
+            self.status = GameStatus.GAME_OVER
 
 
     def draw(self):
