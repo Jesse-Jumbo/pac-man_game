@@ -4,7 +4,7 @@ import sys
 import pygame.event
 
 from games.PacMan.src.Node import Node
-from games.PacMan.src.TiledMap import TiledMap
+from games.PacMan.src.PacManMap import PacManMap
 from games.PacMan.module.draw_text import draw_text
 from games.PacMan.src.SquareGrid import *
 from mlgame.gamedev.game_interface import GameResultState, GameStatus
@@ -42,7 +42,7 @@ class GameMode:
         self.power_pellets = pygame.sprite.Group()
         self.nodes = pygame.sprite.Group()
         '''load map'''
-        self.map = TiledMap(path.join(MAP_DIR, self.map_name))
+        self.map = PacManMap(path.join(MAP_DIR, self.map_name))
         self.map.make_map()
         # create map object
         self.player = self.map.player

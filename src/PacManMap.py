@@ -11,7 +11,7 @@ from games.PacMan.src.RedGhost import RedGhost
 from .env import *
 
 
-class TiledMap:
+class PacManMap:
     def __init__(self, filename: str):
         tm = pytmx.load_pygame(filename, pixealpha=True)
         self.width = tm.tilewidth
