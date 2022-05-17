@@ -1,113 +1,74 @@
 import random
 import pygame.transform
 
+from GameFramework.Player import Player
 from games.PacMan.src.SquareGrid import *
 
 from .env import *
 
 
-class Ghost(pygame.sprite.Sprite):
+class Ghost(Player):
     # TODO add state pattern
-    def __init__(self, x: int, y: int):
-        super().__init__()
-        self.ghosts_images = {BLUE_IMG: {}, RED_IMG: {}, PINK_IMG: {}, GREEN_IMG: {}, ORANGE_IMG: {}}
-        # TODO refactor img load mean
-        for key, value, in blue_ghost_image_dic.items():
-            self.ghosts_images[BLUE_IMG][key] = path.join(IMAGE_DIR, value)
-
-        self.rect = ALL_OBJECT_SIZE.copy()
-        self.rect.x = x
-        self.rect.y = y
-        self.hit_rect = GHOST_HIT_RECT.copy()
-        self.hit_rect.center = self.rect.center
-        self.pos = pygame.math.Vector2(0, 0)
-        self.pos.xy = self.rect.center
+    def __init__(self, _id: int, _no: int, x: int, y: int, width: int, height: int):
+        super().__init__(_id, _no, x, y, width, height)
         self.blue_frame = 0
-        self.frame = 0
-        self.vel = pygame.math.Vector2(0, 0)
         self.speed = GHOST_SPEED
         self.speed_slow = SPEED_SLOW
         self.is_blue = False
         self.is_out = False
         self.draw_check_path = False
-        self.ghost_origin_pos = pygame.math.Vector2(0, 0)
-        self.ghost_origin_pos.xy = self.rect.center
-
-        self.node_pos = pygame.math.Vector2(self.rect.center) / TILE_SIZE
-
-        self.origin_no = BLUE_GHOST_NO
-        self.ghost_no = BLUE_GHOST_NO
-        self.ghost_image_no = BLUE_IMG
-        self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
         self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
         self.move_change_frame = random.randrange(60, 610, 10)
+        self.act_command = "right"
 
-    def update(self, chase_path: list) -> None:
+    def game_update(self, commands: str) -> None:
         if self.is_out:
-            self.frame += 1
-            if self.frame % self.move_change_frame == 0:
+            self.act(commands)
+            if self.used_frame - self.blue_frame >= 600:
+                self.is_blue = False
+                self.blue_frame = 0
+            if self.used_frame % self.move_change_frame == 0:
                 self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
                 self.move_change_frame = random.randrange(60, 610, 10)
 
-            if self._move_cmd == LEFT_cmd:
-                self.move_left()
-            elif self._move_cmd == RIGHT_cmd:
-                self.move_right()
-            elif self._move_cmd == UP_cmd:
-                self.move_up()
-            elif self._move_cmd == DOWN_cmd:
-                self.move_down()
+    def act(self, commands: str):
+        if self._move_cmd == LEFT_cmd:
+            self.move_left()
+        elif self._move_cmd == RIGHT_cmd:
+            self.move_right()
+        elif self._move_cmd == UP_cmd:
+            self.move_up()
+        elif self._move_cmd == DOWN_cmd:
+            self.move_down()
 
-            if self.frame - self.blue_frame >= 600:
-                self.ghost_no = self.origin_no
-                self.is_blue = False
-                self.blue_frame = 0
+    def get_info(self):
+        if self.is_blue:
+            if self._id == 5:
+                id = "red_ghost"
+            elif self._id == 4:
+                id = "pink_ghost"
+            elif self._id == 2:
+                id = "green_ghost"
+            elif self._id == 3:
+                id = "orange_ghost"
+        else:
+            id = "blue_ghost"
 
-            # if chase_path[-1].x == 1:
-            #     self.move_right()
-            # elif chase_path[-1].x == -1:
-            #     self.move_left()
-            # else:
-            #     pass
-            #
-            # if chase_path[-1].y == -1:
-            #     self.move_up()
-            # elif chase_path[-1].y == 1:
-            #     self.move_down()
-            # else:
-            #     pass
-
-        self.rect.center = self.pos
-
-        self.rect.center = self.hit_rect.center
-        self.hit_rect.centerx = self.pos.x
-        self.hit_rect.centery = self.pos.y
+        info = {"id": id, "x": self.rect.x, "y": self.rect.y}
+        return info
 
     def collide_with_walls(self):
         self.vel *= -1
-        self.pos += self.vel
-        self.hit_rect.center = self.pos
-        self.rect.center = self.pos
+        self.rect.center += self.vel
         self._move_cmd = random.choice([UP_cmd, DOWN_cmd, LEFT_cmd, RIGHT_cmd])
         # if abs(self.vel.x) != 0:
         #     self._move_cmd = random.choice([UP_cmd, DOWN_cmd])
         # elif abs(self.vel.y) != 0:
         #     self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
-        self.pos += self.vel
-        self.hit_rect.center = self.pos
-        self.rect.center = self.pos
-
-    def speed_up(self):
-        pass
-        # if len(self.game.dots) == len(self.game.dots) / 2:
-        #     self.speed = self.speed * 1.1
-        # if len(self.game.dots) == len(self.game.dots) / 3:
-        #     self.speed = self.speed * 1.2
 
     def get_blue_state(self):
         if self.is_out:
-            self.blue_frame = self.frame
-            self.ghost_no = BLUE_GHOST_NO
+            self.blue_frame = self.used_frame
             self.is_blue = True
 
     def enter_frightened_mode(self, grid: pygame.sprite.Group):
@@ -123,54 +84,56 @@ class Ghost(pygame.sprite.Sprite):
         return chase_path
 
     def move_left(self):
-        self.image_no = f"{self.ghost_no}_{LEFT_IMG}"
+        self.act_command = "left"
         if not self.is_blue:
             self.vel.x = -self.speed
         else:
             self.vel.x = -(self.speed + self.speed_slow)
-        self.pos.x += self.vel.x
+        self.rect.x += self.vel.x
 
     def move_down(self):
-        self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
+        self.act_command = "down"
         if not self.is_blue:
             self.vel.y = self.speed
         else:
             self.vel.y = self.speed + self.speed_slow
-        self.pos.y += self.vel.y
+        self.rect.y += self.vel.y
 
     def move_right(self):
-        self.image_no = f"{self.ghost_no}_{RIGHT_IMG}"
+        self.act_command = "right"
         if not self.is_blue:
             self.vel.x = self.speed
         else:
             self.vel.x = self.speed + self.speed_slow
-        self.pos.x += self.vel.x
+        self.rect.x += self.vel.x
 
     def move_up(self):
-        self.image_no = f"{self.ghost_no}_{UP_IMG}"
+        self.act_command = "up"
         if not self.is_blue:
             self.vel.y = -self.speed
         else:
             self.vel.y = -(self.speed + self.speed_slow)
-        self.pos.y += self.vel.y
+        self.rect.y += self.vel.y
 
     def enter_scatter_mode(self, x, y):
         pass
 
-    def get_position(self, xy: str):
-        if xy == "x":
-            return self.rect.x
-        elif xy == "y":
-            return self.rect.y
+    def get_image_data(self):
+        super().get_image_data()
+        if not self.is_blue:
+            if self._id == 5:
+                _image_id = "red_ghost"
+            elif self._id == 4:
+                _image_id = "pink_ghost"
+            elif self._id == 2:
+                _image_id = "green_ghost"
+            elif self._id == 3:
+                _image_id = "orange_ghost"
         else:
-            return "please input x or y to get position"
-
-    def get_info(self):
-        return {
-            "ghost_id": self.ghost_no,
-            "pos_x": self.pos.x,
-            "pos_y": self.pos.y,
-        }
+            _image_id = "blue_ghost"
+        image_data = {"id": f"{_image_id}_{self.act_command}", "x": self.rect.x, "y": self.rect.y,
+                      "width": self.rect.width, "height": self.rect.height, "angle": 0}
+        return image_data
 
     # TODO refactor draw path and search area
     # def draw_ghost_move_path(self, ghost):

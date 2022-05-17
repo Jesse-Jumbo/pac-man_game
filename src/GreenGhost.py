@@ -8,7 +8,7 @@ class GreenGhost(Ghost):
         self.origin_no = GREEN_GHOST_NO
         self.ghost_no = GREEN_GHOST_NO
         self.ghost_image_no = GREEN_IMG
-        for key, value, in green_ghost_image_dic.items():
+        for key, value, in GREEN_GHOST_IMAGE_PATH_DIC.items():
             self.ghosts_images[GREEN_IMG][key] = path.join(IMAGE_DIR, value)
 
         self.image_no = f"{self.ghost_no}_{DOWN_IMG}"

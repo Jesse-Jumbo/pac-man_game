@@ -3,7 +3,7 @@ import pygame
 import heapq
 from collections import deque
 
-from games.PacMan.src.Obstacle import Obstacle
+from games.PacMan.src.PacWall import PacWall
 
 vec = pygame.math.Vector2
 
@@ -14,7 +14,7 @@ class SquareGrid:
         self.height = height
         self.walls = []
         for wall in walls:
-            if isinstance(wall, Obstacle):
+            if isinstance(wall, PacWall):
                 self.walls.append(wall.node_pos)
         self.connections = [vec(1, 0), vec(-1, 0), vec(0, 1), vec(0, -1)]
 

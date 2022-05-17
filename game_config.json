@@ -9,8 +9,8 @@
       "type": "str",
       "choices": [
         {
-          "verbose": "NORMAL",
-          "value": "NORMAL"
+          "verbose": "SINGLE",
+          "value": "SINGLE"
         },
         {
           "verbose": "BATTLE",
@@ -18,7 +18,7 @@
         }
       ],
       "help": "choose the type of game",
-      "default": "NORMAL"
+      "default": "SINGLE"
     },
     {
       "name": "map_no",
@@ -26,7 +26,7 @@
       "type": "int",
       "max": 11,
       "min": 1,
-      "default": 1,
+      "default": 2,
       "help": "set map number for load game scene"
     },
     {

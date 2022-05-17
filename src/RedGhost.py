@@ -10,7 +10,7 @@ class RedGhost(Ghost):
         self.origin_no = RED_GHOST_NO
         self.ghost_no = RED_GHOST_NO
         self.ghost_image_no = RED_IMG
-        for key, value, in red_ghost_image_dic.items():
+        for key, value, in RED_GHOST_IMAGE_PATH_DIC.items():
             self.ghosts_images[RED_IMG][key] = path.join(IMAGE_DIR, value)
 
         self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
@@ -19,5 +19,5 @@ class RedGhost(Ghost):
         self.right_img = f"{self.ghost_no}_{RIGHT_IMG}"
         self.left_image = f"{self.ghost_no}_{LEFT_IMG}"
         self.draw_rect = False
-        self.img_name = red_ghost_image_dic[DOWN_IMG]
+        self.img_name = RED_GHOST_IMAGE_PATH_DIC[DOWN_IMG]
 

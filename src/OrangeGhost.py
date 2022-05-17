@@ -8,7 +8,7 @@ class OrangeGhost(Ghost):
         self.origin_no = ORANGE_GHOST_NO
         self.ghost_no = ORANGE_GHOST_NO
         self.ghost_image_no = ORANGE_IMG
-        for key, value, in orange_ghost_image_dic.items():
+        for key, value, in ORANGE_GHOST_IMAGE_PATH_DIC.items():
             self.ghosts_images[ORANGE_IMG][key] = path.join(IMAGE_DIR, value)
 
         self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
@@ -16,7 +16,7 @@ class OrangeGhost(Ghost):
         self.up_img = f"{self.ghost_no}_{UP_IMG}"
         self.right_img = f"{self.ghost_no}_{RIGHT_IMG}"
         self.left_image = f"{self.ghost_no}_{LEFT_IMG}"
-        self.img_name = orange_ghost_image_dic[DOWN_IMG]
+        self.img_name = ORANGE_GHOST_IMAGE_PATH_DIC[DOWN_IMG]
 
 
 

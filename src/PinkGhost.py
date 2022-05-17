@@ -8,7 +8,7 @@ class PinkGhost(Ghost):
         self.origin_no = PINK_GHOST_NO
         self.ghost_no = PINK_GHOST_NO
         self.ghost_image_no = PINK_IMG
-        for key, value, in pink_ghost_image_dic.items():
+        for key, value, in PINK_GHOST_IMAGE_PATH_DIC.items():
             self.ghosts_images[PINK_IMG][key] = path.join(IMAGE_DIR, value)
 
         self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
@@ -17,7 +17,7 @@ class PinkGhost(Ghost):
         self.right_img = f"{self.ghost_no}_{RIGHT_IMG}"
         self.left_image = f"{self.ghost_no}_{LEFT_IMG}"
         # TODO refactor self.img_name
-        self.img_name = pink_ghost_image_dic[DOWN_IMG]
+        self.img_name = PINK_GHOST_IMAGE_PATH_DIC[DOWN_IMG]
 
 
 
