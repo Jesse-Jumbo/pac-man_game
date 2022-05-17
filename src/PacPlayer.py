@@ -24,9 +24,12 @@ class PacPlayer(Player):
         self.act_command = "right"
         self.image_index = 0
         self.index_control = 0
+        self.is_move_up = False
+        self.is_move_down = False
+        self.is_move_left = False
+        self.is_move_right = False
 
     def new_update(self):
-        self.rect.center += self.vel
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
@@ -38,12 +41,28 @@ class PacPlayer(Player):
 
     def act(self, commands: str):
         if commands == LEFT_cmd:
+            self.is_move_left = True
+            self.is_move_up = False
+            self.is_move_down = False
+            self.is_move_right = False
             self.move_left()
         elif commands == RIGHT_cmd:
+            self.is_move_right = True
+            self.is_move_up = False
+            self.is_move_down = False
+            self.is_move_left = False
             self.move_right()
         elif commands == UP_cmd:
+            self.is_move_up = True
+            self.is_move_down = False
+            self.is_move_left = False
+            self.is_move_right = False
             self.move_up()
         elif commands == DOWN_cmd:
+            self.is_move_down = True
+            self.is_move_up = False
+            self.is_move_left = False
+            self.is_move_right = False
             self.move_down()
 
     def get_info(self):
@@ -61,23 +80,29 @@ class PacPlayer(Player):
 
     def move_up(self):
         self.act_command = "up"
-        self.vel = vec(0, -self.speed)
+        self.rect.center += vec(0, -self.speed)
 
     def move_down(self):
         self.act_command = "down"
-        self.vel = vec(0, self.speed)
+        self.rect.center += vec(0, self.speed)
 
     def move_left(self):
         self.act_command = "left"
-        self.vel = vec(-self.speed, 0)
+        self.rect.center += vec(-self.speed, 0)
 
     def move_right(self):
         self.act_command = "right"
-        self.vel = vec(self.speed, 0)
+        self.rect.center += vec(self.speed, 0)
 
     def collide_with_walls(self):
-        self.vel *= -1
-        self.rect.center += self.vel
+        if self.is_move_right:
+            self.move_left()
+        elif self.is_move_left:
+            self.move_right()
+        elif self.is_move_up:
+            self.move_down()
+        elif self.is_move_down:
+            self.move_up()
 
     def collide_with_dots(self):
         self.score += DOT_SCORE
@@ -93,5 +118,5 @@ class PacPlayer(Player):
         if self.index_control == 1:
             self.index_control = 0
         image_data = {"id": f"player_{self.act_command}_{self.image_index}", "x": self.rect.x, "y": self.rect.y,
-                           "width": self.rect.width, "height": self.rect.height, "angle": 0}
+                      "width": self.rect.width, "height": self.rect.height, "angle": 0}
         return image_data

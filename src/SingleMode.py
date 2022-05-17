@@ -95,28 +95,18 @@ class SingleMode(GameMode):
     def check_events(self):
         # catch all events here
         cmd_1P = ""
-        # key_pressed_list = pygame.key.get_pressed()
-        # if key_pressed_list[pygame.K_UP]:
-        #     cmd_1P = UP_cmd
-        # elif key_pressed_list[pygame.K_DOWN]:
-        #     cmd_1P = DOWN_cmd
-        # elif key_pressed_list[pygame.K_RIGHT]:
-        #     cmd_1P = RIGHT_cmd
-        # elif key_pressed_list[pygame.K_LEFT]:
-        #     cmd_1P = LEFT_cmd
+        key_pressed_list = pygame.key.get_pressed()
+        if key_pressed_list[pygame.K_UP]:
+            cmd_1P = UP_cmd
+        elif key_pressed_list[pygame.K_DOWN]:
+            cmd_1P = DOWN_cmd
+        elif key_pressed_list[pygame.K_RIGHT]:
+            cmd_1P = RIGHT_cmd
+        elif key_pressed_list[pygame.K_LEFT]:
+            cmd_1P = LEFT_cmd
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    cmd_1P = UP_cmd
-                elif event.key == pygame.K_DOWN:
-                    cmd_1P = DOWN_cmd
-                elif event.key == pygame.K_LEFT:
-                    cmd_1P = LEFT_cmd
-                elif event.key == pygame.K_RIGHT:
-                    cmd_1P = RIGHT_cmd
-                else:
-                    cmd_1P = ""
                 if event.key == pygame.K_b:
                     self.draw_debug = not self.draw_debug
                 if event.key == pygame.K_SPACE:

@@ -21,9 +21,8 @@ class Ghost(Player):
         self.move_change_frame = random.randrange(60, 610, 10)
         self.act_command = "right"
 
-    def game_update(self, commands: str) -> None:
+    def new_update(self):
         if self.is_out:
-            self.act(commands)
             if self.used_frame - self.blue_frame >= 600:
                 self.is_blue = False
                 self.blue_frame = 0
@@ -61,10 +60,6 @@ class Ghost(Player):
         self.vel *= -1
         self.rect.center += self.vel
         self._move_cmd = random.choice([UP_cmd, DOWN_cmd, LEFT_cmd, RIGHT_cmd])
-        # if abs(self.vel.x) != 0:
-        #     self._move_cmd = random.choice([UP_cmd, DOWN_cmd])
-        # elif abs(self.vel.y) != 0:
-        #     self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
 
     def get_blue_state(self):
         if self.is_out:
@@ -134,22 +129,3 @@ class Ghost(Player):
         image_data = {"id": f"{_image_id}_{self.act_command}", "x": self.rect.x, "y": self.rect.y,
                       "width": self.rect.width, "height": self.rect.height, "angle": 0}
         return image_data
-
-    # TODO refactor draw path and search area
-    # def draw_ghost_move_path(self, ghost):
-    #     current = ghost.start  # + ghost.path[vec2int(ghost.start)]
-    #     try:
-    #         while vec2int(current) != vec2int(ghost.goal):# - ghost.path[vec2int(vec(list(ghost.path.keys())[1]))]:
-    #             current += ghost.path[vec2int(current)]
-    #             img = ghost.origin_img
-    #             r = img.get_rect(center=(current.x * TILE_X_SIZE, current.y * TILE_Y_SIZE))
-    #             self.window.blit(img, r)
-    #     except (KeyError, IndexError):
-    #         pass
-
-    # def draw_search(self):
-    #     # search area
-    #     for node in self.path:
-    #         x, y = node
-    #         draw_rect = pygame.Rect(x * TILE_X_SIZE, y * TILE_Y_SIZE, TILE_X_SIZE, TILE_Y_SIZE)
-    #         pygame.draw.rect(self.game.window, CYAN_BLUE, draw_rect, 1)
