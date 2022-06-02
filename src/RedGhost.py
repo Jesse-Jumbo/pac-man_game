@@ -1,24 +1,25 @@
-import pygame.time
-
 from games.PacMan.src.Ghost import Ghost
-from .env import *
+
+GO_OUT_FRAME = 60
 
 
 class RedGhost(Ghost):
-    def __init__(self, x: float, y: float):
-        super().__init__(x, y)
-        self.origin_no = RED_GHOST_NO
-        self.ghost_no = RED_GHOST_NO
-        self.ghost_image_no = RED_IMG
-        for key, value, in red_ghost_image_dic.items():
-            self.ghosts_images[RED_IMG][key] = path.join(IMAGE_DIR, value)
+    def __init__(self, _id: int, _no: int, x: int, y: int, width: int, height: int):
+        super().__init__(_id, _no, x, y, width, height)
+        self.image_id = "red_ghost"
+        self.go_out_frame = GO_OUT_FRAME
 
-        self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
-        self.origin_img = f"{self.ghost_no}_{DOWN_IMG}"
-        self.up_img = f"{self.ghost_no}_{UP_IMG}"
-        self.right_img = f"{self.ghost_no}_{RIGHT_IMG}"
-        self.left_image = f"{self.ghost_no}_{LEFT_IMG}"
-        self.draw_rect = None
-        self.update_time = pygame.time.get_ticks()
-        self.img_name = red_ghost_image_dic[DOWN_IMG]
+    def update_children(self):
+        if self.is_blue:
+            self.image_id = "blue_ghost"
+        else:
+            self.image_id = "red_ghost"
 
+    def get_image_data(self):
+        image_data = {"id": f"{self.image_id}_{self.act_command}", "x": self.rect.x, "y": self.rect.y,
+                      "width": self.rect.width, "height": self.rect.height, "angle": 0}
+        return image_data
+
+    def get_info(self):
+        info = {"id": self.image_id, "x": self.rect.x, "y": self.rect.y, "speed": self.speed}
+        return info

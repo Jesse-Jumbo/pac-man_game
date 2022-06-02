@@ -1,42 +1,42 @@
 {
   "game_name": "PacMan",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "url": "https://github.com/Jesse-Jumbo/pac-man_game",
   "game_params": [
-    {
-      "name": "user_num",
-      "verbose": "參賽人數",
-      "type": "int",
-      "max": 4,
-      "min": 1,
-      "default": 1,
-      "help": "set the number of user."
-    },
     {
       "name": "game_mode",
       "verbose": "遊戲模式",
       "type": "str",
       "choices": [
         {
-          "verbose": "NORMAL",
-          "value": "NORMAL"
+          "verbose": "SINGLE",
+          "value": "SINGLE"
         },
         {
-          "verbose": "RELIVE",
-          "value": "RELIVE"
+          "verbose": "BATTLE",
+          "value": "BATTLE"
         }
       ],
       "help": "choose the type of game",
-      "default": "NORMAL"
+      "default": "SINGLE"
     },
     {
       "name": "map_no",
       "verbose": "地圖編號",
       "type": "int",
-      "max": 11,
+      "max": 2,
       "min": 1,
-      "default": 1,
+      "default": 2,
       "help": "set map number for load game scene"
+    },
+    {
+      "name": "time_limit",
+      "verbose": "時間限制",
+      "type": "int",
+      "max": 600,
+      "min": 1,
+      "default": 25,
+      "help": "set the time number of your game level"
     },
     {
       "name": "sound",
@@ -46,7 +46,7 @@
         "on",
         "off"
       ],
-      "help": "'on' can turn on the sound.",
+      "help": "'off' can turn off the sound.",
       "default": "on"
     }
   ]
