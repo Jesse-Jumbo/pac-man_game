@@ -1,6 +1,6 @@
 {
   "game_name": "PacMan",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "url": "https://github.com/Jesse-Jumbo/pac-man_game",
   "game_params": [
     {
@@ -24,7 +24,7 @@
       "name": "map_no",
       "verbose": "地圖編號",
       "type": "int",
-      "max": 11,
+      "max": 2,
       "min": 1,
       "default": 2,
       "help": "set map number for load game scene"

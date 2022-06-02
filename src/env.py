@@ -3,8 +3,8 @@ from os import path
 import pygame
 
 '''width and height'''
-WIDTH = 1400
-HEIGHT = 720
+WINDOW_WIDTH = 1400
+WINDOW_HEIGHT = 720
 
 '''environment data'''
 FPS = 60
@@ -36,7 +36,7 @@ DOWN_cmd = "MOVE_DOWN"
 GAME_DIR = path.dirname(__file__)
 IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
 SOUND_DIR = path.join(GAME_DIR, "..", "asset", "sound")
-MAP_DIR = path.join(GAME_DIR, '..', 'maps')
+MAP_DIR = path.join(GAME_DIR, '..', "asset", "maps")
 
 '''BG View'''
 TITLE = "Pac-Man!"
@@ -44,13 +44,13 @@ BG_COLOR = DARKGREY
 TILE_X_SIZE = 40
 TILE_Y_SIZE = 40
 TILE_SIZE = 40
-GRID_WIDTH = WIDTH / TILE_X_SIZE
-GRID_HEIGHT = HEIGHT / TILE_Y_SIZE
+GRID_WIDTH = WINDOW_WIDTH / TILE_X_SIZE
+GRID_HEIGHT = WINDOW_HEIGHT / TILE_Y_SIZE
 TITLE_SIZE = 100
 
 '''window pos'''
-WIDTH_CENTER = WIDTH / 2
-HEIGHT_CENTER = HEIGHT / 2
+WIDTH_CENTER = WINDOW_WIDTH / 2
+HEIGHT_CENTER = WINDOW_HEIGHT / 2
 
 '''object size'''
 ALL_OBJECT_SIZE = pygame.Rect(0, 0, TILE_X_SIZE - 2, TILE_Y_SIZE - 2)
@@ -162,6 +162,6 @@ DOT_IMG_PATH = path.join(IMAGE_DIR, "dots.png")
 POWER_PELLET_IMG_PATH = path.join(IMAGE_DIR, "power_pellet.png")
 
 '''music'''
-BGM = path.join(SOUND_DIR, 'pacman background music.ogg')
-BLUE_SND = path.join(SOUND_DIR, 'blue_time.wav')
-DANGER_SND = path.join(SOUND_DIR, 'count_time.mp3')
+BGM = path.join(SOUND_DIR, 'bgm.ogg')
+INVINCIBILITY_MUSIC = path.join(SOUND_DIR, 'invincibility.wav')
+GHOST_SND = path.join(SOUND_DIR, 'ghost.mp3')

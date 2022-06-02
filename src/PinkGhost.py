@@ -1,24 +1,27 @@
-from .env import *
 from games.PacMan.src.Ghost import Ghost
+
+GO_OUT_FRAME = 480
 
 
 class PinkGhost(Ghost):
-    def __init__(self, x: int, y: int):
-        super().__init__(x, y)
-        self.origin_no = PINK_GHOST_NO
-        self.ghost_no = PINK_GHOST_NO
-        self.ghost_image_no = PINK_IMG
-        for key, value, in PINK_GHOST_IMAGE_PATH_DIC.items():
-            self.ghosts_images[PINK_IMG][key] = path.join(IMAGE_DIR, value)
+    def __init__(self, _id: int, _no: int, x: int, y: int, width: int, height: int):
+        super().__init__(_id, _no, x, y, width, height)
+        self.image_id = "pink_ghost"
+        self.go_out_frame = GO_OUT_FRAME
 
-        self.image_no = f"{self.ghost_no}_{DOWN_IMG}"
-        self.origin_img = f"{self.ghost_no}_{DOWN_IMG}"
-        self.up_img = f"{self.ghost_no}_{UP_IMG}"
-        self.right_img = f"{self.ghost_no}_{RIGHT_IMG}"
-        self.left_image = f"{self.ghost_no}_{LEFT_IMG}"
-        # TODO refactor self.img_name
-        self.img_name = PINK_GHOST_IMAGE_PATH_DIC[DOWN_IMG]
+    def update_children(self):
+        if self.is_blue:
+            self.image_id = "blue_ghost"
+        else:
+            self.image_id = "pink_ghost"
 
+    def get_image_data(self):
+        image_data = {"id": f"{self.image_id}_{self.act_command}", "x": self.rect.x, "y": self.rect.y,
+                      "width": self.rect.width, "height": self.rect.height, "angle": 0}
+        return image_data
 
-
-
+    def get_info(self):
+        info = {"id": self.image_id, "x": self.rect.x, "y": self.rect.y, "speed": self.speed}
+        if self.is_blue:
+            print(info)
+        return info

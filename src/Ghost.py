@@ -1,10 +1,8 @@
 import random
-import pygame.transform
 
-from GameFramework.Player import Player
 from games.PacMan.src.SquareGrid import *
-
 from .env import *
+from ...TankMan.GameFramework.Player import Player
 
 
 class Ghost(Player):
@@ -17,11 +15,18 @@ class Ghost(Player):
         self.is_blue = False
         self.is_out = False
         self.draw_check_path = False
-        self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
+        self._move_cmd = UP_cmd
         self.move_change_frame = random.randrange(60, 610, 10)
         self.act_command = "right"
+        self.is_move_up = False
+        self.is_move_down = False
+        self.is_move_left = False
+        self.is_move_right = False
+        self.go_out_frame = 0
 
-    def new_update(self):
+    def update_children(self):
+        if self.used_frame > self.go_out_frame:
+            self.is_out = True
         if self.is_out:
             if self.used_frame - self.blue_frame >= 600:
                 self.is_blue = False
@@ -29,32 +34,37 @@ class Ghost(Player):
             if self.used_frame % self.move_change_frame == 0:
                 self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd, UP_cmd, DOWN_cmd])
                 self.move_change_frame = random.randrange(60, 610, 10)
+            self.update_child()
+
+    def update_child(self):
+        """update this parent's child"""
+        print("please overwrite this update")
 
     def act(self, commands: str):
         if self._move_cmd == LEFT_cmd:
+            self.is_move_left = True
+            self.is_move_up = False
+            self.is_move_down = False
+            self.is_move_right = False
             self.move_left()
         elif self._move_cmd == RIGHT_cmd:
+            self.is_move_right = True
+            self.is_move_up = False
+            self.is_move_down = False
+            self.is_move_left = False
             self.move_right()
         elif self._move_cmd == UP_cmd:
+            self.is_move_up = True
+            self.is_move_down = False
+            self.is_move_left = False
+            self.is_move_right = False
             self.move_up()
         elif self._move_cmd == DOWN_cmd:
+            self.is_move_down = True
+            self.is_move_up = False
+            self.is_move_left = False
+            self.is_move_right = False
             self.move_down()
-
-    def get_info(self):
-        if self.is_blue:
-            if self._id == 5:
-                id = "red_ghost"
-            elif self._id == 4:
-                id = "pink_ghost"
-            elif self._id == 2:
-                id = "green_ghost"
-            elif self._id == 3:
-                id = "orange_ghost"
-        else:
-            id = "blue_ghost"
-
-        info = {"id": id, "x": self.rect.x, "y": self.rect.y}
-        return info
 
     def collide_with_walls(self):
         self.vel *= -1
@@ -110,22 +120,15 @@ class Ghost(Player):
             self.vel.y = -(self.speed + self.speed_slow)
         self.rect.y += self.vel.y
 
+    def collide_with_walls(self):
+        if self.is_move_right:
+            self._move_cmd = random.choice([UP_cmd, DOWN_cmd])
+        elif self.is_move_left:
+            self._move_cmd = random.choice([UP_cmd, DOWN_cmd])
+        elif self.is_move_up:
+            self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
+        elif self.is_move_down:
+            self._move_cmd = random.choice([LEFT_cmd, RIGHT_cmd])
+
     def enter_scatter_mode(self, x, y):
         pass
-
-    def get_image_data(self):
-        super().get_image_data()
-        if not self.is_blue:
-            if self._id == 5:
-                _image_id = "red_ghost"
-            elif self._id == 4:
-                _image_id = "pink_ghost"
-            elif self._id == 2:
-                _image_id = "green_ghost"
-            elif self._id == 3:
-                _image_id = "orange_ghost"
-        else:
-            _image_id = "blue_ghost"
-        image_data = {"id": f"{_image_id}_{self.act_command}", "x": self.rect.x, "y": self.rect.y,
-                      "width": self.rect.width, "height": self.rect.height, "angle": 0}
-        return image_data

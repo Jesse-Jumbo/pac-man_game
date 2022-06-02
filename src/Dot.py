@@ -1,5 +1,7 @@
-from GameFramework.Props import Props
+from games.TankMan.GameFramework.Props import Props
+
 DOT_IMG_ID = "dots"
+
 
 class Dot(Props):
     def __init__(self, x: int, y: int, width: int, height: int):

@@ -1,4 +1,4 @@
-from GameFramework.Props import Props
+from ...TankMan.GameFramework.Props import Props
 
 
 class PacWall(Props):

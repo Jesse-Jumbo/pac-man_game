@@ -1,7 +1,7 @@
 import pygame
 
-from GameFramework.Player import Player
 from .env import *
+from ...TankMan.GameFramework.Player import Player
 
 vec = pygame.math.Vector2
 
@@ -29,13 +29,13 @@ class PacPlayer(Player):
         self.is_move_left = False
         self.is_move_right = False
 
-    def new_update(self):
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
+    def update_children(self):
+        if self.rect.right > WINDOW_WIDTH:
+            self.rect.right = WINDOW_WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.bottom > HEIGHT:
-            self.rect.bottom = HEIGHT
+        if self.rect.bottom > WINDOW_HEIGHT:
+            self.rect.bottom = WINDOW_HEIGHT
         if self.rect.top < 0:
             self.rect.top = 0
 
@@ -80,19 +80,19 @@ class PacPlayer(Player):
 
     def move_up(self):
         self.act_command = "up"
-        self.rect.center += vec(0, -self.speed)
+        self.rect.y += -self.speed
 
     def move_down(self):
         self.act_command = "down"
-        self.rect.center += vec(0, self.speed)
+        self.rect.y += self.speed
 
     def move_left(self):
         self.act_command = "left"
-        self.rect.center += vec(-self.speed, 0)
+        self.rect.x += -self.speed
 
     def move_right(self):
         self.act_command = "right"
-        self.rect.center += vec(self.speed, 0)
+        self.rect.x += self.speed
 
     def collide_with_walls(self):
         if self.is_move_right:
