@@ -7,7 +7,7 @@ from mlgame.gamedev.generic import quit_or_esc
 
 if __name__ == '__main__':
     pygame.init()
-    game = PacMan.PacMan(game_mode="NORMAL", map_no=1, time_limit=10, sound="off")
+    game = PacMan.PacMan(game_mode="NORMAL", map_no=1, frame_limit=10, sound="off")
     scene_init_info_dict = game.get_scene_init_data()
     game_view = PygameView(scene_init_info_dict)
     # interval = 1 / 30
@@ -19,9 +19,7 @@ if __name__ == '__main__':
         # pygame.display.set_caption(TITLE + "{:.2f}".format(clock.get_fps()))
         game.update(game.get_keyboard_command())
         game_progress_data = game.get_scene_progress_data()
-        game_view.draw_screen()
         game_view.draw(game_progress_data)
-        game_view.flip()
         frame_count += 1
 
     pygame.quit()

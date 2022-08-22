@@ -1,11 +1,7 @@
-from ...TankMan.GameFramework.Props import Props
+from games.TankMan.src.GameFramework.Props import Props
 
 
 class PacWall(Props):
-    def __init__(self, _id: int, x: int, y: int, width: int, height: int):
-        super().__init__(x, y, width, height)
-        self._id = _id
-
     def update(self, *args, **kwargs) -> None:
         pass
 

@@ -1,11 +1,8 @@
-from ...TankMan.GameFramework.Props import Props
+from games.TankMan.src.GameFramework.Props import Props
 PELLET_IMG_ID = "power_pellets"
 
 
 class PowerPellet(Props):
-    def __init__(self, x: int, y: int, width: int, height: int):
-        super().__init__(x, y, width, height)
-
     def update(self, *args, **kwargs) -> None:
         pass
 

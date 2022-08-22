@@ -1,5 +1,5 @@
 from games.PacMan.src.env import FPS, GHOST_SND, INVINCIBILITY_MUSIC, BGM
-from games.TankMan.GameFramework.sound_controller import SoundController
+from games.TankMan.src.GameFramework import SoundController
 
 
 class PacSoundController(SoundController):

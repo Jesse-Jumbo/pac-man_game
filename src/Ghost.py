@@ -2,13 +2,14 @@ import random
 
 from games.PacMan.src.SquareGrid import *
 from .env import *
-from ...TankMan.GameFramework.Player import Player
+from games.TankMan.src.GameFramework.Mob import Mob
+from games.TankMan.src.GameFramework import ID, WIDTH, HEIGHT, ANGLE, X, Y
 
 
-class Ghost(Player):
+class Ghost(Mob):
     # TODO add state pattern
-    def __init__(self, _id: int, _no: int, x: int, y: int, width: int, height: int):
-        super().__init__(_id, _no, x, y, width, height)
+    def __init__(self, construction, **kwargs):
+        super().__init__(construction, **kwargs)
         self.blue_frame = 0
         self.speed = GHOST_SPEED
         self.speed_slow = SPEED_SLOW
@@ -40,7 +41,7 @@ class Ghost(Player):
         """update this parent's child"""
         print("please overwrite this update")
 
-    def act(self, commands: str):
+    def act(self):
         if self._move_cmd == LEFT_cmd:
             self.is_move_left = True
             self.is_move_up = False
@@ -132,3 +133,9 @@ class Ghost(Player):
 
     def enter_scatter_mode(self, x, y):
         pass
+
+    def get_image_data(self):
+        image_data = {ID: f"{self._id}P", X: self.rect.x, Y: self.rect.y,
+                      WIDTH: self.rect.width, HEIGHT: self.rect.height, ANGLE: 0}
+        return image_data
+

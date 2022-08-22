@@ -1,24 +1,20 @@
 import pygame.event
 
 from .PacSoundController import PacSoundController
-from ...TankMan.GameFramework.GameMode import GameMode
 from games.PacMan.src.SquareGrid import *
 from mlgame.gamedev.game_interface import GameResultState, GameStatus
 from mlgame.view.view_model import create_asset_init_data, create_image_view_data, create_text_view_data
 from .Dot import Dot, DOT_IMG_ID
-from .GreenGhost import GreenGhost
-from .OrangeGhost import OrangeGhost
-from .PinkGhost import PinkGhost
 from .PowerPellet import PowerPellet, PELLET_IMG_ID
-from .RedGhost import RedGhost
 from .collide_hit_rect import *
 from .env import *
-from ...TankMan.GameFramework.constants import ID, X, Y, ANGLE, HEIGHT, WIDTH
+from games.TankMan.src.GameFramework import SingleMode
+from games.TankMan.src.GameFramework import ID, X, Y, ANGLE, HEIGHT, WIDTH
 
 
-class SingleMode(GameMode):
-    def __init__(self, map_path: str, time_limit: int, is_sound: bool):
-        super().__init__(map_path, time_limit, is_sound)
+class PacSingleMode(SingleMode):
+    def __init__(self, map_path: str, frame_limit: int, is_sound: bool):
+        super().__init__(map_path, frame_limit, is_sound)
         self.sound_controller = PacSoundController(is_sound)
         self.sound_controller.play_bgm()
         # control variables
@@ -28,46 +24,29 @@ class SingleMode(GameMode):
         self.dots = pygame.sprite.Group()
         self.power_pellets = pygame.sprite.Group()
         # init player
-        player = self.map.create_obj_init_data(PLAYER_IMG_NO_LIST)[0]
-        self.player = PacPlayer(player["_id"], player["_no"], player["x"], player["y"],
-                                player["width"], player["height"])
-
+        self.player = self.map.create_init_obj(PLAYER_IMG_NO, PacPlayer)
+        self.players.add(self.player)
         # init red ghost
-        red_ghost = self.map.create_obj_init_data(RED_GHOST_IMG_NO_LIST)[0]
-        self.red_ghost = RedGhost(red_ghost["_id"], red_ghost["_no"], red_ghost["x"], red_ghost["y"],
-                                  red_ghost["width"], red_ghost["height"])
+        self.red_ghost = self.map.create_init_obj(RED_GHOST_IMG_NO, Ghost)
         self.ghosts.add(self.red_ghost)
         # init pink ghost
-        pink_ghost = self.map.create_obj_init_data(PINK_GHOST_IMG_NO_LIST)[0]
-        self.pink_ghost = PinkGhost(pink_ghost["_id"], pink_ghost["_no"], pink_ghost["x"], pink_ghost["y"],
-                                    pink_ghost["width"], pink_ghost["height"])
+        self.pink_ghost = self.map.create_init_obj(PINK_GHOST_IMG_NO, Ghost)
         self.ghosts.add(self.pink_ghost)
         # init green ghost
-        green_ghost = self.map.create_obj_init_data(GREEN_GHOST_IMG_NO_LIST)[0]
-        self.green_ghost = GreenGhost(green_ghost["_id"], green_ghost["_no"], green_ghost["x"], green_ghost["y"],
-                                      green_ghost["width"], green_ghost["height"])
+        self.green_ghost = self.map.create_init_obj(GREEN_GHOST_IMG_NO, Ghost)
         self.ghosts.add(self.green_ghost)
         # init orange ghost
-        orange_ghost = self.map.create_obj_init_data(ORANGE_GHOST_IMG_NO_LIST)[0]
-        self.orange_ghost = OrangeGhost(orange_ghost["_id"], orange_ghost["_no"], orange_ghost["x"], orange_ghost["y"],
-                                        orange_ghost["width"], orange_ghost["height"])
+        self.orange_ghost = self.map.create_init_obj(ORANGE_GHOST_IMG_NO, Ghost)
         self.ghosts.add(self.orange_ghost)
         # init walls
-        walls = self.map.create_obj_init_data(WALLS_IMG_NO_LIST)
-        for wall in walls:
-            pac_wall = PacWall(wall["_id"], wall["x"], wall["y"], wall["width"], wall["height"])
-            self.walls.add(pac_wall)
+        walls = self.map.create_init_obj_list(WALLS_IMG_NO_LIST, PacWall)
+        self.walls.add(*walls)
         # init power pellets
-        power_pellets = self.map.create_obj_init_data(POWER_PELLET_IMG_NO_LIST)
-        for power_pellet in power_pellets:
-            pac_power_pellet = PowerPellet(power_pellet["x"], power_pellet["y"], power_pellet["width"],
-                                           power_pellet["height"])
-            self.power_pellets.add(pac_power_pellet)
+        power_pellets = self.map.create_init_obj_list(POWER_PELLET_IMG_NO, PowerPellet)
+        self.power_pellets.add(*power_pellets)
         # init dots
-        dots = self.map.create_obj_init_data(DOT_IMG_NO_LIST)
-        for dot in dots:
-            pac_dot = Dot(dot["x"], dot["y"], dot["width"], dot["height"])
-            self.dots.add(pac_dot)
+        dots = self.map.create_init_obj_list(DOT_IMG_NO, Dot)
+        self.dots.add(*dots)
 
         self.ghost_go_out_limit = len(self.dots)
 
@@ -75,19 +54,18 @@ class SingleMode(GameMode):
         res = [self.player.get_info()]
         return res
 
-    def update_game_mode(self, command: dict):
-        self.player.update(command["1P"])
-        self.ghosts.update("")
+    def update_game_mode(self):
+        self.ghosts.update()
         if self.used_frame in GHOST_GO_OUT_FRAME.values():
             self.sound_controller.play_ghost_sound()
 
-    def check_game_is_end(self):
+    def reset(self):
         if not len(self.dots):
-            self.reset(state=GameResultState.FINISH, status=GameStatus.GAME_PASS)
+            self.set_result(state=GameResultState.FINISH, status=GameStatus.GAME_PASS)
         elif not self.player.is_alive:
-            self.reset(state=GameResultState.FAIL, status=GameStatus.GAME_OVER)
+            self.set_result(state=GameResultState.FAIL, status=GameStatus.GAME_OVER)
         elif self.used_frame > self.frame_limit:
-            self.reset(state=GameResultState.FAIL, status=GameStatus.GAME_OVER)
+            self.set_result(state=GameResultState.FAIL, status=GameStatus.GAME_OVER)
             print("Time Out")
 
     def check_events(self):
@@ -179,9 +157,7 @@ class SingleMode(GameMode):
                 all_sprite_data.append(create_image_view_data(data[ID], data[X], data[Y], data[WIDTH], data[HEIGHT],
                                                               data[ANGLE]))
 
-        data = self.player.get_image_data()
-        all_sprite_data.append(create_image_view_data(data[ID], data[X], data[Y], data[WIDTH], data[HEIGHT],
-                                                      data[ANGLE]))
+        all_sprite_data.append(self.draw_players())
 
         for ghost in self.ghosts:
             if isinstance(ghost, Ghost):
@@ -197,7 +173,7 @@ class SingleMode(GameMode):
 
         return all_sprite_data
 
-    def draw_text_data(self):
+    def draw_foreground_data(self):
         all_text_data = []
         all_text_data.append(create_text_view_data(f"Score: {self.player.score}", WINDOW_WIDTH / 2 - 60, 0,
                                                                 WHITE, "35px Arial"))
@@ -234,30 +210,26 @@ class SingleMode(GameMode):
         return scene_info
 
     def create_game_data_to_player(self):
-        to_player_data = {}
-        info = self.player.get_info()
-        info["used_frame"] = self.used_frame
-        info["status"] = self.status
+        to_player_data = self.get_game_data_to_player()
         walls_info = []
         for wall in self.walls:
             if isinstance(wall, PacWall):
                 walls_info.append(wall.get_info())
-        info["walls_info"] = walls_info
+        to_player_data["1P"]["walls_info"] = walls_info
         power_pellets_info = []
         for power_pellets in self.power_pellets:
             if isinstance(power_pellets, PowerPellet):
                 power_pellets_info.append(power_pellets.get_info())
-        info["power_pellets_info"] = power_pellets_info
+        to_player_data["1P"]["power_pellets_info"] = power_pellets_info
         dots_info = []
         for dot in self.dots:
             if isinstance(dot, Dot):
                 dots_info.append(dot.get_info())
-        info["dots_info"] = dots_info
+        to_player_data["1P"]["dots_info"] = dots_info
         ghosts_info = []
         for ghost in self.ghosts:
             if isinstance(ghost, Ghost):
                 ghosts_info.append(ghost.get_info())
-        info["ghosts_info"] = ghosts_info
+        to_player_data["1P"]["ghosts_info"] = ghosts_info
 
-        to_player_data["1P"] = info
         return to_player_data

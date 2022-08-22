@@ -1,14 +1,12 @@
-import pygame
-
 from .env import *
-from ...TankMan.GameFramework.Player import Player
+from games.TankMan.src.GameFramework.Player import Player
 
 vec = pygame.math.Vector2
 
 
 class PacPlayer(Player):
-    def __init__(self, _id: int, _no: int, x: int, y: int, width: int, height: int):
-        super().__init__(_id, _no, x, y, width, height)
+    def __init__(self, construction, **kwargs):
+        super().__init__(construction, **kwargs)
         self.up_move = False
         self.down_move = False
         self.right_move = False

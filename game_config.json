@@ -30,12 +30,12 @@
       "help": "set map number for load game scene"
     },
     {
-      "name": "time_limit",
-      "verbose": "時間限制",
+      "name": "frame_limit",
+      "verbose": "遊戲總幀數(Frame)",
       "type": "int",
-      "max": 600,
-      "min": 1,
-      "default": 25,
+      "max": 30000,
+      "min": 30,
+      "default": 3600,
       "help": "set the time number of your game level"
     },
     {

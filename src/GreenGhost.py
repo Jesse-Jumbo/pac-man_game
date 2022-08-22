@@ -17,7 +17,7 @@ class GreenGhost(Ghost):
 
     def get_image_data(self):
         image_data = {"id": f"{self.image_id}_{self.act_command}", "x": self.rect.x, "y": self.rect.y,
-                      "width": self.rect.width, "height": self.rect.height, "angle": 0}
+                      "_width": self.rect.width, "_height": self.rect.height, "angle": 0}
         return image_data
 
     def get_info(self):
