@@ -1,40 +1,10 @@
-# from argparse import ArgumentTypeError
-
-# test to push
-# test to push again
-# test to push and build
-# test to push , build and run
-# def positive_int(string):
-#     value = int(string)
-#     if value < 1:
-#         raise ArgumentTypeError()
-#     return value
-from .src.PacMan import PacMan
-import pygame
+import sys
 from os import path
-from mlgame.utils.parse_config import read_json_file, parse_config
-from argparse import ArgumentTypeError
+
+sys.path.append(path.dirname(__file__))
+from src.Game import Game
 
 GAME_SETUP = {
-    "game": PacMan,
-
-    "ml_clients":PacMan.ai_clients(),
-    "dynamic_ml_clients":True
+    "game": Game,
 }
-
-# test to push
-# test to push again
-# test to push and build
-# test to push , build and run
-# def positive_int(string):
-#     value = int(string)
-#     if value < 1:
-#         raise ArgumentTypeError()
-#     return value
-
-config_file = path.join(path.dirname(__file__), "game_config.json")
-
-config_data = read_json_file(config_file)
-GAME_VERSION = config_data["version"]
-GAME_PARAMS = parse_config(config_data)
 

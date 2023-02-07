@@ -27,16 +27,16 @@ MAGENTA = "#FF00FF"
 MEDGRAY = "#4B4B4B"
 
 '''command'''
-LEFT_cmd = "MOVE_LEFT"
-RIGHT_cmd = "MOVE_RIGHT"
-UP_cmd = "MOVE_UP"
-DOWN_cmd = "MOVE_DOWN"
+LEFT_CMD = "MOVE_LEFT"
+RIGHT_CMD = "MOVE_RIGHT"
+UP_CMD = "MOVE_UP"
+DOWN_CMD = "MOVE_DOWN"
 
 '''data path'''
 GAME_DIR = path.dirname(__file__)
-IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
+MAP_DIR = path.join(GAME_DIR, "..", "asset", "maps")
 SOUND_DIR = path.join(GAME_DIR, "..", "asset", "sound")
-MAP_DIR = path.join(GAME_DIR, '..', "asset", "maps")
+IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
 
 '''BG View'''
 TITLE = "Pac-Man!"

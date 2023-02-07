@@ -1,6 +1,7 @@
 """
 The template of the main script of the machine learning process
 """
+import random
 
 import pygame
 
@@ -26,15 +27,17 @@ class MLPlay:
         if scene_info["status"] != "GAME_ALIVE":
             return "RESET"
 
+        action = random.randrange(5)
+        action_cd = random.randrange(15, 31)
         command = "NONE"
-        if self.ai_name == "1P":
-            if pygame.K_RIGHT in keyboard:
+        if self.ai_name == "1P" and not scene_info["used_frame"] % action_cd:
+            if action == 1:
                 command = "MOVE_RIGHT"
-            elif pygame.K_LEFT in keyboard:
+            elif action == 2:
                 command = "MOVE_LEFT"
-            elif pygame.K_UP in keyboard:
+            elif action == 3:
                 command = "MOVE_UP"
-            elif pygame.K_DOWN in keyboard:
+            elif action == 4:
                 command = "MOVE_DOWN"
 
         return [command]

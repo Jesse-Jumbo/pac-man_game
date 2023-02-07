@@ -1,17 +1,13 @@
 import pygame.sprite
 
 from .Ghost import Ghost
-from .PacPlayer import PacPlayer
+from .Player import Player
 from .env import *
 
 
-def collide_hit_rect(one: pygame.sprite, two: pygame.sprite):
-    return one.hit_rect.colliderect(two.hit_rect)
-
-
 # collide player with ghosts
-def collide_player_with_ghosts(sprite: PacPlayer, group: pygame.sprite.Group):
-    hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+def collide_player_with_ghosts(sprite: Player, group: pygame.sprite.Group):
+    hits = pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_circle_ratio(0.8))
     if hits:
         ghost = hits[0]
         if isinstance(ghost, Ghost):
@@ -41,13 +37,13 @@ def collide_with_nodes(sprite: pygame.sprite, group: pygame.sprite.Group, dir=""
 
 # collide sprite with walls
 def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group):
-    hits = pygame.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+    hits = pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_circle_ratio(0.8))
     if hits:
         sprite.collide_with_walls()
 
 
-def collide_with_dots(sprite: PacPlayer, group: pygame.sprite.Group):
-    hits = pygame.sprite.spritecollide(sprite, group, True, collide_hit_rect)
+def collide_with_dots(sprite: Player, group: pygame.sprite.Group):
+    hits = pygame.sprite.spritecollide(sprite, group, True, pygame.sprite.collide_circle_ratio(0.8))
     for hit in hits:
         sprite.collide_with_dots()
 

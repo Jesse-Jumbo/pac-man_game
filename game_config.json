@@ -2,6 +2,15 @@
   "game_name": "PacMan",
   "version": "0.0.1",
   "url": "https://github.com/Jesse-Jumbo/pac-man_game",
+  "description": "小精靈也叫吃豆人，還原一款經典 Pac-Man Game 的簡單版本\n利用方向鍵盤讓玩家操作Pac-Man，躲避小精靈並順利獲得所有dots過關",
+  "logo": [
+    "./asset/image/PacMan.svg",
+    "https://raw.githubusercontent.com/Jesse-Jumbo/pac-man_game/main/asset/image/PacMan.svg"
+  ],
+  "user_num": {
+    "min": 1,
+    "max": 1
+  },
   "game_params": [
     {
       "name": "game_mode",
@@ -11,10 +20,6 @@
         {
           "verbose": "SINGLE",
           "value": "SINGLE"
-        },
-        {
-          "verbose": "BATTLE",
-          "value": "BATTLE"
         }
       ],
       "help": "choose the type of game",
@@ -33,9 +38,9 @@
       "name": "frame_limit",
       "verbose": "遊戲總幀數(Frame)",
       "type": "int",
-      "max": 30000,
+      "max": 3000,
       "min": 30,
-      "default": 3600,
+      "default": 450,
       "help": "set the time number of your game level"
     },
     {
@@ -47,7 +52,7 @@
         "off"
       ],
       "help": "'off' can turn off the sound.",
-      "default": "on"
+      "default": "off"
     }
   ]
 }
