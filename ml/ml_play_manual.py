@@ -4,6 +4,8 @@ The template of the main script of the machine learning process
 
 import pygame
 
+from src.env import LEFT_CMD, RIGHT_CMD, UP_CMD, DOWN_CMD
+
 
 class MLPlay:
     def __init__(self, ai_name, *args, **kwargs):
@@ -28,14 +30,14 @@ class MLPlay:
 
         command = "NONE"
         if self.ai_name == "1P":
-            if pygame.K_RIGHT in keyboard:
-                command = "MOVE_RIGHT"
-            elif pygame.K_LEFT in keyboard:
-                command = "MOVE_LEFT"
+            if pygame.K_LEFT in keyboard:
+                command = LEFT_CMD
+            elif pygame.K_RIGHT in keyboard:
+                command = RIGHT_CMD
             elif pygame.K_UP in keyboard:
-                command = "MOVE_UP"
+                command = UP_CMD
             elif pygame.K_DOWN in keyboard:
-                command = "MOVE_DOWN"
+                command = DOWN_CMD
 
         return [command]
 

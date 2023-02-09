@@ -50,13 +50,20 @@ class Ghost(pygame.sprite.Sprite):
             self.lives = 0
         if self.used_frame > self.go_out_frame:
             self.is_out = True
-        if self.is_alive and self.is_out:
-            if self.used_frame - self.blue_frame >= 600:
-                self.is_blue = False
-                self.blue_frame = 0
-            if self.used_frame % self.move_change_frame == 0:
-                self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD, UP_CMD, DOWN_CMD])
-                self.move_change_frame = random.randrange(60, 610, 10)
+        if not self.is_alive or not self.is_out:
+            return
+        if self.used_frame - self.blue_frame >= 600:
+            self.is_blue = False
+            self.blue_frame = 0
+        if self.used_frame % self.move_change_frame == 0:
+            self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD, UP_CMD, DOWN_CMD])
+            self.move_change_frame = random.randrange(60, 610, 10)
+        if self.rect.right > self.play_rect_area.right \
+                or self.rect.left < self.play_rect_area.left \
+                or self.rect.bottom > self.play_rect_area.bottom \
+                or self.rect.top < self.play_rect_area.top:
+            self.collide_with_walls()
+        else:
             self.act()
 
     def act(self):
@@ -120,13 +127,18 @@ class Ghost(pygame.sprite.Sprite):
 
     def collide_with_walls(self):
         if self.is_move_right:
+            self.move_left()
             self.move_cmd = random.choice([UP_CMD, DOWN_CMD])
         elif self.is_move_left:
+            self.move_right()
             self.move_cmd = random.choice([UP_CMD, DOWN_CMD])
         elif self.is_move_up:
+            self.move_down()
             self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD])
         elif self.is_move_down:
+            self.move_up()
             self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD])
+        self.act()
 
     def enter_scatter_mode(self, x, y):
         pass

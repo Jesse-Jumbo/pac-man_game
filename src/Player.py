@@ -47,42 +47,54 @@ class Player(pygame.sprite.Sprite):
             self.is_alive = False
             self.lives = 0
 
-        if self.is_alive:
-            self.act(command[get_ai_name(0)])
+        if not self.is_alive:
+            return
 
         if self.rect.right > self.play_rect_area.right \
                 or self.rect.left < self.play_rect_area.left \
                 or self.rect.bottom > self.play_rect_area.bottom \
                 or self.rect.top < self.play_rect_area.top:
             self.collide_with_walls()
+        else:
+            self.act(command[get_ai_name(0)])
 
     def act(self, commands: list):
         if not commands:
             return None
+        if self.is_move_right:
+            self.move_right()
+        elif self.is_move_left:
+            self.move_left()
+        elif self.is_move_up:
+            self.move_up()
+        elif self.is_move_down:
+            self.move_down()
         if LEFT_CMD in commands:
             self.is_move_left = True
             self.is_move_up = False
             self.is_move_down = False
             self.is_move_right = False
-            self.move_left()
         elif RIGHT_CMD in commands:
             self.is_move_right = True
             self.is_move_up = False
             self.is_move_down = False
             self.is_move_left = False
-            self.move_right()
         elif UP_CMD in commands:
             self.is_move_up = True
             self.is_move_down = False
             self.is_move_left = False
             self.is_move_right = False
-            self.move_up()
         elif DOWN_CMD in commands:
             self.is_move_down = True
             self.is_move_up = False
             self.is_move_left = False
             self.is_move_right = False
-            self.move_down()
+
+    def stop_move(self):
+        self.is_move_left = not self.is_move_left if self.is_move_left else self.is_move_left
+        self.is_move_up = not self.is_move_up if self.is_move_up else self.is_move_up
+        self.is_move_down = not self.is_move_down if self.is_move_down else self.is_move_down
+        self.is_move_right = not self.is_move_right if self.is_move_right else self.is_move_right
 
     def move_up(self):
         self.act_command = "up"
@@ -109,6 +121,7 @@ class Player(pygame.sprite.Sprite):
             self.move_down()
         elif self.is_move_down:
             self.move_up()
+        self.stop_move()
 
     def collide_with_dots(self):
         self.score += DOT_SCORE

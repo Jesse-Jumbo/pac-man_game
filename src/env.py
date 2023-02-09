@@ -3,8 +3,8 @@ from os import path
 import pygame
 
 '''width and height'''
-WINDOW_WIDTH = 1400
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 1000
+WINDOW_HEIGHT = 600
 
 '''environment data'''
 FPS = 60
@@ -41,12 +41,11 @@ IMAGE_DIR = path.join(GAME_DIR, "..", "asset", "image")
 '''BG View'''
 TITLE = "Pac-Man!"
 BG_COLOR = DARKGREY
-TILE_X_SIZE = 40
-TILE_Y_SIZE = 40
-TILE_SIZE = 40
+TILE_X_SIZE = 50
+TILE_Y_SIZE = 50
+TILE_SIZE = 50
 GRID_WIDTH = WINDOW_WIDTH / TILE_X_SIZE
 GRID_HEIGHT = WINDOW_HEIGHT / TILE_Y_SIZE
-TITLE_SIZE = 100
 
 '''window pos'''
 WIDTH_CENTER = WINDOW_WIDTH / 2
