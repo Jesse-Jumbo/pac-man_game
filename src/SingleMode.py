@@ -49,7 +49,7 @@ class SingleMode:
         self.map.add_init_obj_data(DOT_IMG_NO, Dot)
         self.map.add_init_obj_data(POWER_PELLET_IMG_NO, PowerPellet)
         for wall_no in WALLS_IMG_NO_LIST:
-            self.map.add_init_obj_data(wall_no, Ghost, play_rect_area=self.play_rect_area)
+            self.map.add_init_obj_data(wall_no, Wall, play_rect_area=self.play_rect_area)
         # create obj
         all_obj = self.map.create_init_obj_dict()
         # init player
@@ -134,6 +134,8 @@ class SingleMode:
             collide_player_with_ghosts(self.player, self.ghosts)
         collide_with_dots(self.player, self.dots)
         collide_with_dots(self.player, self.power_pellets)
+        # ghost
+        [collide_with_walls(ghost, self.walls) for ghost in self.ghosts]
 
     def get_init_image_data(self):
         init_image_data = []
