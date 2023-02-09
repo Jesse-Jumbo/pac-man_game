@@ -22,7 +22,7 @@ class Game(PaiaGame):
         if sound == "on":
             self.is_sound = True
         self.game_mode = self.set_game_mode()
-        self.scene = Scene(width=self.game_mode.scene_width, height=self.game_mode.scene_height, color="#ffffff",
+        self.scene = Scene(width=self.game_mode.scene_width, height=self.game_mode.scene_height, color="#000000",
                            bias_y=50)
 
     def get_data_from_game_to_player(self) -> dict:

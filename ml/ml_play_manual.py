@@ -38,6 +38,10 @@ class MLPlay:
                 command = UP_CMD
             elif pygame.K_DOWN in keyboard:
                 command = DOWN_CMD
+            if pygame.K_b in keyboard:
+                command = "DEBUG"
+            if pygame.K_p in keyboard:
+                command = "PAUSED"
 
         return [command]
 

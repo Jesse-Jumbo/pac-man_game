@@ -4,6 +4,8 @@ from mlgame.view.view_model import create_image_view_data
 
 from .env import *
 
+Vec = pygame.math.Vector2
+
 
 # TODO adjust blue settings
 class Ghost(pygame.sprite.Sprite):
@@ -29,6 +31,7 @@ class Ghost(pygame.sprite.Sprite):
         self.lives = 3
         self.is_alive = True
         self.blue_frame = 0
+        self.vel = Vec(0, 0)
         self.speed = GHOST_SPEED
         self.speed_slow = SPEED_SLOW
         self.is_blue = False
@@ -36,11 +39,7 @@ class Ghost(pygame.sprite.Sprite):
         self.draw_check_path = False
         self.move_cmd = UP_CMD
         self.move_change_frame = random.randrange(60, 610, 10)
-        self.act_command = "right"
-        self.is_move_up = False
-        self.is_move_down = False
-        self.is_move_left = False
-        self.is_move_right = False
+        self.act_command = "up"
         self.go_out_frame = 0
 
     def update(self):
@@ -55,41 +54,31 @@ class Ghost(pygame.sprite.Sprite):
         if self.used_frame - self.blue_frame >= 600:
             self.is_blue = False
             self.blue_frame = 0
-        if self.used_frame % self.move_change_frame == 0:
-            self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD, UP_CMD, DOWN_CMD])
-            self.move_change_frame = random.randrange(60, 610, 10)
         if self.rect.right > self.play_rect_area.right \
                 or self.rect.left < self.play_rect_area.left \
                 or self.rect.bottom > self.play_rect_area.bottom \
                 or self.rect.top < self.play_rect_area.top:
             self.collide_with_walls()
         else:
+            if self.used_frame % self.move_change_frame == 0:
+                self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD, UP_CMD, DOWN_CMD])
+                self.move_change_frame = random.randrange(60, 610, 10)
             self.act()
+
+        if self.is_blue:
+            self.speed = GHOST_SPEED + self.speed_slow
+        else:
+            self.speed = GHOST_SPEED
+        self.rect.center += self.vel
 
     def act(self):
         if self.move_cmd == LEFT_CMD:
-            self.is_move_left = True
-            self.is_move_up = False
-            self.is_move_down = False
-            self.is_move_right = False
             self.move_left()
         elif self.move_cmd == RIGHT_CMD:
-            self.is_move_right = True
-            self.is_move_up = False
-            self.is_move_down = False
-            self.is_move_left = False
             self.move_right()
         elif self.move_cmd == UP_CMD:
-            self.is_move_up = True
-            self.is_move_down = False
-            self.is_move_left = False
-            self.is_move_right = False
             self.move_up()
         elif self.move_cmd == DOWN_CMD:
-            self.is_move_down = True
-            self.is_move_up = False
-            self.is_move_left = False
-            self.is_move_right = False
             self.move_down()
 
     def get_blue_state(self):
@@ -99,46 +88,26 @@ class Ghost(pygame.sprite.Sprite):
 
     def move_left(self):
         self.act_command = "left"
-        if not self.is_blue:
-            self.rect.x += -self.speed
-        else:
-            self.rect.x += -(self.speed + self.speed_slow)
+        self.vel = Vec(-self.speed, 0)
 
     def move_down(self):
         self.act_command = "down"
-        if not self.is_blue:
-            self.rect.y += self.speed
-        else:
-            self.rect.y += self.speed + self.speed_slow
+        self.vel = Vec(0, self.speed)
 
     def move_right(self):
         self.act_command = "right"
-        if not self.is_blue:
-            self.rect.x += self.speed
-        else:
-            self.rect.x += self.speed + self.speed_slow
+        self.vel = Vec(self.speed, 0)
 
     def move_up(self):
         self.act_command = "up"
-        if not self.is_blue:
-            self.rect.y += -self.speed
-        else:
-            self.rect.y += -(self.speed + self.speed_slow)
+        self.vel = Vec(0, -self.speed)
 
     def collide_with_walls(self):
-        if self.is_move_right:
-            self.move_left()
-            self.move_cmd = random.choice([UP_CMD, DOWN_CMD])
-        elif self.is_move_left:
-            self.move_right()
-            self.move_cmd = random.choice([UP_CMD, DOWN_CMD])
-        elif self.is_move_up:
-            self.move_down()
+        self.vel *= -1
+        if not self.vel.x:
             self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD])
-        elif self.is_move_down:
-            self.move_up()
-            self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD])
-        self.act()
+        elif not self.vel.y:
+            self.move_cmd = random.choice([UP_CMD, DOWN_CMD])
 
     def enter_scatter_mode(self, x, y):
         pass
@@ -147,7 +116,7 @@ class Ghost(pygame.sprite.Sprite):
         info = {"id": f"{self.image_id}"
                 , "x": self.rect.x
                 , "y": self.rect.y
-                , "speed": "{:.2f}".format(self.speed)
+                , "vel": self.vel
                 , "act": self.act_command
                 }
         return info

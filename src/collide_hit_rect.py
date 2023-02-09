@@ -7,7 +7,7 @@ from .env import *
 
 # collide player with ghosts
 def collide_player_with_ghosts(sprite: Player, group: pygame.sprite.Group):
-    hits = pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_circle_ratio(0.8))
+    hits = pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_rect_ratio(0.8))
     if hits:
         ghost = hits[0]
         if isinstance(ghost, Ghost):
@@ -37,13 +37,13 @@ def collide_with_nodes(sprite: pygame.sprite, group: pygame.sprite.Group, dir=""
 
 # collide sprite with walls
 def collide_with_walls(sprite: pygame.sprite, group: pygame.sprite.Group):
-    hits = pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_circle_ratio(0.8))
+    hits = pygame.sprite.spritecollide(sprite, group, False, pygame.sprite.collide_rect_ratio(0.8))
     if hits:
         sprite.collide_with_walls()
 
 
 def collide_with_dots(sprite: Player, group: pygame.sprite.Group):
-    hits = pygame.sprite.spritecollide(sprite, group, True, pygame.sprite.collide_circle_ratio(0.8))
+    hits = pygame.sprite.spritecollide(sprite, group, True, pygame.sprite.collide_rect_ratio(0.8))
     for hit in hits:
         sprite.collide_with_dots()
 
