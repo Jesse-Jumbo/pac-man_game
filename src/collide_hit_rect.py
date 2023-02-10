@@ -18,7 +18,6 @@ def collide_player_with_ghosts(sprite: Player, group: pygame.sprite.Group):
                 ghost.rect.center = ghost.origin_center
                 ghost.is_blue = False
             else:
-                sprite.lives -= 1
                 sprite.reset()
 
 
@@ -47,3 +46,8 @@ def collide_with_dots(sprite: Player, group: pygame.sprite.Group):
     for hit in hits:
         sprite.collide_with_dots()
 
+
+def collide_with_power_pellets(sprite: Player, group: pygame.sprite.Group):
+    hits = pygame.sprite.spritecollide(sprite, group, True, pygame.sprite.collide_rect_ratio(0.8))
+    for hit in hits:
+        sprite.collide_with_power_pellets()

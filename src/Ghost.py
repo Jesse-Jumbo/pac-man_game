@@ -39,10 +39,10 @@ class Ghost(pygame.sprite.Sprite):
         self.draw_check_path = False
         self.move_cmd = UP_CMD
         self.move_change_frame = random.randrange(60, 610, 10)
-        self.act_command = "up"
+        self.act_command = "down"
         self.go_out_frame = 0
 
-    def update(self):
+    def update(self, is_blue: bool):
         self.used_frame += 1
         if self.lives <= 0:
             self.is_alive = False
@@ -109,6 +109,8 @@ class Ghost(pygame.sprite.Sprite):
         elif not self.vel.y:
             self.move_cmd = random.choice([UP_CMD, DOWN_CMD])
 
+    def enter_frightened_mode(self):
+        pass
     def enter_scatter_mode(self, x, y):
         pass
 

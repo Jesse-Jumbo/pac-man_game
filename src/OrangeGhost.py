@@ -5,7 +5,7 @@ from .Ghost import Ghost
 GO_OUT_FRAME = 1200
 
 
-class GreenGhost(Ghost):
+class OrangeGhost(Ghost):
     def __init__(self, construction, **kwargs):
         super().__init__(construction, **kwargs)
         self.image_id = "orange_ghost"

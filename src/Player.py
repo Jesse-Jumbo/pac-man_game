@@ -20,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.no = construction.no
         self.rect = pygame.Rect(construction.init_pos, construction.init_size)
         self.play_rect_area = kwargs["play_rect_area"]
+        self.origin_center = self.rect.center
         self.size = construction.init_size
         self.angle = 0
         self.score = 0
@@ -90,6 +91,10 @@ class Player(pygame.sprite.Sprite):
             self.is_move_left = False
             self.is_move_right = False
 
+    def reset(self):
+        self.rect.center = self.origin_center
+        self.lives -= 1
+
     def stop_move(self):
         self.is_move_left = not self.is_move_left if self.is_move_left else self.is_move_left
         self.is_move_up = not self.is_move_up if self.is_move_up else self.is_move_up
@@ -129,6 +134,11 @@ class Player(pygame.sprite.Sprite):
         self.dots_score += DOT_SCORE
         self.speed += -0.001
 
+    def collide_with_power_pellets(self):
+        self.score += POWER_PELLET_SCORE
+        self.ate_power_pellets_times += 1
+        self.power_pellets_score += POWER_PELLET_SCORE
+
     def get_data_from_obj_to_game(self) -> dict:
         info = {"id": f"1P"
                 , "x": self.rect.x
@@ -159,14 +169,11 @@ class Player(pygame.sprite.Sprite):
 
     def get_info_to_game_result(self) -> dict:
         info = {"id": f"1P"
-                , "x": self.rect.x
-                , "y": self.rect.y
                 , "speed": "{:.2f}".format(self.speed)
                 , "score": self.score
                 , "lives": self.lives
                 , "dots_score": f"{self.dots_score}/{self.ate_dots_times} times"
                 , "power_pellets_score": f"{self.power_pellets_score}/{self.ate_power_pellets_times} times"
                 , "blue_ghosts_score": f"{self.blue_ghosts_score}/{self.ate_blue_ghosts_times} times"
-                , "angle": self.angle
                 }
         return info

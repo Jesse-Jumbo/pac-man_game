@@ -4,7 +4,11 @@ from mlgame.game.paia_game import GameResultState, GameStatus
 from mlgame.view.view_model import create_asset_init_data, create_text_view_data, create_line_view_data
 
 from .Dot import Dot
+from .GreenGhost import GreenGhost
+from .OrangeGhost import OrangeGhost
+from .PinkGhost import PinkGhost
 from .PowerPellet import PowerPellet
+from .RedGhost import RedGhost
 from .TiledMap import TiledMap
 from .Wall import Wall
 from .collide_hit_rect import *
@@ -34,6 +38,7 @@ class SingleMode:
         # control variables
         self.is_invincible = False
         self.is_through_wall = False
+        self.is_ghost_frightened = False
         # initialize sprites group
         self.walls = pygame.sprite.Group()
         self.ghosts = pygame.sprite.Group()
@@ -42,10 +47,10 @@ class SingleMode:
         self.all_sprites = pygame.sprite.Group()
         # init obj data
         self.map.add_init_obj_data(PLAYER_IMG_NO, Player, play_rect_area=self.play_rect_area)
-        self.map.add_init_obj_data(RED_GHOST_IMG_NO, Ghost, play_rect_area=self.play_rect_area)
-        self.map.add_init_obj_data(PINK_GHOST_IMG_NO, Ghost, play_rect_area=self.play_rect_area)
-        self.map.add_init_obj_data(GREEN_GHOST_IMG_NO, Ghost, play_rect_area=self.play_rect_area)
-        self.map.add_init_obj_data(ORANGE_GHOST_IMG_NO, Ghost, play_rect_area=self.play_rect_area)
+        self.map.add_init_obj_data(RED_GHOST_IMG_NO, RedGhost, play_rect_area=self.play_rect_area)
+        self.map.add_init_obj_data(PINK_GHOST_IMG_NO, PinkGhost, play_rect_area=self.play_rect_area)
+        self.map.add_init_obj_data(GREEN_GHOST_IMG_NO, GreenGhost, play_rect_area=self.play_rect_area)
+        self.map.add_init_obj_data(ORANGE_GHOST_IMG_NO, OrangeGhost, play_rect_area=self.play_rect_area)
         self.map.add_init_obj_data(DOT_IMG_NO, Dot)
         self.map.add_init_obj_data(POWER_PELLET_IMG_NO, PowerPellet)
         for wall_no in WALLS_IMG_NO_LIST:
@@ -86,7 +91,7 @@ class SingleMode:
         self.used_frame += 1
         self.check_collisions()
         self.player.update(command)
-        self.ghosts.update()
+        self.ghosts.update(is_blue = self.is_ghost_frightened)
         self.get_player_end()
         if self.used_frame >= self.frame_limit:
             self.get_game_end()
@@ -99,7 +104,6 @@ class SingleMode:
             , frame_limit=self.frame_limit
             , sound_path=self.sound_path
             , play_rect_area=self.play_rect_area)
-
 
     def get_player_end(self):
         if isinstance(self.player, Player) and self.player.is_alive:
@@ -133,7 +137,8 @@ class SingleMode:
         if not self.is_invincible:
             collide_player_with_ghosts(self.player, self.ghosts)
         collide_with_dots(self.player, self.dots)
-        collide_with_dots(self.player, self.power_pellets)
+        if collide_with_power_pellets(self.player, self.power_pellets):
+            self.is_ghost_frightened = True
         # ghost
         [collide_with_walls(ghost, self.walls) for ghost in self.ghosts]
 
@@ -145,37 +150,37 @@ class SingleMode:
                                                               , TILE_X_SIZE, TILE_Y_SIZE
                                                               , img_path, PLAYER_IMAGE_URL[act][_id]))
         for act, img_path in RED_GHOST_IMAGE_PATH_DIC.items():
-            init_image_data.append(create_asset_init_data(f"red_ghost_{act}", TILE_X_SIZE,
-                                                                                TILE_Y_SIZE, img_path, ""))
+            init_image_data.append(create_asset_init_data(f"red_ghost_{act}"
+                                                          , TILE_X_SIZE, TILE_Y_SIZE, img_path, ""))
         for act, img_path in PINK_GHOST_IMAGE_PATH_DIC.items():
-            init_image_data.append(create_asset_init_data(f"pink_ghost_{act}", TILE_X_SIZE,
-                                                                                TILE_Y_SIZE, img_path, ""))
+            init_image_data.append(create_asset_init_data(f"pink_ghost_{act}"
+                                                          , TILE_X_SIZE, TILE_Y_SIZE, img_path, ""))
         for act, img_path in GREEN_GHOST_IMAGE_PATH_DIC.items():
-            init_image_data.append(create_asset_init_data(f"green_ghost_{act}", TILE_X_SIZE,
-                                                                                TILE_Y_SIZE, img_path, ""))
+            init_image_data.append(create_asset_init_data(f"green_ghost_{act}"
+                                                          , TILE_X_SIZE, TILE_Y_SIZE, img_path, ""))
         for act, img_path in ORANGE_GHOST_IMAGE_PATH_DIC.items():
-            init_image_data.append(create_asset_init_data(f"orange_ghost_{act}", TILE_X_SIZE,
-                                                                                TILE_Y_SIZE, img_path, ""))
+            init_image_data.append(create_asset_init_data(f"orange_ghost_{act}"
+                                                          , TILE_X_SIZE, TILE_Y_SIZE, img_path, ""))
         for act, img_path in BLUE_GHOST_IMAGE_PATH_DIC.items():
-            init_image_data.append(create_asset_init_data(f"blue_ghost_{act}", TILE_X_SIZE,
-                                                                                TILE_Y_SIZE, img_path, ""))
+            init_image_data.append(create_asset_init_data(f"blue_ghost_{act}"
+                                                          , TILE_X_SIZE, TILE_Y_SIZE, img_path, ""))
         for _id, img_path in WALLS_IMG_PATH_DIC.items():
-            init_image_data.append(create_asset_init_data(f"wall_{_id}", TILE_X_SIZE, TILE_Y_SIZE,
-                                                                                img_path, ""))
-        init_image_data.append(create_asset_init_data("power_pellets", TILE_X_SIZE, TILE_Y_SIZE,
-                                                                            POWER_PELLET_IMG_PATH, ""))
-        init_image_data.append(create_asset_init_data("dots", TILE_X_SIZE, TILE_Y_SIZE,
-                                                                            DOT_IMG_PATH, ""))
+            init_image_data.append(create_asset_init_data(f"wall_{_id}"
+                                                          , TILE_X_SIZE, TILE_Y_SIZE, img_path, ""))
+        init_image_data.append(create_asset_init_data("power_pellets"
+                                                      , TILE_X_SIZE, TILE_Y_SIZE, POWER_PELLET_IMG_PATH, ""))
+        init_image_data.append(create_asset_init_data("dots"
+                                                      , TILE_X_SIZE, TILE_Y_SIZE, DOT_IMG_PATH, ""))
         return init_image_data
 
     def get_toggle_progress_data(self):
         toggle_data = []
-        toggle_data.append(create_text_view_data(f"Score: {self.player.score}", WINDOW_WIDTH / 2 - 60, 0,
-                                                                WHITE, "35px Arial BOLD"))
-        toggle_data.append(create_text_view_data(f"Frame: {self.used_frame}", WINDOW_WIDTH - 130, 0,
-                                                                WHITE, "35px Arial BOLD"))
-        toggle_data.append(create_text_view_data(f"Lives: {self.player.lives}", 5, 0, WHITE,
-                                                                "35px Arial BOLD"))
+        toggle_data.append(create_text_view_data(f"Score: {self.player.score}", self.width_center - 60, 0
+                                                 , WHITE, "35px Arial BOLD"))
+        toggle_data.append(create_text_view_data(f"Frame: {self.frame_limit - self.used_frame}", 5, 0
+                                                 , WHITE, "35px Arial BOLD"))
+        toggle_data.append(create_text_view_data(f"Lives: {self.player.lives}", self.scene_width - 150, 0
+                                                 , WHITE, "35px Arial BOLD"))
         return toggle_data
 
     def get_ai_data_to_player(self) -> dict:
@@ -215,9 +220,9 @@ class SingleMode:
                                                                     , *play_rect_area_points[index + 1], RED))
 
     def draw_foreground_data(self):
-        all_text_data = [create_text_view_data(f"Score: {self.player.score}", WINDOW_WIDTH / 2 - 60, 0,
+        all_text_data = [create_text_view_data(f"Score: {self.player.score}", self.width_center - 60, 0,
                                                WHITE, "35px Arial"),
-                         create_text_view_data(f"Time: {self.frame_limit - self.used_frame}", WINDOW_WIDTH - 130, 0,
+                         create_text_view_data(f"Time: {self.frame_limit - self.used_frame}", self.scene_width - 130, 0,
                                                WHITE, "35px Arial"),
                          create_text_view_data(f"Lives: {self.player.lives}", 5, 0, WHITE,
                                                "35px Arial")]
