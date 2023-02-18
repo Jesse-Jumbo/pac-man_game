@@ -41,16 +41,21 @@ class Ghost(pygame.sprite.Sprite):
         self.move_change_frame = random.randrange(60, 610, 10)
         self.act_command = "down"
         self.go_out_frame = 0
+        self.is_move_up = False
+        self.is_move_down = False
+        self.is_move_left = False
+        self.is_move_right = False
 
     def update(self, is_blue: bool):
         self.used_frame += 1
-        if self.lives <= 0:
-            self.is_alive = False
-            self.lives = 0
         if self.used_frame > self.go_out_frame:
             self.is_out = True
         if not self.is_alive or not self.is_out:
             return
+        if self.lives <= 0:
+            self.is_alive = False
+            self.lives = 0
+        self.rect.center += self.vel
         if self.used_frame - self.blue_frame >= 600:
             self.is_blue = False
             self.blue_frame = 0
@@ -69,16 +74,36 @@ class Ghost(pygame.sprite.Sprite):
             self.speed = GHOST_SPEED + self.speed_slow
         else:
             self.speed = GHOST_SPEED
-        self.rect.center += self.vel
 
     def act(self):
-        if self.move_cmd == LEFT_CMD:
-            self.move_left()
-        elif self.move_cmd == RIGHT_CMD:
+        if self.move_cmd == LEFT_CMD and not self.is_move_right:
+            self.is_move_left = True
+            self.is_move_up = False
+            self.is_move_down = False
+            self.is_move_right = False
+        elif self.move_cmd == RIGHT_CMD and not self.is_move_left:
+            self.is_move_right = True
+            self.is_move_up = False
+            self.is_move_down = False
+            self.is_move_left = False
+        elif self.move_cmd == UP_CMD and not self.is_move_down:
+            self.is_move_up = True
+            self.is_move_down = False
+            self.is_move_left = False
+            self.is_move_right = False
+        elif self.move_cmd == DOWN_CMD and not self.is_move_up:
+            self.is_move_down = True
+            self.is_move_up = False
+            self.is_move_left = False
+            self.is_move_right = False
+
+        if self.is_move_right:
             self.move_right()
-        elif self.move_cmd == UP_CMD:
+        elif self.is_move_left:
+            self.move_left()
+        elif self.is_move_up:
             self.move_up()
-        elif self.move_cmd == DOWN_CMD:
+        elif self.is_move_down:
             self.move_down()
 
     def get_blue_state(self):
@@ -108,6 +133,7 @@ class Ghost(pygame.sprite.Sprite):
             self.move_cmd = random.choice([LEFT_CMD, RIGHT_CMD])
         elif not self.vel.y:
             self.move_cmd = random.choice([UP_CMD, DOWN_CMD])
+
 
     def enter_frightened_mode(self):
         pass
