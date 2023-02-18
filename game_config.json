@@ -40,7 +40,7 @@
       "type": "int",
       "max": 3000,
       "min": 30,
-      "default": 450,
+      "default": 800,
       "help": "set the time number of your game level"
     },
     {

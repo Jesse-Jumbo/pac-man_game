@@ -1,7 +1,8 @@
 import pygame.event
 
 from mlgame.game.paia_game import GameResultState, GameStatus
-from mlgame.view.view_model import create_asset_init_data, create_text_view_data, create_line_view_data
+from mlgame.view.view_model import create_asset_init_data, create_text_view_data, create_line_view_data, \
+    create_image_view_data
 
 from .Dot import Dot
 from .GreenGhost import GreenGhost
@@ -29,6 +30,7 @@ class SingleMode:
         self.width_center = self.scene_width // 2
         self.height_center = self.scene_height // 2
         self.play_rect_area = play_rect_area
+        self.play_rect_area_size = (self.play_rect_area.width, self.play_rect_area.height)
         self.used_frame = 0
         self.state = GameResultState.FAIL
         self.status = GameStatus.GAME_ALIVE
@@ -85,13 +87,14 @@ class SingleMode:
         self.all_sprites.add(*self.dots)
         # init pos list
         self.obj_list = [self.dots, self.power_pellets, [self.player], self.ghosts, self.walls]
+        self.bg = create_image_view_data('bg', *self.play_rect_area.topleft, *self.play_rect_area_size, 0)
 
     def update(self, command: dict):
         # refactor
         self.used_frame += 1
         self.check_collisions()
         self.player.update(command)
-        self.ghosts.update(is_blue = self.is_ghost_frightened)
+        self.ghosts.update(is_blue=self.is_ghost_frightened)
         self.get_player_end()
         if self.used_frame >= self.frame_limit:
             self.get_game_end()
@@ -171,6 +174,8 @@ class SingleMode:
                                                       , TILE_X_SIZE, TILE_Y_SIZE, POWER_PELLET_IMG_PATH, ""))
         init_image_data.append(create_asset_init_data("dots"
                                                       , TILE_X_SIZE, TILE_Y_SIZE, DOT_IMG_PATH, ""))
+        init_image_data.append(create_asset_init_data("bg"
+                                                      , self.scene_width, self.scene_height, BG_IMG_PATH, ""))
         return init_image_data
 
     def get_toggle_progress_data(self):

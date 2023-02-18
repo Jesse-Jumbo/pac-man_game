@@ -41,6 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.is_move_down = False
         self.is_move_left = False
         self.is_move_right = False
+        self.is_collide_with_walls = False
 
     def update(self, command: dict):
         self.used_frame += 1
@@ -62,38 +63,45 @@ class Player(pygame.sprite.Sprite):
     def act(self, commands: list):
         if not commands:
             return None
-        if self.is_move_right:
-            self.move_right()
-        elif self.is_move_left:
-            self.move_left()
-        elif self.is_move_up:
-            self.move_up()
-        elif self.is_move_down:
-            self.move_down()
-        if LEFT_CMD in commands:
+        if LEFT_CMD in commands and not self.is_move_right:
             self.is_move_left = True
             self.is_move_up = False
             self.is_move_down = False
             self.is_move_right = False
-        elif RIGHT_CMD in commands:
+            self.is_collide_with_walls = False
+        elif RIGHT_CMD in commands and not self.is_move_left:
             self.is_move_right = True
             self.is_move_up = False
             self.is_move_down = False
             self.is_move_left = False
-        elif UP_CMD in commands:
+            self.is_collide_with_walls = False
+        elif UP_CMD in commands and not self.is_move_down:
             self.is_move_up = True
             self.is_move_down = False
             self.is_move_left = False
             self.is_move_right = False
-        elif DOWN_CMD in commands:
+            self.is_collide_with_walls = False
+        elif DOWN_CMD in commands and not self.is_move_up:
             self.is_move_down = True
             self.is_move_up = False
             self.is_move_left = False
             self.is_move_right = False
+            self.is_collide_with_walls = False
+
+        if self.is_move_right and not self.is_collide_with_walls:
+            self.move_right()
+        elif self.is_move_left and not self.is_collide_with_walls:
+            self.move_left()
+        elif self.is_move_up and not self.is_collide_with_walls:
+            self.move_up()
+        elif self.is_move_down and not self.is_collide_with_walls:
+            self.move_down()
 
     def reset(self):
         self.rect.center = self.origin_center
         self.lives -= 1
+        self.act_command = "right"
+        self.stop_move()
 
     def stop_move(self):
         self.is_move_left = not self.is_move_left if self.is_move_left else self.is_move_left
@@ -119,14 +127,14 @@ class Player(pygame.sprite.Sprite):
 
     def collide_with_walls(self):
         if self.is_move_right:
-            self.move_left()
+            self.rect.x += -self.speed
         elif self.is_move_left:
-            self.move_right()
+            self.rect.x += self.speed
         elif self.is_move_up:
-            self.move_down()
+            self.rect.y += self.speed
         elif self.is_move_down:
-            self.move_up()
-        self.stop_move()
+            self.rect.y += -self.speed
+        self.is_collide_with_walls = True
 
     def collide_with_dots(self):
         self.score += DOT_SCORE
@@ -141,15 +149,15 @@ class Player(pygame.sprite.Sprite):
 
     def get_data_from_obj_to_game(self) -> dict:
         info = {"id": f"1P"
-                , "x": self.rect.x
-                , "y": self.rect.y
-                , "speed": "{:.2f}".format(self.speed)
-                , "score": self.score
-                , "lives": self.lives
-                , "dots_score": f"{self.dots_score}/{self.ate_dots_times} times"
-                , "power_pellets_score": f"{self.power_pellets_score}/{self.ate_power_pellets_times} times"
-                , "blue_ghosts_score": f"{self.blue_ghosts_score}/{self.ate_blue_ghosts_times} times"
-                , "angle": self.angle
+            , "x": self.rect.x
+            , "y": self.rect.y
+            , "speed": "{:.2f}".format(self.speed)
+            , "score": self.score
+            , "lives": self.lives
+            , "dots_score": f"{self.dots_score}/{self.ate_dots_times} times"
+            , "power_pellets_score": f"{self.power_pellets_score}/{self.ate_power_pellets_times} times"
+            , "blue_ghosts_score": f"{self.blue_ghosts_score}/{self.ate_blue_ghosts_times} times"
+            , "angle": self.angle
                 }
         return info
 
@@ -169,11 +177,11 @@ class Player(pygame.sprite.Sprite):
 
     def get_info_to_game_result(self) -> dict:
         info = {"id": f"1P"
-                , "speed": "{:.2f}".format(self.speed)
-                , "score": self.score
-                , "lives": self.lives
-                , "dots_score": f"{self.dots_score}/{self.ate_dots_times} times"
-                , "power_pellets_score": f"{self.power_pellets_score}/{self.ate_power_pellets_times} times"
-                , "blue_ghosts_score": f"{self.blue_ghosts_score}/{self.ate_blue_ghosts_times} times"
+            , "speed": "{:.2f}".format(self.speed)
+            , "score": self.score
+            , "lives": self.lives
+            , "dots_score": f"{self.dots_score}/{self.ate_dots_times} times"
+            , "power_pellets_score": f"{self.power_pellets_score}/{self.ate_power_pellets_times} times"
+            , "blue_ghosts_score": f"{self.blue_ghosts_score}/{self.ate_blue_ghosts_times} times"
                 }
         return info

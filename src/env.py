@@ -160,6 +160,9 @@ GREEN_GHOST_IMAGE_PATH_DIC = {DOWN_IMG: path.join(IMAGE_DIR, "green_ghost_d.png"
 DOT_IMG_PATH = path.join(IMAGE_DIR, "dots.png")
 POWER_PELLET_IMG_PATH = path.join(IMAGE_DIR, "power_pellet.png")
 
+'''bg'''
+BG_IMG_PATH = path.join(IMAGE_DIR, "bg.png")
+
 '''music'''
 BGM = path.join(SOUND_DIR, 'bgm.ogg')
 INVINCIBILITY_MUSIC = path.join(SOUND_DIR, 'invincibility.wav')

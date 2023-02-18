@@ -11,8 +11,8 @@ class GreenGhost(Ghost):
         self.image_id = "green_ghost"
         self.go_out_frame = GO_OUT_FRAME
 
-    def update(self):
-        super().update()
+    def update(self, is_blue: bool):
+        super().update(is_blue)
         if self.is_blue:
             self.image_id = "blue_ghost"
         else:

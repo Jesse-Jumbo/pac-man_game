@@ -22,7 +22,7 @@ class Game(PaiaGame):
         if sound == "on":
             self.is_sound = True
         self.game_mode = self.set_game_mode()
-        self.scene = Scene(width=self.game_mode.scene_width, height=self.game_mode.scene_height, color="#000000",
+        self.scene = Scene(width=self.game_mode.scene_width, height=self.game_mode.scene_height, color="#ffffff",
                            bias_y=50)
 
     def get_data_from_game_to_player(self) -> dict:
@@ -56,7 +56,7 @@ class Game(PaiaGame):
         """
         Get the position of src objects for drawing on the web
         """
-        scene_progress = {'background': [],
+        scene_progress = {'background': [self.game_mode.bg],
                           'object_list': [*self.get_obj_progress_data()],
                           'toggle_with_bias': [],
                           'toggle': self.game_mode.get_toggle_progress_data(),
