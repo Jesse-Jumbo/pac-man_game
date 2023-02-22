@@ -176,16 +176,23 @@ class SingleMode:
                                                       , TILE_X_SIZE, TILE_Y_SIZE, DOT_IMG_PATH, ""))
         init_image_data.append(create_asset_init_data("bg"
                                                       , self.scene_width, self.scene_height, BG_IMG_PATH, ""))
+        init_image_data.append(create_asset_init_data("lives"
+                                                      , TILE_X_SIZE, TILE_Y_SIZE, LIVES_IMG_PATH, ""))
         return init_image_data
 
     def get_toggle_progress_data(self):
         toggle_data = []
         toggle_data.append(create_text_view_data(f"Score: {self.player.score}", self.width_center - 60, 0
-                                                 , WHITE, "35px Arial BOLD"))
+                                                 , BLACK, "35px Arial BOLD"))
         toggle_data.append(create_text_view_data(f"Frame: {self.frame_limit - self.used_frame}", 5, 0
-                                                 , WHITE, "35px Arial BOLD"))
-        toggle_data.append(create_text_view_data(f"Lives: {self.player.lives}", self.scene_width - 150, 0
-                                                 , WHITE, "35px Arial BOLD"))
+                                                 , RED, "35px Arial"))
+        toggle_data.append(create_text_view_data(f"Level: single_{self.map_no}", self.scene_width - 220, 0
+                                                 , DARKGREY, "35px Arial"))
+        x = 0
+        for times in range(self.player.lives):
+            toggle_data.append(create_image_view_data(f"lives", x, self.scene_height - TILE_Y_SIZE
+                                                      , TILE_X_SIZE, TILE_Y_SIZE, 0))
+            x += TILE_X_SIZE
         return toggle_data
 
     def get_ai_data_to_player(self) -> dict:

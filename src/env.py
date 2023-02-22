@@ -121,6 +121,7 @@ WALLS_IMG_PATH_DIC = {}
 for i in range(10, 24):
     WALLS_IMG_PATH_DIC[i] = path.join(IMAGE_DIR, f"wall_{i}.png")
 '''player'''
+LIVES_IMG_PATH = path.join(IMAGE_DIR, "lives.png")
 PLAYER_IMG_PATH_DIC = {LEFT_IMG: {}, RIGHT_IMG: {}, UP_IMG: {}, DOWN_IMG: {}}
 PLAYER_IMAGE_URL = {LEFT_IMG: {}, RIGHT_IMG: {}, UP_IMG: {}, DOWN_IMG: {}}
 for i in range(4):
